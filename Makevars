@@ -8,6 +8,8 @@ ifeq ($(API_KEY),)
 $(error API_KEY is empty.  Export USCENSUSAPIKEY in your shell or set API_KEY in the Makefile.)
 endif
 
+RSCRIPTVANILLA ?= Rscript --vanilla
+
 # ------------------------------------------------------------------------------
 # Years and tables of the ACS5 to download
 # ------------------------------------------------------------------------------

@@ -3,7 +3,7 @@ include Makevars
 
 .PHONY: all fips acs5 acs5-state acs5-county acs5-tract acs5-block-group decennial decennial-state decennial-county decennial-tract decennial-block-group
 
-all: fips
+all: fips decennial
 
 fips:
 	$(MAKE) -C FIPS
