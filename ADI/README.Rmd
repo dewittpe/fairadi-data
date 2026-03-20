@@ -1,0 +1,64 @@
+# Area Depredation Index
+
+The Area Depredation Index (ADI)
+
+* defined in Kind et.al. (2014) https://doi.org/10.7326/m13-2946
+
+* A well referenced and commonly used source for the ADI is from [Neighborhood
+  Atlas](https://www.neighborhoodatlas.medicine.wisc.edu/)
+
+The work in this directory is an attempt to reproduce the ADI as published by
+Neighborhood Atlas.
+
+In general, the ADI is defined at the United States Census Block Group level
+using data from the American Community Survey Five-Year (ACS5) data.
+
+| Topic  | Topic Area                                 | ACS5 Detailed Table ID   | Specific Variables / Calculation                                                                  |
+| ---    | ------------                               | -------------------      | ----------------------------------                                                                |
+| 1      | % Pop ≥ 25 yrs with < 9 yrs Education      | B15003                   | Numerator: Sum _002 to _012. Denominator: B15003_001                                              |
+| 2      | % Pop ≥ 25 yrs with >= High School Diploma | B15003                   | Numerator: Sum _002 to _016. Denominator: B15003_001. 1 - (sum() / D)                             |
+| 3      | % Employed ≥ 16 yrs in White-Collar Occs.  | C24010                   | Numerator: Sum _003 to _013 (Male) and _039 to _049 (Female). Denominator: C24010_001             |
+| 4      | Median Family Income                       | B19113                   | Use B19113_001                                                                                    |
+| 5      | Income Disparity (Singh Index)             | B19001                   | Numerator: B19001_002. Denominator: Sum B19001_011 to B19001_017. Calculate: log(100 × Num / Den) |
+| 6      | Median Home Value                          | B25077                   | Use B25077_001                                                                                    |
+| 7      | Median Gross Rent                          | B25063                   | Use B25063_001                                                                                    |
+| 8      | Median Monthly Mortgage                    | B25087                   | Use B25087_001                                                                                    |
+| 9      | Home Ownership Rate (% Owner-Occupied)     | B25003                   | Numerator: B25003_002. Denominator: B25003_001                                                    |
+| 10     | Unemployment Rate (% Civilian Labor Force) | B23025                   | Numerator: B23025_005. Denominator: B23025_002                                                    |
+| 11     | % Families Below Poverty Level             | B17010                   | Numerator: B17010_002. Denominator: B17010_001                                                    |
+| 12     | % Pop Below 150% of Poverty Threshold      | C17002                   | Numerator: Sum _002 through _005. Denominator: C17002_001                                         |
+| 13     | % One-Parent Households (Children < 18)    | B11012                   | Numerator: B11012_010 + B11012_015. Denominator: B11012_001                                       |
+| 14     | % Households Without a Motor Vehicle       | B25044                   | Numerator: B25044_003 + B25044_010. Denominator: B25044_001                                       |
+| 15-old | % Households Without a Telephone           | B25043                   | Numerator: B25043_004. Denominator: B25043_001                                                    |
+| 15-new | % Households Without internet              | B28002                   | Numerator: B28002_013. Denominator: B28002_001                                                    |
+| 16     | % Units Without Complete Plumbing          | B25047                   | Numerator: B25047_003. Denominator: B25047_001                                                    |
+| 17     | % Crowding (> 1.00 Person Per Room)        | B25014                   | Numerator: Sum _005, _006, _011, _012. Denominator: B25014_001                                    |
+
+Neighborhood Atlas also [uses block group suppression](https://www.neighborhoodatlas.medicine.wisc.edu/changelog#:~:text=Changes%20between%20versions%20of%20the%20ADI%2C%2011/19/2020)
+before building the state and national rankings.
+
+> Block group suppression: We have applied the same Diez Roux suppression
+> criteria used in the earlier 2013 and 2015 builds: any block group with fewer
+> than 100 persons, fewer than 30 housing units, or greater than 33% of the
+> population living in group quarters will not receive an ADI ranking. In
+> addition, we have suppressed of a small number of block groups which include
+> those with survey errors acknowledged by the US Census Bureau.
+
+Tables from the United States Census used to build the suppression criteria
+include those from the ACS5 and from the Decennial census.  In particular,
+grouped quarters are available at the block group level in the Decennial census
+but are not available at the block group level, only the tract level, for the
+ACS5 data.
+
+| Topic            | Decennial Table | ACS5 Table |
+| :----            | :----:          | :----:     |
+| Total Population | P1              | B01003     |
+| Group Quaters    | P18             |            |
+| Housing Units    |                 | B25001     |
+
+## Workflow
+
+In this directory there are R script for each of the ADI topics and one for
+building the ADI score and rankings.
+
+## Diagnostics of the Reproduction
