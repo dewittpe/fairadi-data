@@ -48,12 +48,11 @@
 source("adi_utilities.R")
 
 # import needed data
-#B15003 <- data.table::fread(file = file.path("..", "ACS5", "B15003.csv.gz"))
 DT <- import_census_table(table = "B15003")
-
-check_for_anotations(DT)
+cfa <- check_for_anotations(DT)
 
 # B15003_001MA exists
+stopifnot(identical(cfa, list(E = character(0), M = "B15003_001MA")))
 # all the annotations are the same:
 stopifnot(
   DT[!is.na(B15003_001MA), all(B15003_001MA == "*****")]
