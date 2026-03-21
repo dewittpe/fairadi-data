@@ -2,11 +2,7 @@
 # US Census API Key
 # ------------------------------------------------------------------------------
 API_KEY ?= $(USCENSUSAPIKEY)
-
-# Fail if API_KEY is not set
-ifeq ($(API_KEY),)
-$(error API_KEY is empty.  Export USCENSUSAPIKEY in your shell or set API_KEY in the Makefile.)
-endif
+REQUIRE_API_KEY = test -n "$(API_KEY)" || { echo "API_KEY is empty. Export USCENSUSAPIKEY in your shell or set API_KEY in the Makefile." >&2; exit 1; }
 
 RSCRIPTVANILLA ?= Rscript --vanilla
 

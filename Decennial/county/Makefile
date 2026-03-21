@@ -22,7 +22,8 @@ $(OUTDIR)/%.csv.gz:
 	$(eval TEMP_LIST := $(subst /, , $*))
 	$(eval year := $(word 1,$(TEMP_LIST)))
 	$(eval tab := $(word 2,$(TEMP_LIST)))
-	@raw="$@.raw"; \
+	@$(REQUIRE_API_KEY); \
+	raw="$@.raw"; \
 	tmp="$@.tmp"; \
 	mkdir -p "$(dir $@)"; \
 	url="https://api.census.gov/data/$(year)/dec/$(DECENNIAL_DATASET)?get=group($(tab))&for=county:*&in=state:*&outputFormat=csv&key=$(API_KEY)"; \

@@ -17,7 +17,8 @@ BLOCK_GROUP_CSV := $(foreach year,$(FIPS_YEARS),$(year)__block_groups.csv)
 all: $(STATE_CSV) $(COUNTY_CSV) $(TRACT_CSV) $(BLOCK_GROUP_CSV)
 
 %__states.csv:
-	@raw="$@.raw"; \
+	@$(REQUIRE_API_KEY); \
+	raw="$@.raw"; \
 	tmp="$@.tmp"; \
 	url="https://api.census.gov/data/$*/$(ACS5_DATASET)?get=NAME&for=state:*&outputFormat=csv&key=$(API_KEY)"; \
 	echo " Writing $@"; \
@@ -28,7 +29,8 @@ all: $(STATE_CSV) $(COUNTY_CSV) $(TRACT_CSV) $(BLOCK_GROUP_CSV)
 	rm -f "$$raw" "$$tmp"
 
 %__counties.csv:
-	@raw="$@.raw"; \
+	@$(REQUIRE_API_KEY); \
+	raw="$@.raw"; \
 	tmp="$@.tmp"; \
 	url="https://api.census.gov/data/$*/$(ACS5_DATASET)?get=NAME&for=county:*&in=state:*&outputFormat=csv&key=$(API_KEY)"; \
 	echo " Writing $@"; \
@@ -42,7 +44,8 @@ all: $(STATE_CSV) $(COUNTY_CSV) $(TRACT_CSV) $(BLOCK_GROUP_CSV)
 	tail -n +2 $< | cut -d, -f1,2 | tr -d '"' | awk -F, '{print $$1 "/" $$2}' | sort -u > $@
 
 tracts/%.csv:
-	@parts=($$(echo "$*" | tr / ' ')); \
+	@$(REQUIRE_API_KEY); \
+	parts=($$(echo "$*" | tr / ' ')); \
 	year="$${parts[0]}"; \
 	state="$${parts[1]}"; \
 	county="$${parts[2]}"; \
@@ -76,7 +79,8 @@ tracts/%.csv:
 	rm -f "$$tmp"
 
 block_groups/%.csv:
-	@parts=($$(echo "$*" | tr / ' ')); \
+	@$(REQUIRE_API_KEY); \
+	parts=($$(echo "$*" | tr / ' ')); \
 	year="$${parts[0]}"; \
 	state="$${parts[1]}"; \
 	county="$${parts[2]}"; \

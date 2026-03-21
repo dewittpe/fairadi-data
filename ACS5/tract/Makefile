@@ -34,7 +34,8 @@ $(OUTDIR)/%.csv.gz:
 	$(eval year := $(word 1,$(TEMP_LIST)))
 	$(eval state := $(word 2,$(TEMP_LIST)))
 	$(eval tab := $(word 3,$(TEMP_LIST)))
-	@raw="$@.raw"; \
+	@$(REQUIRE_API_KEY); \
+	raw="$@.raw"; \
 	tmp="$@.tmp"; \
 	mkdir -p "$(dir $@)"; \
 	url="https://api.census.gov/data/$(year)/acs/acs5?get=group($(tab))&for=tract:*&in=state:$(state)&in=county:*&outputFormat=csv&key=$(API_KEY)"; \
