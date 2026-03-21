@@ -207,21 +207,58 @@ adi <- subset(adi, !(is.na(exclude_from_ranking)))
 ``` r
 adi[,
   .(
-    both_exclude = qwraps2::n_perc0(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1),
-    both_include = qwraps2::n_perc0(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0),
-    r_in_ngbr_ex = qwraps2::n_perc0(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1),
-    r_ex_nghr_in = qwraps2::n_perc0(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0)
+    both_exclude = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1, digits = 1),
+    both_include = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0, digits = 1),
+    r_in_ngbr_ex = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1, digits = 1),
+    r_ex_nghr_in = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0, digits = 1)
   ),
   keyby = .(year)
   ]
 ## Key: <year>
-##     year both_exclude both_include r_in_ngbr_ex r_ex_nghr_in
-##    <int>       <char>       <char>       <char>       <char>
-## 1:  2020    5,669 (2) 235,334 (97)      780 (0)      552 (0)
-## 2:  2023    3,683 (2) 236,102 (97)    2,511 (1)        0 (0)
+##     year both_exclude    both_include r_in_ngbr_ex r_ex_nghr_in
+##    <int>       <char>          <char>       <char>       <char>
+## 1:  2020 5,669 (2.3%) 235,334 (97.1%)   780 (0.3%)   552 (0.2%)
+## 2:  2023 3,683 (1.5%) 236,102 (97.4%) 2,511 (1.0%)     0 (0.0%)
 ```
 
-adi[, sum(exclude_from_ranking == neighborhood_atlas_exclude)]
+Let's look at the block groups that are excluded in Neighborhood Atlas but not
+in the reproduction.
+
+
+``` r
+adi[
+  exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1,
+  .N,
+  keyby = .(year, neighborhood_atlas_exclude_reason)
+]
+## Key: <year, neighborhood_atlas_exclude_reason>
+##     year neighborhood_atlas_exclude_reason     N
+##    <int>                            <char> <int>
+## 1:  2020                                GQ   751
+## 2:  2020                               QDI    29
+## 3:  2023                                GQ  2469
+## 4:  2023                               QDI    42
+```
+The primary reaon for exclusion by Neighborhood Atlas is group quarters.
+
+
+``` r
+group_quarters <- data.table::fread("group_quarters.csv.gz")
+
+group_quarters[
+  adi[exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1],
+  on = c("year", "state", "county", "tract", "block_group")
+][
+  ,
+  .N,
+  keyby = .(year, group_quarters < 1/3)
+  ]
+## Key: <year, group_quarters>
+##     year group_quarters     N
+##    <int>         <lgcl> <int>
+## 1:  2020           TRUE   780
+## 2:  2023             NA  2511
+```
 
 
 

@@ -165,16 +165,39 @@ adi <- subset(adi, !(is.na(exclude_from_ranking)))
 ```{r}
 adi[,
   .(
-    both_exclude = qwraps2::n_perc0(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1),
-    both_include = qwraps2::n_perc0(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0),
-    r_in_ngbr_ex = qwraps2::n_perc0(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1),
-    r_ex_nghr_in = qwraps2::n_perc0(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0)
+    both_exclude = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1, digits = 1),
+    both_include = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0, digits = 1),
+    r_in_ngbr_ex = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1, digits = 1),
+    r_ex_nghr_in = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0, digits = 1)
   ),
   keyby = .(year)
   ]
 ```
 
-adi[, sum(exclude_from_ranking == neighborhood_atlas_exclude)]
+Let's look at the block groups that are excluded in Neighborhood Atlas but not
+in the reproduction.
+
+```{r}
+adi[
+  exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1,
+  .N,
+  keyby = .(year, neighborhood_atlas_exclude_reason)
+]
+```
+The primary reaon for exclusion by Neighborhood Atlas is group quarters.
+
+```{r}
+group_quarters <- data.table::fread("group_quarters.csv.gz")
+
+group_quarters[
+  adi[exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1],
+  on = c("year", "state", "county", "tract", "block_group")
+][
+  ,
+  .N,
+  keyby = .(year, group_quarters < 1/3)
+  ]
+```
 
 
 ```{r}

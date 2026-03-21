@@ -23,6 +23,9 @@ adi <-
 
 adi <- Reduce(f = function(x, y) {merge(x, y, all = TRUE)}, x = adi)
 
+# only looking at block groups
+adi <- subset(adi, !is.na(block_group))
+
 adi[,
   adi_raw :=
     topic01 *  0.0849 +
@@ -63,6 +66,10 @@ total_population <- data.table::fread("total_population.csv.gz")
 housing_units    <- data.table::fread("housing_units.csv.gz")
 group_quarters   <- data.table::fread("group_quarters.csv.gz")
 
+total_population <- subset(total_population, !is.na(block_group))
+housing_units    <- subset(housing_units,    !is.na(block_group))
+group_quarters   <- subset(group_quarters,   !is.na(block_group))
+
 adi <-
   merge(
     x = adi,
@@ -87,17 +94,18 @@ adi <-
     by = COLS_TO_KEEP
   )
 
-adi <- adi[!is.na(block_group)]
-
 # exclude reason
-adi[, exclude_reason :=
-  data.table::fcase(
-    (total_population < 100 | housing_units < 30) & group_quarters >= 1/3, "GQ-PH",
-    (total_population < 100 | housing_units < 30),                         "PH",
-    group_quarters >= 1/3,                                                 "GQ",
-    is.na(adi_raw), "QDI",
-    default = NA_character_
-  )]
+adi[
+  ,
+  exclude_reason :=
+    data.table::fcase(
+      (total_population < 100 | housing_units < 30) & group_quarters >= 1/3, "GQ-PH",
+      (total_population < 100 | housing_units < 30),                         "PH",
+      group_quarters >= 1/3,                                                 "GQ",
+      is.na(adi_raw),                                                        "QDI",
+      default = NA_character_
+    )
+]
 
 adi[, exclude_from_ranking := as.integer(!is.na(exclude_reason))]
 
