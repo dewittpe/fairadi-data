@@ -1,8 +1,8 @@
-# FAIR Area Depredation Index
+# FAIR Area Deprivation Index
 
 
 
-The Area Depredation Index (ADI)
+The Area Deprivation Index (ADI)
 
 * defined in Kind et.al. (2014) https://doi.org/10.7326/m13-2946
 
@@ -56,7 +56,7 @@ ACS5 data.
 | Topic            | Decennial Table | ACS5 Table |
 | :----            | :----:          | :----:     |
 | Total Population | P1              | B01003     |
-| Group Quaters    | P18             |            |
+| Group Quarters   | P18             |            |
 | Housing Units    |                 | B25001     |
 
 ## Workflow
@@ -127,7 +127,7 @@ str(fairadi)
 ##  - attr(*, ".internal.selfref")=<externalptr>
 ```
 
-The this README we will subset to the two years of Neighborhood Atlas data.
+In this README we will subset to the two years of Neighborhood Atlas data.
 
 ``` r
 fairadi <- subset(fairadi, year %in% c(2020, 2023))
@@ -154,7 +154,7 @@ adi[, .N, keyby = .(year, exclude_from_ranking, neighborhood_atlas_exclude)]
 ## 8:  2023                    1                          1   6152
 ```
 
-There are 40 GEOID in the 2023 Neighborhood Atlas only.
+There are 40 GEOIDs in the 2023 Neighborhood Atlas only.
 - In the 2023 Neighborhood Atlas file, all 40 are marked QDI for both
   ADI_NATRANK and ADI_STATERNK.
 - Those same GEOIDs existed in local Census-derived outputs for earlier
