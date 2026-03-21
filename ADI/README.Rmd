@@ -209,36 +209,91 @@ data sets.
 ```{r}
 bg_gh[, .SD[duplicated(.SD, by = c("state", "county", "tract", "block_group"))]]
 ```
+This is not the case.
+```{r}
+data.table::dcast(
+  neighborhood_atlas[
+    neighborhood_atlas[, .(N = length(unique(neighborhood_atlas_exclude_reason))), by = .(FIPS)][N > 1],
+    on = "FIPS"
+  ]
+  ,
+  FIPS ~ year,
+  value.var = "neighborhood_atlas_exclude_reason"
+)[, .N, keyby = .(`2020`, `2023`)] |>
+print(nrow = Inf)
+```
+We speculate that the reason the exclusion based on group quarters changes from
+2020 to 2023 within the Neighborhood Atlas data is that they have access to the
+non-public ACS5 block group level data.  That data can be acquired with a signed
+data-use agreement.  For the reproduction, and using only publicly available
+data, we are restricted to using the Decennial census values for both 2020 and
+2023.
+
 
 ```{r}
 adi[bg_gh, on = "FIPS"]
 ```
-
-
+Not that for the block groups that our reproduction excludes but Neighborhood
+Atlas does not, it is all due to grouped quarters.
 ```{r}
-with(adi, cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs"))
-with(adi, cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs"))
-adi[complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
-
-with(adi[year == 2020], cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs"))
-with(adi[year == 2020], cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs"))
-adi[year == 2020 & complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
-
-with(adi[year == 2023], cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs"))
-with(adi[year == 2023], cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs"))
-adi[year == 2023 & complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
-
-with(adi, cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs"))
-with(adi, cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs"))
-adi[complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
-
-with(adi[year == 2020], cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs"))
-with(adi[year == 2020], cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs"))
-adi[year == 2020 & complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
-
-with(adi[year == 2023], cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs"))
-with(adi[year == 2023], cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs"))
-adi[year == 2023 & complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
+adi[exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0, .N, by =
+  .(year, exclude_reason)]
 ```
 
+### Correlations
+
+```{r, echo = FALSE, results = "asis"}
+for_cor <- adi[exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0]
+p <- function(DT, level, method = c("pearson", "spearman", "kendall")) {
+  method <- match.arg(method, several.ok = FALSE)
+  if (method %in% c("pearson", "spearman")) {
+    if (level == "state") {
+      DT[, cor(state_rank, ADI_STATERNK, method = method)]
+    } else {
+      DT[, cor(national_rank, ADI_NATRANK, method = method)]
+    }
+  } else {
+    if (level == "state") {
+      DT[, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
+    } else {
+      DT[, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
+    }
+  }
+}
+
+d <- c(
+  for_cor[, .N],
+  p(for_cor, "state", "pearson"),
+  p(for_cor, "state", "spearman"),
+  p(for_cor, "state", "kendall"),
+  p(for_cor, "national", "pearson"),
+  p(for_cor, "national", "spearman"),
+  p(for_cor, "national", "kendall"),
+
+  for_cor[year == 2020, .N],
+  p(for_cor[year == 2020], "state", "pearson"),
+  p(for_cor[year == 2020], "state", "spearman"),
+  p(for_cor[year == 2020], "state", "kendall"),
+  p(for_cor[year == 2020], "national", "pearson"),
+  p(for_cor[year == 2020], "national", "spearman"),
+  p(for_cor[year == 2020], "national", "kendall"),
+
+  for_cor[year == 2023, .N],
+  p(for_cor[year == 2023], "state", "pearson"),
+  p(for_cor[year == 2023], "state", "spearman"),
+  p(for_cor[year == 2023], "state", "kendall"),
+  p(for_cor[year == 2023], "national", "pearson"),
+  p(for_cor[year == 2023], "national", "spearman"),
+  p(for_cor[year == 2023], "national", "kendall")
+)
+
+df <- data.frame(Year = c("2020 & 2023", "2020", "2023"))
+df <- cbind(df, as.data.frame(matrix(round(d, 4), nrow = 3, byrow = TRUE)))
+names(df) <- c("Year", "Block Groups", rep(c("Pearson", "Spearman", "Kendall"), 2))
+kableExtra::kbl(
+  format = "markdown",
+  x = df, row.names = FALSE
+  ) |>
+kableExtra::add_header_above(c("", "", "State Level" = 3, "National Level" = 3))
+```
 

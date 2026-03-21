@@ -286,6 +286,48 @@ bg_gh[, .SD[duplicated(.SD, by = c("state", "county", "tract", "block_group"))]]
 ## 2:           NA                               QDI                          1
 ## 3:           NA                               QDI                          1
 ```
+This is not the case.
+
+``` r
+data.table::dcast(
+  neighborhood_atlas[
+    neighborhood_atlas[, .(N = length(unique(neighborhood_atlas_exclude_reason))), by = .(FIPS)][N > 1],
+    on = "FIPS"
+  ]
+  ,
+  FIPS ~ year,
+  value.var = "neighborhood_atlas_exclude_reason"
+)[, .N, keyby = .(`2020`, `2023`)] |>
+print(nrow = Inf)
+## Key: <2020, 2023>
+##       2020   2023     N
+##     <char> <char> <int>
+##  1:            GQ   546
+##  2:            PH   126
+##  3:           QDI   225
+##  4:     GQ          744
+##  5:     GQ  GQ-PH    35
+##  6:     GQ     PH     2
+##  7:     GQ    QDI    25
+##  8:  GQ-PH           10
+##  9:  GQ-PH     GQ    54
+## 10:  GQ-PH     PH    58
+## 11:  GQ-PH    QDI     3
+## 12:     PH          168
+## 13:     PH     GQ     5
+## 14:     PH  GQ-PH   127
+## 15:     PH    QDI    10
+## 16:    QDI          155
+## 17:    QDI     GQ     9
+## 18:    QDI     PH    11
+```
+We speculate that the reason the exclusion based on group quarters changes from
+2020 to 2023 within the Neighborhood Atlas data is that they have access to the
+non-public ACS5 block group level data.  That data can be acquired with a signed
+data-use agreement.  For the reproduction, and using only publicly available
+data, we are restricted to using the Decennial census values for both 2020 and
+2023.
+
 
 
 ``` r
@@ -382,51 +424,71 @@ adi[bg_gh, on = "FIPS"]
 ## 1636:                            1
 ## 1637:                            1
 ```
-
-
+Not that for the block groups that our reproduction excludes but Neighborhood
+Atlas does not, it is all due to grouped quarters.
 
 ``` r
-with(adi, cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs"))
-## [1] 0.9686906
-with(adi, cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs"))
-## [1] 0.968694
-adi[complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
-## [1] 0.9139523
-
-with(adi[year == 2020], cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs"))
-## [1] 0.9693838
-with(adi[year == 2020], cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs"))
-## [1] 0.9693893
-adi[year == 2020 & complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
-## [1] 0.9151964
-
-with(adi[year == 2023], cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs"))
-## [1] 0.9679998
-with(adi[year == 2023], cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs"))
-## [1] 0.9680013
-adi[year == 2023 & complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
-## [1] 0.9127156
-
-with(adi, cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs"))
-## [1] 0.9864773
-with(adi, cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs"))
-## [1] 0.9864796
-adi[complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
-## [1] 0.9219987
-
-with(adi[year == 2020], cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs"))
-## [1] 0.9864514
-with(adi[year == 2020], cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs"))
-## [1] 0.9864559
-adi[year == 2020 & complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
-## [1] 0.9219371
-
-with(adi[year == 2023], cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs"))
-## [1] 0.9865031
-with(adi[year == 2023], cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs"))
-## [1] 0.9865034
-adi[year == 2023 & complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
-## [1] 0.9220821
+adi[exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0, .N, by =
+  .(year, exclude_reason)]
+##     year exclude_reason     N
+##    <int>         <char> <int>
+## 1:  2020             GQ   552
 ```
+
+### Correlations
+
+<table>
+ <thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">State Level</div></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">National Level</div></th>
+</tr>
+  <tr>
+   <th style="text-align:left;"> Year </th>
+   <th style="text-align:right;"> Block Groups </th>
+   <th style="text-align:right;"> Pearson </th>
+   <th style="text-align:right;"> Spearman </th>
+   <th style="text-align:right;"> Kendall </th>
+   <th style="text-align:right;"> Pearson </th>
+   <th style="text-align:right;"> Spearman </th>
+   <th style="text-align:right;"> Kendall </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2020 &amp; 2023 </td>
+   <td style="text-align:right;"> 471436 </td>
+   <td style="text-align:right;"> 0.9687 </td>
+   <td style="text-align:right;"> 0.9687 </td>
+   <td style="text-align:right;"> 0.9140 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9220 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020 </td>
+   <td style="text-align:right;"> 235334 </td>
+   <td style="text-align:right;"> 0.9694 </td>
+   <td style="text-align:right;"> 0.9694 </td>
+   <td style="text-align:right;"> 0.9152 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9219 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2023 </td>
+   <td style="text-align:right;"> 236102 </td>
+   <td style="text-align:right;"> 0.9680 </td>
+   <td style="text-align:right;"> 0.9680 </td>
+   <td style="text-align:right;"> 0.9127 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9221 </td>
+  </tr>
+</tbody>
+</table>
+
 
 
