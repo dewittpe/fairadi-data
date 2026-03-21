@@ -1,4 +1,4 @@
-# Area Depredation Index
+# FAIR Area Depredation Index
 
 
 
@@ -10,7 +10,8 @@ The Area Depredation Index (ADI)
   Atlas](https://www.neighborhoodatlas.medicine.wisc.edu/)
 
 The work in this directory is an attempt to reproduce the ADI as published by
-Neighborhood Atlas.
+Neighborhood Atlas. The reproduction is called `fairadi`, a **FAIR**-compliant
+(Findability, Accessibility, Interoperability, and Reuse) **ADI**.
 
 In general, the ADI is defined at the United States Census Block Group level
 using data from the American Community Survey Five-Year (ACS5) data.
@@ -75,31 +76,7 @@ create an account with them before downloading the data.
 - University of Wisconsin School of Medicine and Public Health. 2020 Area Deprivation Index v4.0.1. Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/ March 20 2026
 - University of Wisconsin School of Medicine and Public Health. 2023 Area Deprivation Index v4.0.1. Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/ March 20 2026
 
-For our work the path to thses files as envirnment variables.
 
-
-``` r
-stopifnot(
-  file.exists(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401")),
-  file.exists(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2023_V401")),
-  identical(
-    digest::digest(
-      Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401"),
-      algo = "sha256",
-      file = TRUE
-    ),
-    "8c575a7ff78cacde1d9d7dfd644d36bc49bf2a9992029ae17e3e35be8c283adc"
-  ),
-  identical(
-    digest::digest(
-      Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2023_V401"),
-      algo = "sha256",
-      file = TRUE
-    ),
-    "396d02228b13f6ae45196d416218e69889696aa99c14730aad631adb8659b08b"
-  )
-)
-```
 Import the Neighborhood Atlas 2020 and 2023 data.
 
 ``` r
@@ -118,46 +95,43 @@ neighborhood_atlas[, neighborhood_atlas_exclude_reason := data.table::fifelse(AD
 neighborhood_atlas[, neighborhood_atlas_exclude := as.integer(neighborhood_atlas_exclude_reason != "")]
 neighborhood_atlas[, ADI_STATERNK := suppressWarnings(as.numeric(ADI_STATERNK))]
 neighborhood_atlas[, ADI_NATRANK  := suppressWarnings(as.numeric(ADI_NATRANK))]
-neighborhood_atlas
-##          year         FIPS ADI_NATRANK ADI_STATERNK
-##         <int>       <char>       <num>        <num>
-##      1:  2020 010010201001          72            5
-##      2:  2020 010010201002          61            3
-##      3:  2020 010010202001          83            6
-##      4:  2020 010010202002          87            7
-##      5:  2020 010010203001          73            5
-##     ---                                            
-## 484667:  2023 361031462041          NA           NA
-## 484668:  2023 361031462042          NA           NA
-## 484669:  2023 361031462043          NA           NA
-## 484670:  2023 361032012001          NA           NA
-## 484671:  2023 361119544011          NA           NA
-##         neighborhood_atlas_exclude_reason neighborhood_atlas_exclude
-##                                    <char>                      <int>
-##      1:                                                            0
-##      2:                                                            0
-##      3:                                                            0
-##      4:                                                            0
-##      5:                                                            0
-##     ---                                                             
-## 484667:                               QDI                          1
-## 484668:                               QDI                          1
-## 484669:                               QDI                          1
-## 484670:                               QDI                          1
-## 484671:                               QDI                          1
+str(neighborhood_atlas)
+## Classes 'data.table' and 'data.frame':	484671 obs. of  6 variables:
+##  $ year                             : int  2020 2020 2020 2020 2020 2020 2020 2020 2020 2020 ...
+##  $ FIPS                             : chr  "010010201001" "010010201002" "010010202001" "010010202002" ...
+##  $ ADI_NATRANK                      : num  72 61 83 87 73 85 62 50 72 71 ...
+##  $ ADI_STATERNK                     : num  5 3 6 7 5 7 3 2 5 5 ...
+##  $ neighborhood_atlas_exclude_reason: chr  "" "" "" "" ...
+##  $ neighborhood_atlas_exclude       : int  0 0 0 0 0 0 0 0 0 0 ...
+##  - attr(*, ".internal.selfref")=<externalptr>
 ```
 
-### Reproduced ADI Data
-Read in the ADI as reproduced in this repo.
+### `fairadi` Data
+Read in the `fairadi` data.
 
 ``` r
-adi <- data.table::fread("adi.csv.gz", colClasses = c("FIPS" = "character"))
+fairadi <- data.table::fread("adi.csv.gz", colClasses = c("FIPS" = "character"))
+str(fairadi)
+## Classes 'data.table' and 'data.frame':	1211599 obs. of  11 variables:
+##  $ year                : int  2020 2021 2022 2023 2024 2020 2021 2022 2023 2024 ...
+##  $ state               : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ county              : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ tract               : int  20100 20100 20100 20100 20100 20100 20100 20100 20100 20100 ...
+##  $ block_group         : int  1 1 1 1 1 2 2 2 2 2 ...
+##  $ FIPS                : chr  "010010201001" "010010201001" "010010201001" "010010201001" ...
+##  $ adi_raw             : num  -17048 -16411 -18557 -20126 -21200 ...
+##  $ exclude_from_ranking: int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ exclude_reason      : chr  "" "" "" "" ...
+##  $ national_rank       : int  67 73 73 73 73 67 73 74 74 73 ...
+##  $ state_rank          : int  4 5 5 5 5 4 5 5 5 5 ...
+##  - attr(*, ".internal.selfref")=<externalptr>
 ```
-Subset to just years 2020 and 2023 and merge on the Neighborhood Atlas data.
+
+The this README we will subset to the two years of Neighborhood Atlas data.
 
 ``` r
-adi <- subset(adi, year %in% c(2020, 2023))
-adi <- merge(x = adi, y = neighborhood_atlas, all = TRUE, by = c("year", "FIPS"))
+fairadi <- subset(fairadi, year %in% c(2020, 2023))
+adi <- merge(x = fairadi, y = neighborhood_atlas, all = TRUE, by = c("year", "FIPS"))
 ```
 
 ### Exclusion Criteria
@@ -221,21 +195,47 @@ adi <- subset(adi, !(is.na(exclude_from_ranking)))
 
 
 ``` r
-adi[,
-  .(
-    both_exclude = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1, digits = 1),
-    both_include = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0, digits = 1),
-    repo_in_ngbr_ex = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1, digits = 1),
-    rep__ex_nghr_in = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0, digits = 1)
-  ),
-  keyby = .(year)
+exin <-
+  adi[,
+    .(
+      both_exclude = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1, digits = 1),
+      both_include = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0, digits = 1),
+      in_fairadi_ngbr_ex = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1, digits = 1),
+      ex_fairadi_nghr_in = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0, digits = 1)
+    ),
+    keyby = .(year)
   ]
-## Key: <year>
-##     year both_exclude    both_include repo_in_ngbr_ex rep__ex_nghr_in
-##    <int>       <char>          <char>          <char>          <char>
-## 1:  2020 5,669 (2.3%) 235,334 (97.1%)      780 (0.3%)      552 (0.2%)
-## 2:  2023 6,152 (2.5%) 236,102 (97.4%)       42 (0.0%)        0 (0.0%)
 ```
+
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Year </th>
+   <th style="text-align:left;"> Excluded in Both </th>
+   <th style="text-align:left;"> Included in Both </th>
+   <th style="text-align:left;"> In fairadi; Excluded from Neighborhood Atlas </th>
+   <th style="text-align:left;"> Excluded from fairadi; Included in Neighborhood Atlas </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 2020 </td>
+   <td style="text-align:left;"> 5,669 (2.3%) </td>
+   <td style="text-align:left;"> 235,334 (97.1%) </td>
+   <td style="text-align:left;"> 780 (0.3%) </td>
+   <td style="text-align:left;"> 552 (0.2%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2023 </td>
+   <td style="text-align:left;"> 6,152 (2.5%) </td>
+   <td style="text-align:left;"> 236,102 (97.4%) </td>
+   <td style="text-align:left;"> 42 (0.0%) </td>
+   <td style="text-align:left;"> 0 (0.0%) </td>
+  </tr>
+</tbody>
+</table>
+
+
 
 Let's look at the block groups that are excluded in Neighborhood Atlas but not
 in the reproduction.
@@ -254,7 +254,7 @@ adi[
 ## 2:  2020                               QDI    29
 ## 3:  2023                               QDI    42
 ```
-The primary reaon for exclusion by Neighborhood Atlas is group quarters.
+The primary reason for exclusion by Neighborhood Atlas is group quarters.
 
 
 ``` r
@@ -266,20 +266,10 @@ bg_gh <-
   ]
 ```
 
-Sanity check, for those with a value for group quarters all of them are, in the
-reproduction, under 1/3.
 
-``` r
-bg_gh[, .N, keyby = .(year, group_quarters < 1/3) ]
-## Key: <year, group_quarters>
-##     year group_quarters     N
-##    <int>         <lgcl> <int>
-## 1:  2020           TRUE   780
-## 2:  2023             NA    42
-```
 
 If the exclusion by group quarters is based on the Decennial census values, then
-a block group should be exlcuded in both 2020 and 2023.  However, only a few
+a block group should be excluded in both 2020 and 2023.  However, only a few
 block groups are excluded due to group quarters in both Neighborhood Atlas
 data sets.
 
@@ -359,7 +349,7 @@ adi[
 ## 1:  2020             GQ   552
 ```
 
-### Correlations
+### Rank Correlations
 
 <table>
  <thead>
@@ -413,5 +403,36 @@ adi[
   </tr>
 </tbody>
 </table>
+
+
+
+### Differences in Ranks
+
+
+
+
+
+#### State Level
+<div class="figure" style="text-align: center">
+<img src="figure/state-level-plots-1.png" alt="plot of chunk state-level-plots"  />
+<p class="caption">plot of chunk state-level-plots</p>
+</div><div class="figure" style="text-align: center">
+<img src="figure/state-level-plots-2.png" alt="plot of chunk state-level-plots"  />
+<p class="caption">plot of chunk state-level-plots</p>
+</div><div class="figure" style="text-align: center">
+<img src="figure/state-level-plots-3.png" alt="plot of chunk state-level-plots"  />
+<p class="caption">plot of chunk state-level-plots</p>
+</div>
+#### National Level
+<div class="figure" style="text-align: center">
+<img src="figure/national-level-plots-1.png" alt="plot of chunk national-level-plots"  />
+<p class="caption">plot of chunk national-level-plots</p>
+</div><div class="figure" style="text-align: center">
+<img src="figure/national-level-plots-2.png" alt="plot of chunk national-level-plots"  />
+<p class="caption">plot of chunk national-level-plots</p>
+</div><div class="figure" style="text-align: center">
+<img src="figure/national-level-plots-3.png" alt="plot of chunk national-level-plots"  />
+<p class="caption">plot of chunk national-level-plots</p>
+</div>
 
 

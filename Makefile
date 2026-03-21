@@ -1,9 +1,9 @@
 SHELL := /bin/bash
 include Makevars
 
-.PHONY: all fips acs5 acs5-state acs5-county acs5-tract acs5-block-group decennial decennial-state decennial-county decennial-tract decennial-block-group
+.PHONY: all fips acs5 acs5-state acs5-county acs5-tract acs5-block-group decennial decennial-state decennial-county decennial-tract decennial-block-group adi
 
-all: fips decennial acs5
+all: fips decennial acs5 adi
 
 fips:
 	$(MAKE) -C FIPS
@@ -37,3 +37,6 @@ decennial-tract: fips
 
 decennial-block-group: fips
 	$(MAKE) -C Decennial block-group
+
+adi: acs5 decennial
+	$(MAKE) -C ADI

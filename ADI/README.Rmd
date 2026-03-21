@@ -1,4 +1,4 @@
-# Area Depredation Index
+# FAIR Area Depredation Index
 
 ```{r sefup, include = FALSE}
 options(qwraps2_markup = "markdown")
@@ -14,7 +14,8 @@ The Area Depredation Index (ADI)
   Atlas](https://www.neighborhoodatlas.medicine.wisc.edu/)
 
 The work in this directory is an attempt to reproduce the ADI as published by
-Neighborhood Atlas.
+Neighborhood Atlas. The reproduction is called `fairadi`, a **FAIR**-compliant
+(Findability, Accessibility, Interoperability, and Reuse) **ADI**.
 
 In general, the ADI is defined at the United States Census Block Group level
 using data from the American Community Survey Five-Year (ACS5) data.
@@ -79,9 +80,7 @@ create an account with them before downloading the data.
 - University of Wisconsin School of Medicine and Public Health. 2020 Area Deprivation Index v4.0.1. Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/ March 20 2026
 - University of Wisconsin School of Medicine and Public Health. 2023 Area Deprivation Index v4.0.1. Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/ March 20 2026
 
-For our work the path to thses files as envirnment variables.
-
-```{r}
+```{r check-for-neighborhood-atlas-files, include = FALSE}
 stopifnot(
   file.exists(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401")),
   file.exists(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2023_V401")),
@@ -104,7 +103,7 @@ stopifnot(
 )
 ```
 Import the Neighborhood Atlas 2020 and 2023 data.
-```{r}
+```{r import-neighborhood-atlas}
 neighborhood_atlas <-
   list(
     "2020" = data.table::fread(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401"), colClasses = "character"),
@@ -120,25 +119,27 @@ neighborhood_atlas[, neighborhood_atlas_exclude_reason := data.table::fifelse(AD
 neighborhood_atlas[, neighborhood_atlas_exclude := as.integer(neighborhood_atlas_exclude_reason != "")]
 neighborhood_atlas[, ADI_STATERNK := suppressWarnings(as.numeric(ADI_STATERNK))]
 neighborhood_atlas[, ADI_NATRANK  := suppressWarnings(as.numeric(ADI_NATRANK))]
-neighborhood_atlas
+str(neighborhood_atlas)
 ```
 
-### Reproduced ADI Data
-Read in the ADI as reproduced in this repo.
-```{r}
-adi <- data.table::fread("adi.csv.gz", colClasses = c("FIPS" = "character"))
+### `fairadi` Data
+Read in the `fairadi` data.
+```{r read-fairadi}
+fairadi <- data.table::fread("adi.csv.gz", colClasses = c("FIPS" = "character"))
+str(fairadi)
 ```
-Subset to just years 2020 and 2023 and merge on the Neighborhood Atlas data.
-```{r}
-adi <- subset(adi, year %in% c(2020, 2023))
-adi <- merge(x = adi, y = neighborhood_atlas, all = TRUE, by = c("year", "FIPS"))
+
+The this README we will subset to the two years of Neighborhood Atlas data.
+```{r merge-fairadi-neighborhood-atlas}
+fairadi <- subset(fairadi, year %in% c(2020, 2023))
+adi <- merge(x = fairadi, y = neighborhood_atlas, all = TRUE, by = c("year", "FIPS"))
 ```
 
 ### Exclusion Criteria
 As noted above, Neighborhood Atlas does exclude some block groups from ranking.  
 Here we report how similar our exclusion flagging is.
 
-```{r}
+```{r exlcusion-criterial}
 adi[, .N, keyby = .(year, exclude_from_ranking, neighborhood_atlas_exclude)]
 ```
 
@@ -175,36 +176,50 @@ What that means:
 So the reason for the mismatch is a geography-vintage mismatch between
 Neighborhood Atlas 2023 and the 2023 Census geography returned by your workflow
 
-```{r}
+```{r remove-the-40}
 # remove these 40 rows
 adi <- subset(adi, !(is.na(exclude_from_ranking)))
 ```
 
-```{r}
-adi[,
-  .(
-    both_exclude = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1, digits = 1),
-    both_include = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0, digits = 1),
-    repo_in_ngbr_ex = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1, digits = 1),
-    rep__ex_nghr_in = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0, digits = 1)
-  ),
-  keyby = .(year)
+```{r fairadi-v-neighborhood-atlas-exclude, results = "hide"}
+exin <-
+  adi[,
+    .(
+      both_exclude = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1, digits = 1),
+      both_include = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0, digits = 1),
+      in_fairadi_ngbr_ex = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1, digits = 1),
+      ex_fairadi_nghr_in = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0, digits = 1)
+    ),
+    keyby = .(year)
   ]
+```
+
+```{r display-exin, echo = FALSE, results = "asis"}
+kableExtra::kbl(
+  x = exin,
+  col.names =
+    c("Year",
+      "Excluded in Both",
+      "Included in Both",
+      "In fairadi; Excluded from Neighborhood Atlas",
+      "Excluded from fairadi; Included in Neighborhood Atlas"
+      )
+)
 ```
 
 Let's look at the block groups that are excluded in Neighborhood Atlas but not
 in the reproduction.
 
-```{r}
+```{r bggq}
 adi[
   exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1,
   .N,
   keyby = .(year, neighborhood_atlas_exclude_reason)
 ]
 ```
-The primary reaon for exclusion by Neighborhood Atlas is group quarters.
+The primary reason for exclusion by Neighborhood Atlas is group quarters.
 
-```{r}
+```{r add-gq}
 group_quarters <- data.table::fread("group_quarters.csv.gz")
 bg_gh <-
   group_quarters[
@@ -213,14 +228,13 @@ bg_gh <-
   ]
 ```
 
-Sanity check, for those with a value for group quarters all of them are, in the
-reproduction, under 1/3.
-```{r}
-bg_gh[, .N, keyby = .(year, group_quarters < 1/3) ]
+```{r sanity-check, include = FALSE}
+#Sanity check, for those with a value for group quarters all of them are, in the reproduction, under 1/3.
+stopifnot(all(bg_gh$group_quarters < 1/3, na.rm = TRUE))
 ```
 
 If the exclusion by group quarters is based on the Decennial census values, then
-a block group should be exlcuded in both 2020 and 2023.  However, only a few
+a block group should be excluded in both 2020 and 2023.  However, only a few
 block groups are excluded due to group quarters in both Neighborhood Atlas
 data sets.
 ```{r}
@@ -250,7 +264,7 @@ data, we are restricted to using the Decennial census values for both 2020 and
 
 Note that for the block groups that our reproduction excludes but Neighborhood
 Atlas does not, it is all due to grouped quarters.
-```{r}
+```{r fairadi-gq}
 adi[
   exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0,
   .N,
@@ -258,9 +272,9 @@ adi[
 ]
 ```
 
-### Correlations
+### Rank Correlations
 
-```{r, echo = FALSE, results = "asis"}
+```{r rank-correlations, echo = FALSE, results = "asis"}
 for_cor <- adi[exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0]
 p <- function(DT, level, method = c("pearson", "spearman", "kendall")) {
   method <- match.arg(method, several.ok = FALSE)
@@ -313,4 +327,175 @@ kableExtra::kbl(
   x = df, row.names = FALSE
   ) |>
 kableExtra::add_header_above(c("", "", "State Level" = 3, "National Level" = 3))
+```
+
+### Differences in Ranks
+
+```{r define-plot-ba-density, include = FALSE}
+plot_ba_density <- function(DT, state = NULL) {
+  stopifnot(is.null(state) || (is.character(state) && nchar(state) == 2L))
+  DT <- subset(DT, !is.na(state_rank) & !is.na(ADI_STATERNK))
+  if (!is.null(state)) {
+    DT <- subset(DT, substr(FIPS, 1, 2) == state)
+  }
+
+  scor <-
+    data.table::data.table(
+      "Correlation" = c("Pearson", "Spearman", "Kendal"),
+      "value" = c(
+      with(DT, cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs")),
+      with(DT, cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs")),
+      adi[complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)])
+    )
+
+  ncor <-
+    data.table::data.table(
+      "Correlation" = c("Pearson", "Spearman", "Kendal"),
+      "value" = c(
+        with(DT, cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs")),
+        with(DT, cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs")),
+        adi[complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
+      )
+    )
+
+  sba <- DT[, .(avg = (state_rank + ADI_STATERNK)/2, diff = state_rank - ADI_STATERNK), by = .(year)]
+  nba <- DT[, .(avg = (national_rank + ADI_NATRANK)/2, diff = national_rank - ADI_NATRANK), by = .(year)]
+
+  sss <- list(
+    mean_diff = mean(sba$diff),
+    sd_diff = sd(sba$diff),
+    lcl = mean(sba$diff) + qnorm(0.025) * sd(sba$diff),
+    ucl = mean(sba$diff) + qnorm(0.975) * sd(sba$diff)
+  )
+  nss <- list(
+    mean_diff = mean(nba$diff),
+    sd_diff = sd(nba$diff),
+    lcl = mean(nba$diff) + qnorm(0.025) * sd(nba$diff),
+    ucl = mean(nba$diff) + qnorm(0.975) * sd(nba$diff)
+  )
+
+  sba <- sba[, .N, by = .(year, avg, diff)]
+  data.table::setkey(sba, N, avg, diff)
+  nba <- nba[, .N, by = .(year, avg, diff)]
+  data.table::setkey(nba, N, avg, diff)
+
+  qba <- function(DT, ss, ylab) {
+    ggplot2::ggplot(DT) +
+      ggplot2::aes(x = avg, y = diff, color = log2(N), size = log2(N)) +
+      ggplot2::geom_point() +
+      ggplot2::scale_color_viridis_c(name = "Number of\nBlock Groups", breaks = seq(0, floor(log2(max(DT$N))), by = 2), labels = function(x) {2^x}) +
+      ggplot2::geom_hline(yintercept = ss$mean_diff, linetype = 2) +
+      ggplot2::geom_hline(yintercept = ss$lcl, linetype = 3) +
+      ggplot2::geom_hline(yintercept = ss$ucl, linetype = 3) +
+      ggplot2::xlab("Average Rank") +
+      ggplot2::ylab(ylab) +
+      ggplot2::theme_bw() +
+      ggplot2::guides(size = "none") +
+      ggplot2::theme(
+        legend.position = "right"
+      )
+  }
+
+  qdn <- function(DT) {
+    ggplot2::ggplot(DT[, .(N = sum(N)), by = diff]) +
+      ggplot2::aes(x = diff, y = N) +
+      ggplot2::geom_col() +
+      ggplot2::scale_y_continuous(label = scales::label_comma()) +
+      ggplot2::theme_bw() +
+      ggplot2::ylab("Number of Block Groups") +
+      ggplot2::xlab("Difference: fairadi - Neighborhood Atlas")
+  }
+
+  qad <- function(DT) {
+    dd <- DT[, .(N = sum(N)), keyby = .(d = abs(diff))]
+    dd[, cp       := cumsum(N) / sum(N)]
+    dd[, cpscaled := cp*max(N)]
+    dd[, Nscaled  := N / max(N)]
+    ggplot2::ggplot(dd) +
+      ggplot2::aes(x = d) +
+      ggplot2::geom_col(mapping = ggplot2::aes(y = Nscaled), fill = "grey70") +
+      ggplot2::geom_line(mapping = ggplot2::aes(y = cp)) +
+      ggplot2::geom_point(mapping = ggplot2::aes(y = cp)) +
+      ggplot2::scale_y_continuous(
+        name = "Cumulative Percent of Block Groups\n(Line and points)",
+        label = scales::label_percent(),
+          sec.axis = ggplot2::sec_axis(
+            name = "Number of Block Groups\n(Bars)",
+            transform =  ~ . * max(dd$N),
+            label = scales::label_comma()
+          )
+        ) +
+      ggplot2::xlab("|Difference = fairadi - Neighborhood Atlas|") +
+      ggplot2::theme_classic()
+  }
+
+  qdd <- function(DT) {
+    D <- DT[, .N, by = .(nd = national_rank - ADI_NATRANK, sd = state_rank - ADI_STATERNK)]
+    data.table::setkey(D, N, sd, nd)
+    ggplot2::ggplot(D) +
+      ggplot2::aes(x = nd, y = sd, color = log2(N), size = log2(N)) +
+      ggplot2::geom_point() +
+      ggplot2::scale_color_viridis_c(name = "Number of\nBlock Groups", breaks = seq(0, floor(log2(max(D$N))), by = 2), labels = function(x) {2^x}) +
+      ggplot2::theme_bw() +
+      ggplot2::guides(size = "none") +
+      ggplot2::theme(
+        legend.position = "right"
+      )
+  }
+
+  list(
+    state_blandaltman = qba(sba, nss, "Difference = fairadi - Neighborhood Atlas"),
+    state_diffhist    = qdn(sba),
+    state_absdiffhist = qad(sba),
+    state_cor         = ggplotify::as.ggplot(gridExtra::tableGrob(scor)),
+    national_blandaltman = qba(nba, nss, "Difference = fairadi - Neighborhood Atlas"),
+    national_diffhist    = qdn(nba),
+    national_absdiffhist = qad(nba),
+    national_cor         = ggplotify::as.ggplot(gridExtra::tableGrob(ncor)),
+    dd = qdd(DT)
+  )
+}
+```
+
+```{r build-plots, include = FALSE}
+plots_2020_2023 <- plot_ba_density(for_cor)
+```
+
+#### State Level
+```{r state-level-plots, echo = FALSE}
+plots_2020_2023$state_blandaltman
+plots_2020_2023$state_diffhist
+plots_2020_2023$state_absdiffhist
+```
+#### National Level
+```{r national-level-plots, echo = FALSE}
+plots_2020_2023$national_blandaltman
+plots_2020_2023$national_diffhist
+plots_2020_2023$national_absdiffhist
+```
+
+```{r build-figures, include = FALSE}
+pdf(file = "figure/00-all-states-all-years.pdf")
+  plots_2020_2023
+dev.off()
+
+pdf(file = "figure/00-all-states-2020.pdf")
+  plot_ba_density(for_cor[year == 2020])
+dev.off()
+
+pdf(file = "figure/00-all-states-2023.pdf")
+  plot_ba_density(for_cor[year == 2023])
+dev.off()
+
+FIPS <- data.table::fread("../FIPS/2020__states.csv", colClasses = "character")
+for (i in  seq_len(nrow(FIPS))) {
+  pdf(file = sprintf("figure/%s-%s-all-years.pdf", FIPS[i, state], FIPS[i, name]))
+    print(plot_ba_density(for_cor, state = FIPS[i, state]))
+  dev.off()
+  for (y in c(2020, 2023)) {
+    pdf(file = sprintf("figure/%s-%s-%d.pdf", FIPS[i, state], FIPS[i, name], y))
+      print(plot_ba_density(for_cor[year == y], state = FIPS[i, state]))
+    dev.off()
+  }
+}
 ```
