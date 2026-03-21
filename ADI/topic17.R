@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic17.R
 #
-# Objective: build topic17 of the Area Depredation Index
+# Objective: build topic17 of the Area Deprivation Index
 #
 #   Topic: 17
 #   Topic Area: % Crowding (> 1.00 Person Per Room)

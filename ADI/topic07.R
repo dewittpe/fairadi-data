@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic07.R
 #
-# Objective: build topic07 of the Area Depredation Index
+# Objective: build topic07 of the Area Deprivation Index
 #
 #   Topic: 7
 #   Topic Area: Median Gross Rent

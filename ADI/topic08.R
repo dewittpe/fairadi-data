@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic08.R
 #
-# Objective: build topic08 of the Area Depredation Index
+# Objective: build topic08 of the Area Deprivation Index
 #
 #   Topic: 8
 #   Topic Area: Median Monthly Mortgage

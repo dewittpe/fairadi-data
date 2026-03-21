@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic13.R
 #
-# Objective: build topic13 of the Area Depredation Index
+# Objective: build topic13 of the Area Deprivation Index
 #
 #   Topic: 13
 #   Topic Area: % One-Parent Households (Children < 18)

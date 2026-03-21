@@ -1,7 +1,7 @@
 ################################################################################
 # file: adi_topic02.R
 #
-# Objective: build topic02 of the Area Depredation Index
+# Objective: build topic02 of the Area Deprivation Index
 #
 #   Topic: 2
 #   Topic Area: % Pop ≥ 25 yrs with >= High School Diploma

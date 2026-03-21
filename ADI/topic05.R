@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic05.R
 #
-# Objective: build topic05 of the Area Depredation Index
+# Objective: build topic05 of the Area Deprivation Index
 #
 #   Topic: 5
 #   Topic Area: Income Disparity (Singh Index)

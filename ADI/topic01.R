@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic01.R
 #
-# Objective: build topic01 of the Area Depredation Index
+# Objective: build topic01 of the Area Deprivation Index
 #
 #   Topic: 1
 #   Topic Area: % Pop ≥ 25 yrs with < 9 yrs Education

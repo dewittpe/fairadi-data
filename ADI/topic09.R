@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic09.R
 #
-# Objective: build topic09 of the Area Depredation Index
+# Objective: build topic09 of the Area Deprivation Index
 #
 #   Topic: 9
 #   Topic Area: Home Ownership Rate (% Owner-Occupied)

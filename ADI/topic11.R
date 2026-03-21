@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic11.R
 #
-# Objective: build topic11 of the Area Depredation Index
+# Objective: build topic11 of the Area Deprivation Index
 #
 #   Topic: 11
 #   Topic Area: % Families Below Poverty Level

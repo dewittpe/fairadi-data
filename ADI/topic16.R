@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic16.R
 #
-# Objective: build topic16 of the Area Depredation Index
+# Objective: build topic16 of the Area Deprivation Index
 #
 #   Topic: 16
 #   Topic Area: % Units Without Complete Plumbing

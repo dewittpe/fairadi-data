@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic04.R
 #
-# Objective: build topic04 of the Area Depredation Index
+# Objective: build topic04 of the Area Deprivation Index
 #
 #   Topic: 4
 #   Topic Area: Median Family Income

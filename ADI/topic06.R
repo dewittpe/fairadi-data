@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic06.R
 #
-# Objective: build topic06 of the Area Depredation Index
+# Objective: build topic06 of the Area Deprivation Index
 #
 #   Topic: 6
 #   Topic Area: Median Home Value

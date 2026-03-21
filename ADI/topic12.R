@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic12.R
 #
-# Objective: build topic12 of the Area Depredation Index
+# Objective: build topic12 of the Area Deprivation Index
 #
 #   Topic: 12
 #   Topic Area: % Pop Below 150% of Poverty Threshold

@@ -1,7 +1,7 @@
 ################################################################################
 # file: adi_topic15.R
 #
-# Objective: build topic15 of the Area Depredation Index
+# Objective: build topic15 of the Area Deprivation Index
 #
 # There are two versions.  The original work used % households without a
 # telephone, the newer version used % households without internet

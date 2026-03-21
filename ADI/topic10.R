@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic10.R
 #
-# Objective: build topic10 of the Area Depredation Index
+# Objective: build topic10 of the Area Deprivation Index
 #
 #   Topic: 10
 #   Topic Area: Unemployment Rate (% Civilian Labor Force)

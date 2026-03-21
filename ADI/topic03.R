@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic03.R
 #
-# Objective: build topic03 of the Area Depredation Index
+# Objective: build topic03 of the Area Deprivation Index
 #
 #   Topic: 3
 #   Topic Area: % Employed ≥ 16 yrs in White-Collar Occs.

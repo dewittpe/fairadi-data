@@ -1,7 +1,7 @@
 ################################################################################
 # file: topic14.R
 #
-# Objective: build topic14 of the Area Depredation Index
+# Objective: build topic14 of the Area Deprivation Index
 #
 #   Topic: 14
 #   Topic Area: % Households Without a Motor Vehicle
