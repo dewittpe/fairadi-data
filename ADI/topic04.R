@@ -49,17 +49,23 @@ DT[
 ]
 
 # There are missing values, we will use a geographic imputation.
-# We also apply a shrinkage
-DT <- shrink(DT, "B19113_001")
+# We also apply a shrinkage.  Both are done using shrink()
+DT <-
+  merge(
+    x = shrink(DT, "B19113_001"),
+    DT[, .SD, .SDcols = c(COLS_TO_KEEP, "topic04_notes")],
+    all = TRUE,
+    by = COLS_TO_KEEP
+  )
 
 data.table::setnames(
   x = DT,
   old = c("B19113_001_shrunk", "B19113_001E",        "B19113_001E_geo"),
-  new = c("topic04",           "topic04_not_shrunk", "topic04_geo")
+  new = c("topic04_shrunk",    "topic04_not_shrunk", "topic04_geo")
 )
 
 ################################################################################
-cols_to_keep <- c(COLS_TO_KEEP, "topic04", "topic04_geo", "topic04_not_shrunk")
+cols_to_keep <- c(COLS_TO_KEEP, "topic04_shrunk", "topic04_geo", "topic04_not_shrunk", "topic04_notes")
 data.table::fwrite(
   x = DT[, .SD, .SDcols = cols_to_keep],
   file = "topic04.csv"

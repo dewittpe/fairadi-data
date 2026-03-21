@@ -53,11 +53,11 @@ DT <- shrink(DT, "B25077_001")
 data.table::setnames(
   x = DT,
   old = c("B25077_001_shrunk", "B25077_001E",        "B25077_001E_geo"),
-  new = c("topic06",           "topic06_not_shrunk", "topic06_geo")
+  new = c("topic06_shrunk",    "topic06_not_shrunk", "topic06_geo")
 )
 
 ################################################################################
-cols_to_keep <- c(COLS_TO_KEEP, "topic06", "topic06_geo", "topic06_not_shrunk")
+cols_to_keep <- c(COLS_TO_KEEP, "topic06_shrunk", "topic06_geo", "topic06_not_shrunk")
 data.table::fwrite(
   x = DT[, .SD, .SDcols = cols_to_keep],
   file = "topic06.csv"

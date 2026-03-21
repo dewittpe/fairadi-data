@@ -29,9 +29,10 @@ DT[
 
 # all missing is due to B11012_001
 stopifnot(DT[is.na(topic13), all(B11012_001E == 0)])
+DT[is.na(topic13) & B11012_001E == 0, topic13_notes := "QDI-ZD"]
 
 # the base cols_to_keep is defined in adi_utilities.R
-cols_to_keep <- c(COLS_TO_KEEP, "topic13")
+cols_to_keep <- c(COLS_TO_KEEP, "topic13", "topic13_notes")
 
 data.table::fwrite(
   x = DT[, .SD, .SDcols = cols_to_keep],

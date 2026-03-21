@@ -8,6 +8,7 @@
 #   import_census_table
 #   check_for_anotations
 #   geographic_imputation
+#   build_FIPS
 #
 # Variables defined in this file
 #
@@ -276,6 +277,14 @@ shrink <- function(DT, variable) {
   d
 }
 
+################################################################################
+build_FIPS <- function(state, county, tract, block_group) {
+  state <- ifelse(is.na(state), "", sprintf("%02d", state))
+  county <- ifelse(is.na(county), "", sprintf("%03d", county))
+  tract <- ifelse(is.na(tract), "", sprintf("%06d", tract))
+  block_group <- ifelse(is.na(block_group), "", sprintf("%01d", block_group))
+  paste0(state, county, tract, block_group)
+}
 
 ################################################################################
 #                                 End of File                                  #

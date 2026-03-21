@@ -76,19 +76,19 @@ DT[
   .SDcols = numerator_variables
   ]
 
-DT[B15003_001E == 0, topic01_suppression := "QDI-ZD"]
+DT[B15003_001E == 0, topic01_notes := "QDI-ZD"]
 
 # check that all the NA values are accounted for
 stopifnot(
-  DT[topic01_suppression == "QDI-ZD", all(is.na(topic01))],
-  DT[is.na(topic01_suppression), !any(is.na(topic01))]
+  DT[topic01_notes == "QDI-ZD", all(is.na(topic01))],
+  DT[is.na(topic01_notes), !any(is.na(topic01))]
 )
 
 # save the output to disk
 cols_to_keep <-
   c(COLS_TO_KEEP,
     "topic01",
-    "topic01_suppression"
+    "topic01_notes"
   )
 
 DT <- DT[, .SD, .SDcols = cols_to_keep]

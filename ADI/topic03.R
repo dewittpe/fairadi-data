@@ -33,18 +33,18 @@ DT[
 
 # what about the missing values?  Check that all the missing values are due to a
 # zero denominator.
-DT[C24010_001E == 0L, topic03_suppression := "QDI-ZD"]
+DT[C24010_001E == 0L, topic03_notes := "QDI-ZD"]
 stopifnot(
   DT[is.na(topic03), all(C24010_001E == 0)],
-  DT[topic03_suppression == "QDI-ZD", all(is.na(topic03))],
-  DT[is.na(topic03_suppression), !any(is.na(topic03))]
+  DT[topic03_notes == "QDI-ZD", all(is.na(topic03))],
+  DT[is.na(topic03_notes), !any(is.na(topic03))]
 )
 
 # save the output to disk
 cols_to_keep <-
   c(COLS_TO_KEEP,
     "topic03",
-    "topic03_suppression"
+    "topic03_notes"
   )
 
 DT <- DT[, .SD, .SDcols = cols_to_keep]

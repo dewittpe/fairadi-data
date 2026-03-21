@@ -41,8 +41,11 @@ DT[
 stopifnot(DT[is.na(topic15_old), all(is.na(B25043_001E) | B25043_001E == 0)])
 stopifnot(DT[is.na(topic15_new), all(B28002_001E == 0)])
 
+DT[is.na(topic15_old) & B25043_001E == 0, topic15_old_notes := "QDI-ZD"]
+DT[is.na(topic15_new) & B28002_001E == 0, topic15_new_notes := "QDI-ZD"]
+
 # the base cols_to_keep is defined in adi_utilities.R
-cols_to_keep <- c(COLS_TO_KEEP, "topic15_old", "topic15_new")
+cols_to_keep <- c(COLS_TO_KEEP, "topic15_old", "topic15_new", "topic15_old_notes", "topic15_new_notes")
 
 data.table::fwrite(
   x = DT[, .SD, .SDcols = cols_to_keep],

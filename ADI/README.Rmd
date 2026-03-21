@@ -62,3 +62,50 @@ In this directory there are R script for each of the ADI topics and one for
 building the ADI score and rankings.
 
 ## Diagnostics of the Reproduction
+
+```{r}
+################################################################################
+# DEV DEV DEV
+
+neighborhood_atlas <-
+  list(
+    "2020" = data.table::fread("../../adi/neighborhood-atlas/neighborhood-atlas-2020-adi-v4_0_1.csv", colClasses = "character"),
+    "2023" = data.table::fread("../../adi/neighborhood-atlas/neighborhood-atlas-2023-adi-v4_0_1.csv", colClasses = "character")
+  ) |>
+  data.table::rbindlist(idcol = "year", fill = TRUE, use.names = TRUE)
+neighborhood_atlas[, year := as.integer(year)]
+neighborhood_atlas[, V1 := NULL]
+neighborhood_atlas[, GISJOIN := NULL]
+
+# set the ADI_STATERNK and ADI_NATRANK to numeric values
+neighborhood_atlas[, neighborhood_atlas_exclude := data.table::fifelse(ADI_STATERNK %in% as.character(1:10), "", ADI_STATERNK)]
+neighborhood_atlas[, ADI_STATERNK := suppressWarnings(as.numeric(ADI_STATERNK))]
+neighborhood_atlas[, ADI_NATRANK  := suppressWarnings(as.numeric(ADI_NATRANK))]
+
+adi[, FIPS := build_FIPS(state, county, tract, block_group)]
+
+adi <- merge(
+  x = adi, #[year %in% unique(neighborhood_atlas$year)],
+  y = neighborhood_atlas,
+  all = TRUE,
+  by = c("year", "FIPS")
+)
+
+adi[year %in% c(2020, 2023), .N, keyby = .(year, exclude_reason, neighborhood_atlas_exclude)] |>
+  print(nrow = Inf)
+
+
+with(adi, cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs"))
+with(adi, cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs"))
+adi[complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
+
+with(adi[year == 2020], cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs"))
+with(adi[year == 2020], cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs"))
+adi[year == 2020 & complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
+
+with(adi, cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs"))
+with(adi, cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs"))
+adi[complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
+```
+
+
