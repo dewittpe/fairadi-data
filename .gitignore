@@ -1,12 +1,9 @@
-# Generated data products are ignored by default.
-# Selected compressed outputs can still be committed explicitly with `git add -f`.
-*.csv
-*.csv.gz
-
 # Local fetch/build scratch files.
 *.raw
 *.tmp
 FIPS/*__tract_pairs.txt
 FIPS/tracts/
 FIPS/block_groups/
+
+# other files to ignore
 .DS_Store
