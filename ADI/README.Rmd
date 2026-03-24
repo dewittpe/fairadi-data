@@ -499,3 +499,9 @@ for (i in  seq_len(nrow(FIPS))) {
   }
 }
 ```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
