@@ -39,6 +39,12 @@ These data are in the public domain. Source: U.S. Census Bureau.
 |                 | C24010       | Occupation by sex and median earnings in the past 12 months |
 |                 | B19083       | Gini Index of Income Inequality                             |
 
+For the ADI suppression criteria, `fairadi` uses Decennial 2020 block-group
+group-quarters values across all modeled years. Public ACS 5-year data do not
+provide group-quarters counts at the block-group level, only at the tract
+level, so the 2020 Decennial Census is the public source that preserves the
+block-group resolution needed for this exclusion rule.
+
 ## Running the Workflow
 
 ### System Requirements

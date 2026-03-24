@@ -87,8 +87,10 @@ adi <-
   )
 
 # join group quarters only on state, county, tract, and block_group, not year.
-# this is because the group quarters are based on the Decennial census data from
-# 2020 and applicable to all years.
+# Public ACS 5-year data do not provide group-quarters counts at the block-group
+# level, only at the tract level. Because the suppression rule is defined at
+# the block-group level, fairadi uses Decennial 2020 block-group group-quarters
+# values as the public-data source for this criterion across all modeled years.
 adi <-
   merge(
     x = adi,

@@ -63,6 +63,14 @@ ACS5 data.
 | Group Quarters   | P18             |            |
 | Housing Units    |                 | B25001     |
 
+In `fairadi`, the group-quarters exclusion criterion uses Decennial 2020
+block-group values for all modeled years. Public ACS 5-year data do not report
+group-quarters counts at the block-group level, only at the tract level.
+Because the suppression rule is defined at the block-group level, the 2020
+Decennial Census is used as the public-data source that preserves the needed
+geographic resolution. This means the group-quarters component of the
+suppression rule is anchored to 2020 rather than varying annually.
+
 ## Workflow
 
 In this directory there are R script for each of the ADI topics and one for
