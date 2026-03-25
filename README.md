@@ -55,7 +55,7 @@ block-group resolution needed for this exclusion rule.
 
 R packages used by the workflow and reporting include:
 `data.table`, `knitr`, `digest`, `qwraps2`, `kableExtra`, `pcaPP`,
-`ggplot2`, `scales`, `ggplotify`, and `gridExtra`.
+`ggplot2`, `ggh4x`, and `scales`.
 
 ### API Key
 You will need an API key from the US Census to download data via the US Census

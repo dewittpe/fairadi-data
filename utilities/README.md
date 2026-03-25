@@ -26,9 +26,8 @@ The current required namespace list is:
 
 - `data.table`
 - `digest`
+- `ggh4x`
 - `ggplot2`
-- `ggplotify`
-- `gridExtra`
 - `kableExtra`
 - `knitr`
 - `pcaPP`

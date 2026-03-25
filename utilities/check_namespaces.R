@@ -6,9 +6,8 @@ root <- if (length(args) >= 1L) args[[1]] else "."
 required_namespaces <- c(
   "data.table",
   "digest",
+  "ggh4x",
   "ggplot2",
-  "ggplotify",
-  "gridExtra",
   "kableExtra",
   "knitr",
   "pcaPP",
