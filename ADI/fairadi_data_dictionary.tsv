@@ -1,0 +1,156 @@
+file	column	type	nullable	description	allowed_values_or_notes
+fairadi.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+fairadi.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+fairadi.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+fairadi.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+fairadi.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+fairadi.csv.gz	FIPS	string	no	Concatenated block-group geographic identifier.	Constructed from state, county, tract, and block_group.
+fairadi.csv.gz	adi_raw	numeric	yes	Continuous raw fairadi score before state and national ranking assignment.	Higher values indicate greater deprivation under the current weighting scheme.
+fairadi.csv.gz	exclude_from_ranking	integer	no	Indicator for whether the block group is excluded from ranking.	0 = included; 1 = excluded.
+fairadi.csv.gz	exclude_reason	string	yes	Reason the block group is excluded from ranking.	NA or empty for included rows; current coded values include PH, GQ, GQ-PH, and QDI.
+fairadi.csv.gz	national_rank	integer	yes	National percentile-style rank for included block groups within year.	Expected range is 1 through 100; missing for excluded rows.
+fairadi.csv.gz	state_rank	integer	yes	State decile-style rank for included block groups within year and state.	Expected range is 1 through 10; missing for excluded rows.
+group_quarters.csv.gz	year	integer	no	Reference year carried through the file.	Current build uses Decennial 2020 block-group group quarters for all modeled years.
+group_quarters.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+group_quarters.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+group_quarters.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+group_quarters.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+group_quarters.csv.gz	group_quarters	numeric	yes	Block-group proportion of the population living in group quarters.	Expected range is 0 through 1; missing when total population is zero.
+housing_units.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+housing_units.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+housing_units.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+housing_units.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+housing_units.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+housing_units.csv.gz	housing_units	integer	yes	Count of housing units for the block group.	Derived from ACS5 table B25001.
+total_population.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+total_population.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+total_population.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+total_population.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+total_population.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+total_population.csv.gz	total_population	integer	yes	Count of total population for the block group.	Derived from ACS5 table B01003.
+topic01.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic01.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic01.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic01.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic01.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic01.csv.gz	topic01	numeric	yes	Topic 1 share: population age 25 and older with less than 9 years of education.	Missing when the denominator is zero.
+topic01.csv.gz	topic01_notes	string	yes	Quality or derivation note for topic01.	Current coded value QDI-ZD denotes a zero denominator.
+topic02.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic02.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic02.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic02.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic02.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic02.csv.gz	topic02	numeric	yes	Topic 2 share: population age 25 and older without a high school diploma.	Missing when the denominator is zero.
+topic02.csv.gz	topic02_notes	string	yes	Quality or derivation note for topic02.	Current coded value QDI-ZD denotes a zero denominator.
+topic03.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic03.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic03.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic03.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic03.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic03.csv.gz	topic03	numeric	yes	Topic 3 share: employed population age 16 and older in white-collar occupations.	Missing when the denominator is zero.
+topic03.csv.gz	topic03_notes	string	yes	Quality or derivation note for topic03.	Current coded value QDI-ZD denotes a zero denominator.
+topic04.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic04.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic04.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic04.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic04.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic04.csv.gz	topic04_shrunk	numeric	yes	Topic 4 median family income after geographic imputation and shrinkage.	Preferred modeled value used by fairadi.
+topic04.csv.gz	topic04_geo	string	yes	Geographic level from which the imputed topic04 value was drawn.	Expected values include block_group, tract, county, and state.
+topic04.csv.gz	topic04_not_shrunk	numeric	yes	Topic 4 median family income before shrinkage.	Missing where annotation handling removed unusable values.
+topic04.csv.gz	topic04_notes	string	yes	Quality or derivation note for topic04.	Current coded values include QDI-n and QDI-range.
+topic05.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic05.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic05.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic05.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic05.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic05.csv.gz	topic05_wo_epsilon	numeric	yes	Topic 5 income disparity index without the epsilon adjustment.	May be missing or non-finite where the underlying ratio is undefined.
+topic05.csv.gz	topic05_w_epsilon	numeric	yes	Topic 5 income disparity index with the 1/total_population epsilon adjustment.	Preferred modeled value used by fairadi.
+topic06.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic06.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic06.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic06.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic06.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic06.csv.gz	topic06_shrunk	numeric	yes	Topic 6 median home value after geographic imputation and shrinkage.	Preferred modeled value used by fairadi.
+topic06.csv.gz	topic06_geo	string	yes	Geographic level from which the imputed topic06 value was drawn.	Expected values include block_group, tract, county, and state.
+topic06.csv.gz	topic06_not_shrunk	numeric	yes	Topic 6 median home value before shrinkage.	Missing where annotation handling removed unusable values.
+topic07.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic07.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic07.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic07.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic07.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic07.csv.gz	topic07_shrunk	numeric	yes	Topic 7 median gross rent after geographic imputation and shrinkage.	Preferred modeled value used by fairadi.
+topic07.csv.gz	topic07_geo	string	yes	Geographic level from which the imputed topic07 value was drawn.	Expected values include block_group, tract, county, and state.
+topic07.csv.gz	topic07_not_shrunk	numeric	yes	Topic 7 median gross rent before shrinkage.	Missing where the source value was unusable.
+topic08.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic08.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic08.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic08.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic08.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic08.csv.gz	topic08_shrunk	numeric	yes	Topic 8 median monthly mortgage after geographic imputation and shrinkage.	Preferred modeled value used by fairadi.
+topic08.csv.gz	topic08_geo	string	yes	Geographic level from which the imputed topic08 value was drawn.	Expected values include block_group, tract, county, and state.
+topic08.csv.gz	topic08_not_shrunk	numeric	yes	Topic 8 median monthly mortgage before shrinkage.	Missing where the source value was unusable.
+topic09.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic09.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic09.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic09.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic09.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic09.csv.gz	topic09	numeric	yes	Topic 9 home ownership rate.	Missing when the denominator is zero.
+topic09.csv.gz	topic09_notes	string	yes	Quality or derivation note for topic09.	Current coded value QDI-ZD denotes a zero denominator.
+topic10.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic10.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic10.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic10.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic10.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic10.csv.gz	topic10	numeric	yes	Topic 10 unemployment rate.	Missing when the denominator is zero.
+topic10.csv.gz	topic10_notes	string	yes	Quality or derivation note for topic10.	Current coded value QDI-ZD denotes a zero denominator.
+topic11.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic11.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic11.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic11.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic11.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic11.csv.gz	topic11	numeric	yes	Topic 11 share of families below the poverty level.	Missing when the denominator is zero.
+topic11.csv.gz	topic11_notes	string	yes	Quality or derivation note for topic11.	Current coded value QDI-ZD denotes a zero denominator.
+topic12.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic12.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic12.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic12.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic12.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic12.csv.gz	topic12	numeric	yes	Topic 12 share of the population below 150 percent of the poverty threshold.	Missing when the denominator is zero.
+topic12.csv.gz	topic12_notes	string	yes	Quality or derivation note for topic12.	Current coded value QDI-ZD denotes a zero denominator.
+topic13.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic13.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic13.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic13.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic13.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic13.csv.gz	topic13	numeric	yes	Topic 13 share of one-parent households with children younger than 18 years.	Missing when the denominator is zero.
+topic13.csv.gz	topic13_notes	string	yes	Quality or derivation note for topic13.	Current coded value QDI-ZD denotes a zero denominator.
+topic14.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic14.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic14.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic14.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic14.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic14.csv.gz	topic14	numeric	yes	Topic 14 share of households without a motor vehicle.	Missing when the denominator is zero.
+topic14.csv.gz	topic14_notes	string	yes	Quality or derivation note for topic14.	Current coded value QDI-ZD denotes a zero denominator.
+topic15.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic15.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic15.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic15.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic15.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic15.csv.gz	topic15_old	numeric	yes	Topic 15 legacy share of households without a telephone.	Missing when the denominator is zero or unavailable.
+topic15.csv.gz	topic15_new	numeric	yes	Topic 15 current share of households without internet.	Missing when the denominator is zero.
+topic15.csv.gz	topic15_old_notes	string	yes	Quality or derivation note for the legacy topic15 measure.	Current coded value QDI-ZD denotes a zero denominator.
+topic15.csv.gz	topic15_new_notes	string	yes	Quality or derivation note for the current topic15 measure.	Current coded value QDI-ZD denotes a zero denominator.
+topic16.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic16.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic16.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic16.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic16.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic16.csv.gz	topic16	numeric	yes	Topic 16 share of occupied housing units without complete plumbing.	Missing when the denominator is zero.
+topic16.csv.gz	topic16_notes	string	yes	Quality or derivation note for topic16.	Current coded value QDI-ZD denotes a zero denominator.
+topic17.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+topic17.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
+topic17.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
+topic17.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.
+topic17.csv.gz	block_group	integer	no	Census block group within tract.	Expected values are typically 1 through 9.
+topic17.csv.gz	topic17	numeric	yes	Topic 17 share of occupied housing units with more than one person per room.	Missing when the denominator is zero.
+topic17.csv.gz	topic17_notes	string	yes	Quality or derivation note for topic17.	Current coded value QDI-ZD denotes a zero denominator.
