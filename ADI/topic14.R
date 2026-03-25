@@ -27,6 +27,9 @@ DT[
   .SDcols = sprintf("B25044_%03dE", c(3, 10))
   ]
 
+# Sanity check, all the proportions should be less than 1
+stopifnot(all(DT[["topic14"]] <= 1.00, na.rm = TRUE))
+
 # all missing is due to B25044_001
 stopifnot(DT[is.na(topic14), all(B25044_001E == 0)])
 DT[is.na(topic14) & B25044_001E == 0, topic14_notes := "QDI-ZD"]

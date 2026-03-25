@@ -76,6 +76,9 @@ DT[
   .SDcols = numerator_variables
   ]
 
+# Sanity check, all the proportions should be less than 1
+stopifnot(all(DT[["topic01"]] <= 1.00, na.rm = TRUE))
+
 DT[B15003_001E == 0, topic01_notes := "QDI-ZD"]
 
 # check that all the NA values are accounted for

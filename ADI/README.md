@@ -285,9 +285,9 @@ data sets.
 bg_gh[, .SD[duplicated(.SD, by = c("state", "county", "tract", "block_group"))]]
 ##     year state county  tract block_group group_quarters         FIPS   adi_raw
 ##    <int> <int>  <int>  <int>       <int>          <num>       <char>     <num>
-## 1:  2023     8     57 955600           1             NA 080579556001 -30102.32
-## 2:  2023     8     57 955600           2             NA 080579556002 -17424.09
-## 3:  2023    48    443 950100           1             NA 484439501001 -16749.86
+## 1:  2023     8     57 955600           1             NA 080579556001 -30102.26
+## 2:  2023     8     57 955600           2             NA 080579556002 -17424.08
+## 3:  2023    48    443 950100           1             NA 484439501001 -16749.82
 ##    exclude_from_ranking exclude_reason national_rank state_rank ADI_NATRANK
 ##                   <int>         <char>         <int>      <int>       <num>
 ## 1:                    0                           47          9          NA

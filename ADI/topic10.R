@@ -26,6 +26,9 @@ DT[
              )
   ]
 
+# Sanity check, all the proportions should be less than 1
+stopifnot(all(DT[["topic10"]] <= 1.00, na.rm = TRUE))
+
 # all missing is due to B23025_002
 stopifnot(DT[is.na(topic10), all(B23025_002E == 0)])
 DT[is.na(topic10) & B23025_002E == 0, topic10_notes := "QDI-ZD"]

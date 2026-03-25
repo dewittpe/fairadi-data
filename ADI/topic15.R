@@ -37,6 +37,12 @@ DT[
   )
   ]
 
+# Sanity check, all the proportions should be less than 1
+stopifnot(
+  all(DT[["topic15_old"]] <= 1.00, na.rm = TRUE),
+  all(DT[["topic15_new"]] <= 1.00, na.rm = TRUE)
+)
+
 # all missing is due to the denominator
 stopifnot(DT[is.na(topic15_old), all(is.na(B25043_001E) | B25043_001E == 0)])
 stopifnot(DT[is.na(topic15_new), all(B28002_001E == 0)])
