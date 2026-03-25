@@ -52,7 +52,7 @@
   },
   "provenance": {
     "repository": "https://github.com/dewittpe/fairadi-data",
-    "git_ref": "v1.0",
+    "git_ref": "v1.0.0",
     "manifest": "MANIFEST.tsv",
     "zenodo_reserved_doi": "10.5281/zenodo.19222629"
   },

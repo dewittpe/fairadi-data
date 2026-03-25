@@ -16,7 +16,7 @@ The reserved Zenodo DOI for the current release record is:
 
 The intended git release reference for this release is:
 
-- `v1.0`
+- `v1.0.0`
 
 ## Canonical Released Dataset
 
