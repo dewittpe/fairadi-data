@@ -1,0 +1,68 @@
+{
+  "title": "fairadi: A FAIR-Compliant U.S. Deprivation Indices Dataset",
+  "name": "fairadi",
+  "version": "1.0.0",
+  "date_released": "2026-03-25",
+  "doi": "10.5281/zenodo.19222629",
+  "description": "Reproducible U.S. Area Deprivation Index build derived from U.S. Census Bureau ACS 5-year and Decennial Census tables. The repository contains tracked source tables, derived outputs, documentation, and integrity metadata for the annual release snapshot.",
+  "resource_type": "dataset",
+  "creators": [
+    {
+      "name": "Peter DeWitt"
+    }
+  ],
+  "keywords": [
+    "area deprivation index",
+    "ADI",
+    "United States",
+    "ACS5",
+    "Decennial Census",
+    "social determinants of health",
+    "block group",
+    "deprivation"
+  ],
+  "spatial_coverage": {
+    "country": "United States"
+  },
+  "temporal_coverage": {
+    "start": "2020",
+    "end": "2024"
+  },
+  "files": [
+    {
+      "path": "ADI/fairadi.csv.gz",
+      "description": "Canonical released fairadi dataset."
+    },
+    {
+      "path": "ADI/fairadi_data_dictionary.tsv",
+      "description": "Column-level schema and value notes for the fairadi dataset."
+    },
+    {
+      "path": "MANIFEST.tsv",
+      "description": "Tracked-file inventory with SHA-256 digests and file sizes."
+    }
+  ],
+  "licenses": {
+    "code": "BSD-3-Clause",
+    "data": "CC-BY-4.0",
+    "upstream_source_data": "U.S. Census Bureau source data are in the public domain."
+  },
+  "provenance": {
+    "repository": "https://github.com/dewittpe/fairadi-data",
+    "git_commit": "86556ba",
+    "manifest": "MANIFEST.tsv",
+    "zenodo_reserved_doi": "10.5281/zenodo.19222629"
+  },
+  "related_resources": [
+    {
+      "type": "article",
+      "title": "Neighborhood socioeconomic disadvantage and 30-day rehospitalization: a retrospective cohort study",
+      "doi": "10.7326/M13-2946"
+    },
+    {
+      "type": "website",
+      "title": "Neighborhood Atlas",
+      "url": "https://www.neighborhoodatlas.medicine.wisc.edu/"
+    }
+  ]
+}

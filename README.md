@@ -78,3 +78,49 @@ you can rebuild downstream outputs without setting `USCENSUSAPIKEY`.
 - `ADI/`: ADI topic scripts, score assembly, validation report, and selected
   derived outputs.
 - `utilities/`: helper scripts for fetching and reshaping Census data.
+- `CITATION.cff`: citation metadata for the repository and released dataset.
+- `metadata.json`: machine-readable dataset metadata for release and archiving.
+- `PROVENANCE.md`: release provenance and integrity guidance.
+- `MANIFEST.tsv`: generated inventory of tracked project files with file type,
+  size in bytes, and SHA-256 digest.
+
+## Manifest
+
+The project includes a generated manifest file, `MANIFEST.tsv`, that inventories
+the tracked release contents of the repository. The manifest is built from
+`git ls-files`, so it reflects the files that are part of the tracked project
+snapshot rather than untracked local scratch files.
+
+Columns in the manifest:
+
+- `path`: path relative to the repository root
+- `type`: coarse file grouping inferred from the top-level directory
+- `size_bytes`: file size in bytes
+- `sha256`: SHA-256 digest of the file contents
+
+Build or refresh the manifest with:
+
+```sh
+make manifest
+```
+
+The top-level `make all` target also refreshes `MANIFEST.tsv`.
+
+## Licensing and Reuse
+
+Repository code is distributed under the BSD 3-Clause license in `LICENSE`.
+
+The upstream U.S. Census Bureau source data used by this workflow are in the
+public domain.
+
+This repository uses a split-license model:
+
+- code and build scripts: BSD 3-Clause License in `LICENSE`
+- released data artifacts and documentation: CC BY 4.0 in `LICENSE-data`
+
+The tracked derived release artifacts in this repository are distributed with
+the repository, and release metadata for citation, provenance, and reuse are
+provided in `CITATION.cff`, `metadata.json`, `PROVENANCE.md`, and
+`ADI/fairadi_data_dictionary.tsv`.
+
+The reserved Zenodo DOI for the current release is `10.5281/zenodo.19222629`.

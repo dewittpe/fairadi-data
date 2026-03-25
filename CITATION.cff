@@ -1,0 +1,53 @@
+cff-version: 1.2.0
+message: "If you use this project or dataset, please cite the software repository and the released dataset snapshot."
+title: "fairadi: A FAIR-Compliant U.S. Deprivation Indices Dataset"
+type: software
+version: 1.0.0
+date-released: 2026-03-25
+license: BSD-3-Clause
+authors:
+  - family-names: DeWitt
+    given-names: Peter
+    orcid: "https://orcid.org/0000-0002-6391-0795"
+  - family-names: Clarke
+    given-names: Ardelia
+    orcid: "https://orcid.org/0000-0001-7253-7171"
+repository-code: "https://github.com/dewittpe/fairadi-data"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.19222629
+abstract: >
+  fairadi is a reproducible, publicly documented U.S. Area Deprivation Index
+  build using U.S. Census Bureau ACS 5-year and Decennial Census inputs. The
+  repository includes BSD-licensed code, CC BY 4.0 licensed released data and
+  documentation, tracked input tables, derived outputs, and release metadata
+  for archiving and reuse.
+preferred-citation:
+  type: dataset
+  title: "fairadi: A FAIR-Compliant U.S. Deprivation Indices Dataset"
+  authors:
+    - family-names: DeWitt
+      given-names: Peter
+      orcid: "https://orcid.org/0000-0002-6391-0795"
+    - family-names: Clarke
+      given-names: Ardelia
+      orcid: "https://orcid.org/0000-0001-7253-7171"
+  doi: 10.5281/zenodo.19222629
+  version: 1.0.0
+  date-released: 2026-03-25
+keywords:
+  - area deprivation index
+  - ADI
+  - Census
+  - ACS5
+  - social determinants of health
+  - deprivation
+  - United States
+  - block group
+references:
+  - type: article
+    authors:
+      - family-names: Kind
+        given-names: Amy J. H.
+    title: "Neighborhood socioeconomic disadvantage and 30-day rehospitalization: a retrospective cohort study"
+    doi: "10.7326/M13-2946"

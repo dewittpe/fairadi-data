@@ -3,6 +3,40 @@
 This directory contains helper scripts used by the Census download workflow,
 file reshaping steps, and Zenodo packaging.
 
+## build_manifest.py
+
+Builds the repository-level `MANIFEST.tsv` file from the current git-tracked
+project contents.
+
+```sh
+./utilities/build_manifest.py
+```
+
+You may optionally provide an alternate output path:
+
+```sh
+./utilities/build_manifest.py path/to/MANIFEST.tsv
+```
+
+The script uses `git ls-files` to enumerate tracked files and writes a
+tab-separated manifest with these columns:
+
+- `path`
+- `type`
+- `size_bytes`
+- `sha256`
+
+This is intended to support release documentation and integrity verification
+without hand-maintaining a file inventory.
+
+The generated manifest complements the FAIR-supporting root-level metadata
+files:
+
+- `CITATION.cff`
+- `metadata.json`
+- `PROVENANCE.md`
+- `ADI/fairadi_data_dictionary.tsv`
+
 ## check_namespaces.R
 
 R script that verifies the repository's required package namespaces.

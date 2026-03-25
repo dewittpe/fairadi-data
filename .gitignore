@@ -8,3 +8,4 @@ FIPS/block_groups/
 # other files to ignore
 .DS_Store
 ADI/cache/*
+*pycache*
