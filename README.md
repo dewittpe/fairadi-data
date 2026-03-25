@@ -106,6 +106,20 @@ make manifest
 
 The top-level `make all` target also refreshes `MANIFEST.tsv`.
 
+Build the Zenodo upload package with:
+
+```sh
+make zenodo
+```
+
+This uses the release label declared in `metadata.json`, currently the git
+reference `v1.0.0`, when naming the package files. To build the full project
+and then package it for Zenodo, use:
+
+```sh
+make release
+```
+
 ## Licensing and Reuse
 
 Repository code is distributed under the BSD 3-Clause license in `LICENSE`.

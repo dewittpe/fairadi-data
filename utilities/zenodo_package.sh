@@ -27,7 +27,17 @@ fail() {
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
 [[ -n "${ROOT}" ]] || fail "this script must be run from inside the git repository"
 
-LABEL="$(git describe --tags --always --dirty 2>/dev/null || git rev-parse --short HEAD)"
+LABEL="$(
+  python3 - <<'PY' 2>/dev/null || true
+import json
+from pathlib import Path
+path = Path("metadata.json")
+if path.exists():
+    metadata = json.loads(path.read_text(encoding="utf-8"))
+    print(metadata.get("provenance", {}).get("git_ref", f"v{metadata['version']}"))
+PY
+)"
+LABEL="${LABEL:-$(git describe --tags --always --dirty 2>/dev/null || git rev-parse --short HEAD)}"
 OUTPUT_DIR="${ROOT}/zenodo-dist"
 DRY_RUN=0
 
@@ -83,9 +93,9 @@ created_utc: $(timestamp_utc)
 
 Files in this release bundle:
 - ${ARCHIVE_PREFIX}-source.tar.gz: git-tracked source snapshot from HEAD.
-- `ADI/fairadi.csv.gz`: canonical released dataset artifact inside the source archive.
-- `ADI/fairadi_data_dictionary.tsv`: column-level schema for ADI release files inside the source archive.
-- `CITATION.cff`, `metadata.json`, `PROVENANCE.md`, and `MANIFEST.tsv`: release metadata and provenance files inside the source archive.
+- ADI/fairadi.csv.gz: canonical released dataset artifact inside the source archive.
+- ADI/fairadi_data_dictionary.tsv: column-level schema for ADI release files inside the source archive.
+- CITATION.cff, metadata.json, PROVENANCE.md, and MANIFEST.tsv: release metadata and provenance files inside the source archive.
 - ${ARCHIVE_PREFIX}-SHA256SUMS.txt: checksums for all archives in this folder.
 
 Recommended unpacking workflow:

@@ -155,6 +155,10 @@ Build the release bundle with:
 ./utilities/zenodo_package.sh --label vX.Y.Z
 ```
 
+If `--label` is omitted, the script defaults to the release reference declared
+in `metadata.json`, falling back to `git describe` only if that metadata is not
+available.
+
 To preview what will be packaged without creating the archives:
 
 ```sh

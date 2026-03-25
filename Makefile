@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 include Makevars
 
-.PHONY: all manifest fips acs5 acs5-state acs5-county acs5-tract acs5-block-group decennial decennial-state decennial-county decennial-tract decennial-block-group adi
+.PHONY: all manifest zenodo release fips acs5 acs5-state acs5-county acs5-tract acs5-block-group decennial decennial-state decennial-county decennial-tract decennial-block-group adi
 
 all: fips decennial acs5 adi manifest
 
@@ -41,5 +41,10 @@ decennial-block-group: fips
 adi: acs5 decennial
 	$(MAKE) -C ADI
 
-manifest:
+manifest: adi
 	./utilities/build_manifest.py
+
+zenodo: manifest
+	./utilities/zenodo_package.sh
+
+release: all zenodo
