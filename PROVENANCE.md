@@ -3,7 +3,7 @@
 This repository publishes a tracked annual release snapshot of the `fairadi`
 project. Provenance for a release is established by the combination of:
 
-- the git commit and repository history
+- the git release reference and repository history
 - `MANIFEST.tsv`, which records tracked file paths, sizes, and SHA-256 digests
 - the build scripts under `Makefile`, `ACS5/`, `Decennial/`, `FIPS/`, `ADI/`,
   and `utilities/`
@@ -13,6 +13,10 @@ project. Provenance for a release is established by the combination of:
 The reserved Zenodo DOI for the current release record is:
 
 - `10.5281/zenodo.19222629`
+
+The intended git release reference for this release is:
+
+- `v1.0`
 
 ## Canonical Released Dataset
 

@@ -83,6 +83,9 @@ created_utc: $(timestamp_utc)
 
 Files in this release bundle:
 - ${ARCHIVE_PREFIX}-source.tar.gz: git-tracked source snapshot from HEAD.
+- `ADI/fairadi.csv.gz`: canonical released dataset artifact inside the source archive.
+- `ADI/fairadi_data_dictionary.tsv`: column-level schema for ADI release files inside the source archive.
+- `CITATION.cff`, `metadata.json`, `PROVENANCE.md`, and `MANIFEST.tsv`: release metadata and provenance files inside the source archive.
 - ${ARCHIVE_PREFIX}-SHA256SUMS.txt: checksums for all archives in this folder.
 
 Recommended unpacking workflow:
@@ -96,6 +99,9 @@ Notes:
 - This repository now tracks the annual release snapshot intended for data use,
   so a single source archive is sufficient for the Zenodo publication record.
 - Ignored scratch files remain outside the archival release by design.
+- Code and build scripts are licensed under BSD-3-Clause in LICENSE.
+- Released data artifacts and documentation are licensed under CC BY 4.0 in LICENSE-data.
+- Reserved Zenodo DOI for the current release: 10.5281/zenodo.19222629
 EOF
 
 SOURCE_ARCHIVE="${OUTPUT_DIR}/${ARCHIVE_PREFIX}-source.tar.gz"
