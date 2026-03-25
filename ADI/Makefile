@@ -5,7 +5,7 @@ ADITOPIC_CSV := $(ADITOPICS:.csv.gz=.csv)
 
 acsvar = $(foreach year,$(ACS5_YEARS),../ACS5/$(1)__$(year).csv.gz)
 
-.INTERMEDIATE: $(ADITOPIC_CSV) total_population.csv housing_units.csv group_quarters.csv adi.csv
+.INTERMEDIATE: $(ADITOPIC_CSV) total_population.csv housing_units.csv group_quarters.csv fairadi.csv
 .PHONY: all clean
 
 all: README.md
@@ -13,7 +13,7 @@ all: README.md
 %.csv.gz: %.csv
 	gzip -9 -f -n $<
 
-adi.csv: adi.R adi_utilities.R $(ADITOPICS) total_population.csv.gz housing_units.csv.gz group_quarters.csv.gz
+fairadi.csv: fairadi.R adi_utilities.R $(ADITOPICS) total_population.csv.gz housing_units.csv.gz group_quarters.csv.gz
 	$(RSCRIPTVANILLA) $<
 
 total_population.csv: total_population.R adi_utilities.R $(call acsvar,B01003)
@@ -76,5 +76,8 @@ topic16.csv: topic16.R adi_utilities.R $(call acsvar,B25047)
 topic17.csv: topic17.R adi_utilities.R $(call acsvar,B25014)
 	$(RSCRIPTVANILLA) $<
 
-README.md: README.Rmd adi.csv.gz
+README.md: README.Rmd fairadi.csv.gz
 	$(RSCRIPTVANILLA) -e "knitr::knit('$<', output='$@')"
+
+clean:
+	$(RM) -r cache/

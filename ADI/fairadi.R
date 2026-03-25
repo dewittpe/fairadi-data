@@ -1,7 +1,7 @@
 ################################################################################
-# file: adi.R
+# file: fairadi.R
 #
-# Build the Area Deprivation Index data and US Census Data
+# Build the fairadi output and ranking data
 #
 # Inputs:
 #   topic{01..17}.csv, each built by a similar named .R file
@@ -135,7 +135,7 @@ adi[!is.na(adi_raw) & exclude_from_ranking == 0,
 ]
 
 ################################################################################
-# save to disk
+# save fairadi to disk
 adi[, FIPS := build_FIPS(state, county, tract, block_group)]
 cols_to_keep <-
   c(
@@ -146,7 +146,7 @@ cols_to_keep <-
     "national_rank", "state_rank"
   )
 adi <- adi[, .SD, .SDcols = cols_to_keep]
-data.table::fwrite(x = adi, file = "adi.csv")
+data.table::fwrite(x = adi, file = "fairadi.csv")
 
 ################################################################################
 #                                 End of File                                  #

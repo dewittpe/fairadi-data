@@ -59,6 +59,14 @@ ACS5 data.
 | Group Quarters   | P18             |            |
 | Housing Units    |                 | B25001     |
 
+In `fairadi`, the group-quarters exclusion criterion uses Decennial 2020
+block-group values for all modeled years. Public ACS 5-year data do not report
+group-quarters counts at the block-group level, only at the tract level.
+Because the suppression rule is defined at the block-group level, the 2020
+Decennial Census is used as the public-data source that preserves the needed
+geographic resolution. This means the group-quarters component of the
+suppression rule is anchored to 2020 rather than varying annually.
+
 ## Workflow
 
 In this directory there are R script for each of the ADI topics and one for
@@ -110,7 +118,7 @@ str(neighborhood_atlas)
 Read in the `fairadi` data.
 
 ``` r
-fairadi <- data.table::fread("adi.csv.gz", colClasses = c("FIPS" = "character"))
+fairadi <- data.table::fread("fairadi.csv.gz", colClasses = c("FIPS" = "character"))
 str(fairadi)
 ## Classes 'data.table' and 'data.frame':	1211599 obs. of  11 variables:
 ##  $ year                : int  2020 2021 2022 2023 2024 2020 2021 2022 2023 2024 ...
@@ -160,7 +168,7 @@ There are 40 GEOIDs in the 2023 Neighborhood Atlas only.
 - Those same GEOIDs existed in local Census-derived outputs for earlier
   years:
    - present in FIPS/2022__block_groups.csv
-   - present in ADI/adi.csv.gz for 2020 to 2022
+   - present in ADI/fairadi.csv.gz for 2020 to 2022
 - They are absent from the 2023 Census geography inventory you are building from:
    - absent from FIPS/2023__block_groups.csv
    - their parent tracts are also absent from FIPS/2023__tracts.csv
@@ -351,29 +359,40 @@ adi[
 
 ### Rank Correlations
 
+
+
+
+
+<div class="figure" style="text-align: center">
+<img src="figure/correlation-plot-national-1.png" alt="plot of chunk correlation-plot-national"  />
+<p class="caption">plot of chunk correlation-plot-national</p>
+</div>
+
+<div class="figure" style="text-align: center">
+<img src="figure/correlation-plot-state-1.png" alt="plot of chunk correlation-plot-state"  />
+<p class="caption">plot of chunk correlation-plot-state</p>
+</div>
+
 <table>
  <thead>
 <tr>
-<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
 <th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
 <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">State Level</div></th>
 <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">National Level</div></th>
 </tr>
   <tr>
-   <th style="text-align:left;"> Year </th>
-   <th style="text-align:right;"> Block Groups </th>
-   <th style="text-align:right;"> Pearson </th>
+   <th style="text-align:left;"> Year(s) </th>
    <th style="text-align:right;"> Spearman </th>
+   <th style="text-align:right;"> Pearson </th>
    <th style="text-align:right;"> Kendall </th>
-   <th style="text-align:right;"> Pearson </th>
    <th style="text-align:right;"> Spearman </th>
+   <th style="text-align:right;"> Pearson </th>
    <th style="text-align:right;"> Kendall </th>
   </tr>
  </thead>
 <tbody>
   <tr>
    <td style="text-align:left;"> 2020 &amp; 2023 </td>
-   <td style="text-align:right;"> 471436 </td>
    <td style="text-align:right;"> 0.9687 </td>
    <td style="text-align:right;"> 0.9687 </td>
    <td style="text-align:right;"> 0.9140 </td>
@@ -383,7 +402,6 @@ adi[
   </tr>
   <tr>
    <td style="text-align:left;"> 2020 </td>
-   <td style="text-align:right;"> 235334 </td>
    <td style="text-align:right;"> 0.9694 </td>
    <td style="text-align:right;"> 0.9694 </td>
    <td style="text-align:right;"> 0.9152 </td>
@@ -393,7 +411,6 @@ adi[
   </tr>
   <tr>
    <td style="text-align:left;"> 2023 </td>
-   <td style="text-align:right;"> 236102 </td>
    <td style="text-align:right;"> 0.9680 </td>
    <td style="text-align:right;"> 0.9680 </td>
    <td style="text-align:right;"> 0.9127 </td>
@@ -406,34 +423,108 @@ adi[
 
 
 
-### Differences in Ranks
 
 
-
-
-
-#### State Level
 <div class="figure" style="text-align: center">
-<img src="figure/state-level-plots-1.png" alt="plot of chunk state-level-plots"  />
-<p class="caption">plot of chunk state-level-plots</p>
-</div><div class="figure" style="text-align: center">
-<img src="figure/state-level-plots-2.png" alt="plot of chunk state-level-plots"  />
-<p class="caption">plot of chunk state-level-plots</p>
-</div><div class="figure" style="text-align: center">
-<img src="figure/state-level-plots-3.png" alt="plot of chunk state-level-plots"  />
-<p class="caption">plot of chunk state-level-plots</p>
+<img src="figure/abs-rank-delta-national-1.png" alt="plot of chunk abs-rank-delta-national"  />
+<p class="caption">plot of chunk abs-rank-delta-national</p>
 </div>
-#### National Level
+
 <div class="figure" style="text-align: center">
-<img src="figure/national-level-plots-1.png" alt="plot of chunk national-level-plots"  />
-<p class="caption">plot of chunk national-level-plots</p>
-</div><div class="figure" style="text-align: center">
-<img src="figure/national-level-plots-2.png" alt="plot of chunk national-level-plots"  />
-<p class="caption">plot of chunk national-level-plots</p>
-</div><div class="figure" style="text-align: center">
-<img src="figure/national-level-plots-3.png" alt="plot of chunk national-level-plots"  />
-<p class="caption">plot of chunk national-level-plots</p>
+<img src="figure/abs-rank-delta-state-1.png" alt="plot of chunk abs-rank-delta-state"  />
+<p class="caption">plot of chunk abs-rank-delta-state</p>
 </div>
+
+<table>
+ <thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">State Level Deciles</div></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="11"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">National Level Percentiles</div></th>
+</tr>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Within</div></th>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="10"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Within</div></th>
+</tr>
+  <tr>
+   <th style="text-align:left;"> Year(s) </th>
+   <th style="text-align:right;"> Equal </th>
+   <th style="text-align:right;"> 1 </th>
+   <th style="text-align:right;"> 2 </th>
+   <th style="text-align:right;"> 3 </th>
+   <th style="text-align:right;"> Equal </th>
+   <th style="text-align:right;"> 1 </th>
+   <th style="text-align:right;"> 2 </th>
+   <th style="text-align:right;"> 3 </th>
+   <th style="text-align:right;"> 4 </th>
+   <th style="text-align:right;"> 5 </th>
+   <th style="text-align:right;"> 6 </th>
+   <th style="text-align:right;"> 7 </th>
+   <th style="text-align:right;"> 8 </th>
+   <th style="text-align:right;"> 9 </th>
+   <th style="text-align:right;"> 10 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2020 &amp; 2023 </td>
+   <td style="text-align:right;"> 0.6718 </td>
+   <td style="text-align:right;"> 0.9662 </td>
+   <td style="text-align:right;"> 0.9913 </td>
+   <td style="text-align:right;"> 0.9967 </td>
+   <td style="text-align:right;"> 0.1683 </td>
+   <td style="text-align:right;"> 0.4245 </td>
+   <td style="text-align:right;"> 0.6000 </td>
+   <td style="text-align:right;"> 0.7230 </td>
+   <td style="text-align:right;"> 0.8082 </td>
+   <td style="text-align:right;"> 0.8657 </td>
+   <td style="text-align:right;"> 0.9036 </td>
+   <td style="text-align:right;"> 0.9290 </td>
+   <td style="text-align:right;"> 0.9464 </td>
+   <td style="text-align:right;"> 0.9587 </td>
+   <td style="text-align:right;"> 0.9677 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020 </td>
+   <td style="text-align:right;"> 0.6741 </td>
+   <td style="text-align:right;"> 0.9672 </td>
+   <td style="text-align:right;"> 0.9918 </td>
+   <td style="text-align:right;"> 0.9970 </td>
+   <td style="text-align:right;"> 0.1717 </td>
+   <td style="text-align:right;"> 0.4252 </td>
+   <td style="text-align:right;"> 0.5995 </td>
+   <td style="text-align:right;"> 0.7221 </td>
+   <td style="text-align:right;"> 0.8074 </td>
+   <td style="text-align:right;"> 0.8649 </td>
+   <td style="text-align:right;"> 0.9026 </td>
+   <td style="text-align:right;"> 0.9278 </td>
+   <td style="text-align:right;"> 0.9456 </td>
+   <td style="text-align:right;"> 0.9579 </td>
+   <td style="text-align:right;"> 0.9671 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2023 </td>
+   <td style="text-align:right;"> 0.6696 </td>
+   <td style="text-align:right;"> 0.9652 </td>
+   <td style="text-align:right;"> 0.9908 </td>
+   <td style="text-align:right;"> 0.9965 </td>
+   <td style="text-align:right;"> 0.1648 </td>
+   <td style="text-align:right;"> 0.4238 </td>
+   <td style="text-align:right;"> 0.6006 </td>
+   <td style="text-align:right;"> 0.7240 </td>
+   <td style="text-align:right;"> 0.8091 </td>
+   <td style="text-align:right;"> 0.8665 </td>
+   <td style="text-align:right;"> 0.9045 </td>
+   <td style="text-align:right;"> 0.9301 </td>
+   <td style="text-align:right;"> 0.9472 </td>
+   <td style="text-align:right;"> 0.9595 </td>
+   <td style="text-align:right;"> 0.9683 </td>
+  </tr>
+</tbody>
+</table>
 
 
 
@@ -462,21 +553,19 @@ sessionInfo()
 ## loaded via a namespace (and not attached):
 ##  [1] gtable_0.3.6        dplyr_1.2.0         compiler_4.5.3     
 ##  [4] tidyselect_1.2.1    Rcpp_1.1.1          xml2_1.5.2         
-##  [7] stringr_1.6.0       gridGraphics_0.5-1  gridExtra_2.3      
-## [10] ggplotify_0.1.3     systemfonts_1.3.2   scales_1.4.0       
-## [13] textshaping_1.0.5   fastmap_1.2.0       ggplot2_4.0.2      
-## [16] R6_2.6.1            labeling_0.4.3      generics_0.1.4     
-## [19] pcaPP_2.0-5         knitr_1.51          yulab.utils_0.2.4  
-## [22] tibble_3.3.1        kableExtra_1.4.0    svglite_2.2.2      
-## [25] pillar_1.11.1       RColorBrewer_1.1-3  qwraps2_0.6.2      
-## [28] R.utils_2.13.0      rlang_1.1.7         stringi_1.8.7      
-## [31] xfun_0.57           fs_1.6.7            S7_0.2.1           
-## [34] otel_0.2.0          viridisLite_0.4.3   cli_3.6.5          
-## [37] withr_3.0.2         magrittr_2.0.4      digest_0.6.39      
-## [40] grid_4.5.3          rstudioapi_0.18.0   mvtnorm_1.3-5      
-## [43] rappdirs_0.3.4      lifecycle_1.0.5     R.methodsS3_1.8.2  
-## [46] R.oo_1.27.1         vctrs_0.7.2         evaluate_1.0.5     
-## [49] glue_1.8.0          data.table_1.18.2.1 farver_2.1.2       
-## [52] rmarkdown_2.30      pkgconfig_2.0.3     tools_4.5.3        
-## [55] htmltools_0.5.9
+##  [7] stringr_1.6.0       systemfonts_1.3.2   scales_1.4.0       
+## [10] textshaping_1.0.5   ggh4x_0.3.1         fastmap_1.2.0      
+## [13] ggplot2_4.0.2       R6_2.6.1            labeling_0.4.3     
+## [16] generics_0.1.4      pcaPP_2.0-5         knitr_1.51         
+## [19] tibble_3.3.1        kableExtra_1.4.0    svglite_2.2.2      
+## [22] pillar_1.11.1       RColorBrewer_1.1-3  qwraps2_0.6.2      
+## [25] R.utils_2.13.0      rlang_1.1.7         stringi_1.8.7      
+## [28] xfun_0.57           S7_0.2.1            otel_0.2.0         
+## [31] viridisLite_0.4.3   cli_3.6.5           withr_3.0.2        
+## [34] magrittr_2.0.4      digest_0.6.39       grid_4.5.3         
+## [37] rstudioapi_0.18.0   mvtnorm_1.3-5       lifecycle_1.0.5    
+## [40] R.methodsS3_1.8.2   R.oo_1.27.1         vctrs_0.7.2        
+## [43] evaluate_1.0.5      glue_1.8.0          data.table_1.18.2.1
+## [46] farver_2.1.2        codetools_0.2-20    rmarkdown_2.30     
+## [49] pkgconfig_2.0.3     tools_4.5.3         htmltools_0.5.9
 ```

@@ -3,7 +3,7 @@
 ```{r sefup, include = FALSE}
 options(qwraps2_markup = "markdown")
 options(knitr.kable.NA = '')
-knitr::opts_chunk$set(collapse = TRUE, fig.align = "center")
+knitr::opts_chunk$set(collapse = TRUE, fig.align = "center", cache = TRUE)
 ```
 
 The Area Deprivation Index (ADI)
@@ -133,7 +133,7 @@ str(neighborhood_atlas)
 ### `fairadi` Data
 Read in the `fairadi` data.
 ```{r read-fairadi}
-fairadi <- data.table::fread("adi.csv.gz", colClasses = c("FIPS" = "character"))
+fairadi <- data.table::fread("fairadi.csv.gz", colClasses = c("FIPS" = "character"))
 str(fairadi)
 ```
 
@@ -157,7 +157,7 @@ There are 40 GEOIDs in the 2023 Neighborhood Atlas only.
 - Those same GEOIDs existed in local Census-derived outputs for earlier
   years:
    - present in FIPS/2022__block_groups.csv
-   - present in ADI/adi.csv.gz for 2020 to 2022
+   - present in ADI/fairadi.csv.gz for 2020 to 2022
 - They are absent from the 2023 Census geography inventory you are building from:
    - absent from FIPS/2023__block_groups.csv
    - their parent tracts are also absent from FIPS/2023__tracts.csv
@@ -282,230 +282,159 @@ adi[
 
 ### Rank Correlations
 
-```{r rank-correlations, echo = FALSE, results = "asis"}
-for_cor <- adi[exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0]
-p <- function(DT, level, method = c("pearson", "spearman", "kendall")) {
-  method <- match.arg(method, several.ok = FALSE)
-  if (method %in% c("pearson", "spearman")) {
-    if (level == "state") {
-      DT[, cor(state_rank, ADI_STATERNK, method = method)]
-    } else {
-      DT[, cor(national_rank, ADI_NATRANK, method = method)]
-    }
-  } else {
-    if (level == "state") {
-      DT[, pcaPP::cor.fk(state_rank, ADI_STATERNK)]
-    } else {
-      DT[, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
-    }
-  }
+```{r build-deltas, include = FALSE}
+deltas <- merge(adi, data.table::fread("../FIPS/2020__states.csv"), by = "state")
+deltas[, adi_raw := NULL]
+deltas[, county := NULL]
+deltas[, tract := NULL]
+deltas[, block_group := NULL]
+deltas[, exclude_from_ranking := NULL]
+deltas[, exclude_reason := NULL]
+deltas[, neighborhood_atlas_exclude := NULL]
+deltas[, neighborhood_atlas_exclude_reason := NULL]
+deltas[, state_delta := state_rank - ADI_STATERNK]
+deltas[, national_delta := national_rank - ADI_NATRANK]
+deltas[, abs_state_delta := abs(state_delta)]
+deltas[, abs_national_delta := abs(national_delta)]
+deltas <- deltas[!is.na(state_delta)]
+deltas[, name := sprintf("(%s) %s", formatC(as.integer(state), format = "d", width = 2, flag = "0"), name)]
+deltas <- data.table::rbindlist(list(deltas, deltas, deltas, deltas), idcol = TRUE)
+deltas[, year := as.character(year)]
+deltas[, state := as.character(state)]
+deltas[.id == 1, `:=`(year = "2020 & 2023", state = "All States")]
+deltas[.id == 2, `:=`(year = "2020 & 2023")]
+deltas[.id == 3, `:=`(state = "All States")]
+deltas[, name := data.table::fifelse(state == "All States", state, name) ]
+
+deltas[, name := factor(name)]
+deltas[, name := relevel(name, "All States")]
+deltas[, year := factor(year)]
+deltas[, year := relevel(year, "2020 & 2023")]
+
+deltas <-
+  deltas[
+    ,
+    .(
+      state_spearman    = cor(x = state_rank, y = ADI_STATERNK, method = "spearman"),
+      state_pearson     = cor(x = state_rank, y = ADI_STATERNK, method = "pearson"),
+      state_kendall     = pcaPP::cor.fk(state_rank, ADI_STATERNK),
+      state_within00    = mean(abs_state_delta == 0),
+      state_within01    = mean(abs_state_delta <= 1),
+      state_within02    = mean(abs_state_delta <= 2),
+      state_within03    = mean(abs_state_delta <= 3),
+      national_spearman = cor(x = national_rank, y = ADI_NATRANK, method = "spearman"),
+      national_pearson  = cor(x = national_rank, y = ADI_NATRANK, method = "pearson"),
+      national_kendall  = pcaPP::cor.fk(national_rank, ADI_NATRANK),
+      national_within00 = mean(abs_national_delta ==  0),
+      national_within01 = mean(abs_national_delta <=  1),
+      national_within02 = mean(abs_national_delta <=  2),
+      national_within03 = mean(abs_national_delta <=  3),
+      national_within04 = mean(abs_national_delta <=  4),
+      national_within05 = mean(abs_national_delta <=  5),
+      national_within06 = mean(abs_national_delta <=  6),
+      national_within07 = mean(abs_national_delta <=  7),
+      national_within08 = mean(abs_national_delta <=  8),
+      national_within09 = mean(abs_national_delta <=  9),
+      national_within10 = mean(abs_national_delta <= 10)
+    ),
+    keyby = .(name, year)
+  ]
+
+deltas_long <-
+  data.table::melt(
+    data = deltas,
+    id.vars = c("name", "year"),
+    variable.factor = FALSE
+  )
+deltas_long[, c("Level", "variable") := data.table::tstrsplit(variable, split = "_")]
+deltas_long[, name2 := factor(name, levels = rev(levels(name)))]
+```
+
+```{r define-correlations-plot, include = FALSE}
+correlation_plot <- function(data) {
+  ggplot2::ggplot(data = data) +
+    ggplot2::aes(
+      x = name2,
+      y = value,
+      shape = variable,
+    ) +
+    ggplot2::geom_col(
+      data = function(x) subset(x, variable == "kendall"),
+      position = ggplot2::position_dodge()
+    ) +
+    ggplot2::geom_point(
+      data = function(x) subset(x, variable %in% c("kendall", "pearson", "spearman"))
+    ) +
+    ggplot2::scale_y_continuous(breaks = c(0.8, 0.9, 1.0)) +
+    ggh4x::facet_nested( ~ Level + year) +
+    ggplot2::coord_flip(ylim = c(0.8, 1.0)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.title = ggplot2::element_blank(),
+      legend.position = "bottom",
+      legend.title = ggplot2::element_blank()
+    )
 }
+```
 
-d <- c(
-  for_cor[, .N],
-  p(for_cor, "state", "pearson"),
-  p(for_cor, "state", "spearman"),
-  p(for_cor, "state", "kendall"),
-  p(for_cor, "national", "pearson"),
-  p(for_cor, "national", "spearman"),
-  p(for_cor, "national", "kendall"),
+```{r correlation-plot-national, echo = FALSE}
+correlation_plot(deltas_long[Level == "national"])
+```
 
-  for_cor[year == 2020, .N],
-  p(for_cor[year == 2020], "state", "pearson"),
-  p(for_cor[year == 2020], "state", "spearman"),
-  p(for_cor[year == 2020], "state", "kendall"),
-  p(for_cor[year == 2020], "national", "pearson"),
-  p(for_cor[year == 2020], "national", "spearman"),
-  p(for_cor[year == 2020], "national", "kendall"),
+```{r correlation-plot-state, echo = FALSE}
+correlation_plot(deltas_long[Level == "state"])
+```
 
-  for_cor[year == 2023, .N],
-  p(for_cor[year == 2023], "state", "pearson"),
-  p(for_cor[year == 2023], "state", "spearman"),
-  p(for_cor[year == 2023], "state", "kendall"),
-  p(for_cor[year == 2023], "national", "pearson"),
-  p(for_cor[year == 2023], "national", "spearman"),
-  p(for_cor[year == 2023], "national", "kendall")
-)
-
-df <- data.frame(Year = c("2020 & 2023", "2020", "2023"))
-df <- cbind(df, as.data.frame(matrix(round(d, 4), nrow = 3, byrow = TRUE)))
-names(df) <- c("Year", "Block Groups", rep(c("Pearson", "Spearman", "Kendall"), 2))
-kableExtra::kbl(
-  format = "markdown",
-  x = df, row.names = FALSE
+```{r correlation-table, echo = FALSE, results = "asis"}
+deltas[name == "All States", .SD, .SDcols = patterns("year|spearman|pearson|kendall")] |>
+  kableExtra::kbl(
+    x = _,
+    digits = 4,
+    col.names = c("Year(s)", rep(c("Spearman", "Pearson", "Kendall"), 2))
   ) |>
-kableExtra::add_header_above(c("", "", "State Level" = 3, "National Level" = 3))
+  kableExtra::add_header_above(c("", "State Level" = 3, "National Level" = 3))
 ```
 
-### Differences in Ranks
-
-```{r define-plot-ba-density, include = FALSE}
-plot_ba_density <- function(DT, state = NULL) {
-  stopifnot(is.null(state) || (is.character(state) && nchar(state) == 2L))
-  DT <- subset(DT, !is.na(state_rank) & !is.na(ADI_STATERNK))
-  if (!is.null(state)) {
-    DT <- subset(DT, substr(FIPS, 1, 2) == state)
-  }
-
-  scor <-
-    data.table::data.table(
-      "Correlation" = c("Pearson", "Spearman", "Kendal"),
-      "value" = c(
-      with(DT, cor(state_rank, ADI_STATERNK, method = "pearson", use = "pairwise.complete.obs")),
-      with(DT, cor(state_rank, ADI_STATERNK, method = "spearman", use = "pairwise.complete.obs")),
-      adi[complete.cases(adi[, .(state_rank, ADI_STATERNK)])][, pcaPP::cor.fk(state_rank, ADI_STATERNK)])
+```{r define-abs-rank-delta-plot, include = FALSE}
+abs_rank_delta_plot <- function(data) {
+  ggplot2::ggplot(data = data) +
+    ggplot2::aes(
+      x = as.numeric(sub("within", "", variable)),
+      y = value,
+      group = name
+    ) +
+    ggplot2::geom_line(alpha = 0.5) +
+    ggplot2::geom_line(data = function(x) subset(x, name == "All States"), color = "red") +
+    ggplot2::geom_point(data = function(x) subset(x, name == "All States"), color = "red") +
+    ggplot2::scale_y_continuous(label = scales::label_percent()) +
+    ggh4x::facet_nested( ~ Level + year) +
+    ggplot2::xlab("Absolute differnce in Ranks") +
+    ggplot2::ylab("Cumulative Percentage of Block Groups") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      legend.position = "bottom",
+      legend.title = ggplot2::element_blank()
     )
-
-  ncor <-
-    data.table::data.table(
-      "Correlation" = c("Pearson", "Spearman", "Kendal"),
-      "value" = c(
-        with(DT, cor(national_rank, ADI_NATRANK, method = "pearson", use = "pairwise.complete.obs")),
-        with(DT, cor(national_rank, ADI_NATRANK, method = "spearman", use = "pairwise.complete.obs")),
-        adi[complete.cases(adi[, .(national_rank, ADI_NATRANK)])][, pcaPP::cor.fk(national_rank, ADI_NATRANK)]
-      )
-    )
-
-  sba <- DT[, .(avg = (state_rank + ADI_STATERNK)/2, diff = state_rank - ADI_STATERNK), by = .(year)]
-  nba <- DT[, .(avg = (national_rank + ADI_NATRANK)/2, diff = national_rank - ADI_NATRANK), by = .(year)]
-
-  sss <- list(
-    mean_diff = mean(sba$diff),
-    sd_diff = sd(sba$diff),
-    lcl = mean(sba$diff) + qnorm(0.025) * sd(sba$diff),
-    ucl = mean(sba$diff) + qnorm(0.975) * sd(sba$diff)
-  )
-  nss <- list(
-    mean_diff = mean(nba$diff),
-    sd_diff = sd(nba$diff),
-    lcl = mean(nba$diff) + qnorm(0.025) * sd(nba$diff),
-    ucl = mean(nba$diff) + qnorm(0.975) * sd(nba$diff)
-  )
-
-  sba <- sba[, .N, by = .(year, avg, diff)]
-  data.table::setkey(sba, N, avg, diff)
-  nba <- nba[, .N, by = .(year, avg, diff)]
-  data.table::setkey(nba, N, avg, diff)
-
-  qba <- function(DT, ss, ylab) {
-    ggplot2::ggplot(DT) +
-      ggplot2::aes(x = avg, y = diff, color = log2(N), size = log2(N)) +
-      ggplot2::geom_point() +
-      ggplot2::scale_color_viridis_c(name = "Number of\nBlock Groups", breaks = seq(0, floor(log2(max(DT$N))), by = 2), labels = function(x) {2^x}) +
-      ggplot2::geom_hline(yintercept = ss$mean_diff, linetype = 2) +
-      ggplot2::geom_hline(yintercept = ss$lcl, linetype = 3) +
-      ggplot2::geom_hline(yintercept = ss$ucl, linetype = 3) +
-      ggplot2::xlab("Average Rank") +
-      ggplot2::ylab(ylab) +
-      ggplot2::theme_bw() +
-      ggplot2::guides(size = "none") +
-      ggplot2::theme(
-        legend.position = "right"
-      )
-  }
-
-  qdn <- function(DT) {
-    ggplot2::ggplot(DT[, .(N = sum(N)), by = diff]) +
-      ggplot2::aes(x = diff, y = N) +
-      ggplot2::geom_col() +
-      ggplot2::scale_y_continuous(label = scales::label_comma()) +
-      ggplot2::theme_bw() +
-      ggplot2::ylab("Number of Block Groups") +
-      ggplot2::xlab("Difference: fairadi - Neighborhood Atlas")
-  }
-
-  qad <- function(DT) {
-    dd <- DT[, .(N = sum(N)), keyby = .(d = abs(diff))]
-    dd[, cp       := cumsum(N) / sum(N)]
-    dd[, cpscaled := cp*max(N)]
-    dd[, Nscaled  := N / max(N)]
-    ggplot2::ggplot(dd) +
-      ggplot2::aes(x = d) +
-      ggplot2::geom_col(mapping = ggplot2::aes(y = Nscaled), fill = "grey70") +
-      ggplot2::geom_line(mapping = ggplot2::aes(y = cp)) +
-      ggplot2::geom_point(mapping = ggplot2::aes(y = cp)) +
-      ggplot2::scale_y_continuous(
-        name = "Cumulative Percent of Block Groups\n(Line and points)",
-        label = scales::label_percent(),
-          sec.axis = ggplot2::sec_axis(
-            name = "Number of Block Groups\n(Bars)",
-            transform =  ~ . * max(dd$N),
-            label = scales::label_comma()
-          )
-        ) +
-      ggplot2::xlab("|Difference = fairadi - Neighborhood Atlas|") +
-      ggplot2::theme_classic()
-  }
-
-  qdd <- function(DT) {
-    D <- DT[, .N, by = .(nd = national_rank - ADI_NATRANK, sd = state_rank - ADI_STATERNK)]
-    data.table::setkey(D, N, sd, nd)
-    ggplot2::ggplot(D) +
-      ggplot2::aes(x = nd, y = sd, color = log2(N), size = log2(N)) +
-      ggplot2::geom_point() +
-      ggplot2::scale_color_viridis_c(name = "Number of\nBlock Groups", breaks = seq(0, floor(log2(max(D$N))), by = 2), labels = function(x) {2^x}) +
-      ggplot2::theme_bw() +
-      ggplot2::guides(size = "none") +
-      ggplot2::theme(
-        legend.position = "right"
-      )
-  }
-
-  list(
-    state_blandaltman = qba(sba, nss, "Difference = fairadi - Neighborhood Atlas"),
-    state_diffhist    = qdn(sba),
-    state_absdiffhist = qad(sba),
-    state_cor         = ggplotify::as.ggplot(gridExtra::tableGrob(scor)),
-    national_blandaltman = qba(nba, nss, "Difference = fairadi - Neighborhood Atlas"),
-    national_diffhist    = qdn(nba),
-    national_absdiffhist = qad(nba),
-    national_cor         = ggplotify::as.ggplot(gridExtra::tableGrob(ncor)),
-    dd = qdd(DT)
-  )
 }
 ```
 
-```{r build-plots, include = FALSE}
-plots_2020_2023 <- plot_ba_density(for_cor)
+```{r abs-rank-delta-national, echo = FALSE}
+abs_rank_delta_plot(deltas_long[startsWith(variable, "within") & Level == "national"])
 ```
 
-#### State Level
-```{r state-level-plots, echo = FALSE}
-plots_2020_2023$state_blandaltman
-plots_2020_2023$state_diffhist
-plots_2020_2023$state_absdiffhist
-```
-#### National Level
-```{r national-level-plots, echo = FALSE}
-plots_2020_2023$national_blandaltman
-plots_2020_2023$national_diffhist
-plots_2020_2023$national_absdiffhist
+```{r abs-rank-delta-state, echo = FALSE}
+abs_rank_delta_plot(deltas_long[startsWith(variable, "within") & Level == "state"])
 ```
 
-```{r build-figures, include = FALSE}
-pdf(file = "figure/00-all-states-all-years.pdf")
-  plots_2020_2023
-dev.off()
-
-pdf(file = "figure/00-all-states-2020.pdf")
-  plot_ba_density(for_cor[year == 2020])
-dev.off()
-
-pdf(file = "figure/00-all-states-2023.pdf")
-  plot_ba_density(for_cor[year == 2023])
-dev.off()
-
-FIPS <- data.table::fread("../FIPS/2020__states.csv", colClasses = "character")
-for (i in  seq_len(nrow(FIPS))) {
-  pdf(file = sprintf("figure/%s-%s-all-years.pdf", FIPS[i, state], FIPS[i, name]))
-    print(plot_ba_density(for_cor, state = FIPS[i, state]))
-  dev.off()
-  for (y in c(2020, 2023)) {
-    pdf(file = sprintf("figure/%s-%s-%d.pdf", FIPS[i, state], FIPS[i, name], y))
-      print(plot_ba_density(for_cor[year == y], state = FIPS[i, state]))
-    dev.off()
-  }
-}
+```{r abs-rank-delta-table, echo = FALSE, results = "asis"}
+deltas[name == "All States", .SD, .SDcols = patterns("year|within")] |>
+  kableExtra::kbl(
+    x = _,
+    digits = 4,
+    col.names = c("Year(s)", "Equal", "1", "2", "3", "Equal", 1:10)
+  ) |>
+  kableExtra::add_header_above(c("", "", "Within" = 3, "", "Within" = 10)) |>
+  kableExtra::add_header_above(c("", "State Level Deciles" = 4, "National Level Percentiles" = 11))
 ```
 
 ## Session Info
