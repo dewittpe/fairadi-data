@@ -34,7 +34,7 @@ topic02.csv: topic02.R adi_utilities.R $(call acsvar,B15003)
 topic03.csv: topic03.R adi_utilities.R $(call acsvar,C24010)
 	$(RSCRIPTVANILLA) $<
 
-topic04.csv: topic04.R adi_utilities.R $(call acsvar,B19113)
+topic04.csv: topic04.R adi_utilities.R $(call acsvar,B19013)
 	$(RSCRIPTVANILLA) $<
 
 topic05.csv: topic05.R adi_utilities.R $(call acsvar,B19001) total_population.csv.gz
@@ -43,10 +43,10 @@ topic05.csv: topic05.R adi_utilities.R $(call acsvar,B19001) total_population.cs
 topic06.csv: topic06.R adi_utilities.R $(call acsvar,B25077)
 	$(RSCRIPTVANILLA) $<
 
-topic07.csv: topic07.R adi_utilities.R $(call acsvar,B25063)
+topic07.csv: topic07.R adi_utilities.R $(call acsvar,B25064)
 	$(RSCRIPTVANILLA) $<
 
-topic08.csv: topic08.R adi_utilities.R $(call acsvar,B25087)
+topic08.csv: topic08.R adi_utilities.R $(call acsvar,B25088)
 	$(RSCRIPTVANILLA) $<
 
 topic09.csv: topic09.R adi_utilities.R $(call acsvar,B25003)
