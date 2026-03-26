@@ -73,6 +73,7 @@ topic06.csv.gz	block_group	integer	no	Census block group within tract.	Expected 
 topic06.csv.gz	topic06_shrunk	numeric	yes	Topic 6 median home value after geographic imputation and shrinkage.	Preferred modeled value used by fairadi.
 topic06.csv.gz	topic06_geo	string	yes	Geographic level from which the imputed topic06 value was drawn.	Expected values include block_group, tract, county, and state.
 topic06.csv.gz	topic06_not_shrunk	numeric	yes	Topic 6 median home value before shrinkage.	Missing where annotation handling removed unusable values.
+topic06.csv.gz	topic06_notes	string	yes	Quality or derivation note for topic06.	Current coded values include QDI-n and QDI-range.
 topic07.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
 topic07.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
 topic07.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
@@ -81,6 +82,7 @@ topic07.csv.gz	block_group	integer	no	Census block group within tract.	Expected 
 topic07.csv.gz	topic07_shrunk	numeric	yes	Topic 7 median gross rent after geographic imputation and shrinkage.	Preferred modeled value used by fairadi.
 topic07.csv.gz	topic07_geo	string	yes	Geographic level from which the imputed topic07 value was drawn.	Expected values include block_group, tract, county, and state.
 topic07.csv.gz	topic07_not_shrunk	numeric	yes	Topic 7 median gross rent before shrinkage.	Missing where the source value was unusable.
+topic07.csv.gz	topic07_notes	string	yes	Quality or derivation note for topic07.	Current coded values include QDI-n and QDI-range.
 topic08.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
 topic08.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
 topic08.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
@@ -89,6 +91,7 @@ topic08.csv.gz	block_group	integer	no	Census block group within tract.	Expected 
 topic08.csv.gz	topic08_shrunk	numeric	yes	Topic 8 median monthly mortgage after geographic imputation and shrinkage.	Preferred modeled value used by fairadi.
 topic08.csv.gz	topic08_geo	string	yes	Geographic level from which the imputed topic08 value was drawn.	Expected values include block_group, tract, county, and state.
 topic08.csv.gz	topic08_not_shrunk	numeric	yes	Topic 8 median monthly mortgage before shrinkage.	Missing where the source value was unusable.
+topic08.csv.gz	topic08_notes	string	yes	Quality or derivation note for topic08.	Current coded values include QDI-n and QDI-range.
 topic09.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
 topic09.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
 topic09.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.

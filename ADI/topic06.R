@@ -20,6 +20,8 @@ if (interactive()) {
   DT[, .N, keyby = .(B25077_001EA, B25077_001MA)]
 }
 
+DT[, topic06_notes := NA_character_]
+
 # Too few samples to compute standard error
 DT[
   B25077_001E  == -666666666 &
@@ -48,7 +50,13 @@ DT[
 
 # There are missing values, we will use a geographic imputation.
 # We also apply a shrinkage
-DT <- shrink(DT, "B25077_001")
+DT <-
+  merge(
+    x = shrink(DT, "B25077_001"),
+    DT[, .SD, .SDcols = c(COLS_TO_KEEP, "topic06_notes")],
+    all = TRUE,
+    by = COLS_TO_KEEP
+  )
 
 data.table::setnames(
   x = DT,
@@ -57,7 +65,7 @@ data.table::setnames(
 )
 
 ################################################################################
-cols_to_keep <- c(COLS_TO_KEEP, "topic06_shrunk", "topic06_geo", "topic06_not_shrunk")
+cols_to_keep <- c(COLS_TO_KEEP, "topic06_shrunk", "topic06_geo", "topic06_not_shrunk", "topic06_notes")
 data.table::fwrite(
   x = DT[, .SD, .SDcols = cols_to_keep],
   file = "topic06.csv"

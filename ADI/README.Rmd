@@ -25,11 +25,11 @@ using data from the American Community Survey Five-Year (ACS5) data.
 | 1      | % Pop ≥ 25 yrs with < 9 yrs Education      | B15003                   | Numerator: Sum _002 to _012. Denominator: B15003_001                                              |
 | 2      | % Pop ≥ 25 yrs with >= High School Diploma | B15003                   | Numerator: Sum _002 to _016. Denominator: B15003_001. 1 - (sum() / D)                             |
 | 3      | % Employed ≥ 16 yrs in White-Collar Occs.  | C24010                   | Numerator: Sum _003 to _013 (Male) and _039 to _049 (Female). Denominator: C24010_001             |
-| 4      | Median Family Income                       | B19113                   | Use B19113_001                                                                                    |
+| 4      | Median Household Income                    | B19013                   | Use B19013_001                                                                                    |
 | 5      | Income Disparity (Singh Index)             | B19001                   | Numerator: B19001_002. Denominator: Sum B19001_011 to B19001_017. Calculate: log(100 × Num / Den) |
 | 6      | Median Home Value                          | B25077                   | Use B25077_001                                                                                    |
-| 7      | Median Gross Rent                          | B25063                   | Use B25063_001                                                                                    |
-| 8      | Median Monthly Mortgage                    | B25087                   | Use B25087_001                                                                                    |
+| 7      | Median Gross Rent                          | B25064                   | Use B25064_001                                                                                    |
+| 8      | Median Monthly Mortgage                    | B25088                   | Use B25088_001                                                                                    |
 | 9      | Home Ownership Rate (% Owner-Occupied)     | B25003                   | Numerator: B25003_002. Denominator: B25003_001                                                    |
 | 10     | Unemployment Rate (% Civilian Labor Force) | B23025                   | Numerator: B23025_005. Denominator: B23025_002                                                    |
 | 11     | % Families Below Poverty Level             | B17010                   | Numerator: B17010_002. Denominator: B17010_001                                                    |
@@ -40,6 +40,11 @@ using data from the American Community Survey Five-Year (ACS5) data.
 | 15-new | % Households Without internet              | B28002                   | Numerator: B28002_013. Denominator: B28002_001                                                    |
 | 16     | % Units Without Complete Plumbing          | B25047                   | Numerator: B25047_003. Denominator: B25047_001                                                    |
 | 17     | % Crowding (> 1.00 Person Per Room)        | B25014                   | Numerator: Sum _005, _006, _011, _012. Denominator: B25014_001                                    |
+
+The current `fairadi` build uses `B19013`, `B25064`, and `B25088` for topics
+4, 7, and 8 respectively. These topic definitions improved agreement with
+Neighborhood Atlas relative to the earlier `B19113`, `B25063`, and `B25087`
+choices.
 
 Neighborhood Atlas also [uses block group suppression](https://www.neighborhoodatlas.medicine.wisc.edu/changelog#:~:text=Changes%20between%20versions%20of%20the%20ADI%2C%2011/19/2020)
 before building the state and national rankings.
