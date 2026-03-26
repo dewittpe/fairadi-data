@@ -127,11 +127,11 @@ str(fairadi)
 ##  $ tract               : int  20100 20100 20100 20100 20100 20100 20100 20100 20100 20100 ...
 ##  $ block_group         : int  1 1 1 1 1 2 2 2 2 2 ...
 ##  $ FIPS                : chr  "010010201001" "010010201001" "010010201001" "010010201001" ...
-##  $ adi_raw             : num  -14992 -14407 -16641 -18126 -18704 ...
+##  $ adi_raw             : num  -17048 -16411 -18557 -20126 -21200 ...
 ##  $ exclude_from_ranking: int  0 0 0 0 0 0 0 0 0 0 ...
 ##  $ exclude_reason      : chr  "" "" "" "" ...
-##  $ national_rank       : int  71 76 75 75 76 62 71 75 76 74 ...
-##  $ state_rank          : int  5 5 5 5 5 3 5 5 5 5 ...
+##  $ national_rank       : int  67 73 73 73 73 67 73 74 74 73 ...
+##  $ state_rank          : int  4 5 5 5 5 4 5 5 5 5 ...
 ##  - attr(*, ".internal.selfref")=<externalptr>
 ```
 
@@ -153,13 +153,13 @@ adi[, .N, keyby = .(year, exclude_from_ranking, neighborhood_atlas_exclude)]
 ##     year exclude_from_ranking neighborhood_atlas_exclude      N
 ##    <int>                <int>                      <int>  <int>
 ## 1:  2020                    0                          0 235334
-## 2:  2020                    0                          1    778
+## 2:  2020                    0                          1    780
 ## 3:  2020                    1                          0    552
-## 4:  2020                    1                          1   5671
+## 4:  2020                    1                          1   5669
 ## 5:  2023                   NA                          1     40
 ## 6:  2023                    0                          0 236102
-## 7:  2023                    0                          1     41
-## 8:  2023                    1                          1   6153
+## 7:  2023                    0                          1     42
+## 8:  2023                    1                          1   6152
 ```
 
 There are 40 GEOIDs in the 2023 Neighborhood Atlas only.
@@ -228,16 +228,16 @@ exin <-
 <tbody>
   <tr>
    <td style="text-align:right;"> 2020 </td>
-   <td style="text-align:left;"> 5,671 (2.3%) </td>
+   <td style="text-align:left;"> 5,669 (2.3%) </td>
    <td style="text-align:left;"> 235,334 (97.1%) </td>
-   <td style="text-align:left;"> 778 (0.3%) </td>
+   <td style="text-align:left;"> 780 (0.3%) </td>
    <td style="text-align:left;"> 552 (0.2%) </td>
   </tr>
   <tr>
    <td style="text-align:right;"> 2023 </td>
-   <td style="text-align:left;"> 6,153 (2.5%) </td>
+   <td style="text-align:left;"> 6,152 (2.5%) </td>
    <td style="text-align:left;"> 236,102 (97.4%) </td>
-   <td style="text-align:left;"> 41 (0.0%) </td>
+   <td style="text-align:left;"> 42 (0.0%) </td>
    <td style="text-align:left;"> 0 (0.0%) </td>
   </tr>
 </tbody>
@@ -259,8 +259,8 @@ adi[
 ##     year neighborhood_atlas_exclude_reason     N
 ##    <int>                            <char> <int>
 ## 1:  2020                                GQ   751
-## 2:  2020                               QDI    27
-## 3:  2023                               QDI    41
+## 2:  2020                               QDI    29
+## 3:  2023                               QDI    42
 ```
 The primary reason for exclusion by Neighborhood Atlas is group quarters.
 
@@ -285,14 +285,14 @@ data sets.
 bg_gh[, .SD[duplicated(.SD, by = c("state", "county", "tract", "block_group"))]]
 ##     year state county  tract block_group group_quarters         FIPS   adi_raw
 ##    <int> <int>  <int>  <int>       <int>          <num>       <char>     <num>
-## 1:  2023     8     57 955600           1             NA 080579556001 -27650.39
-## 2:  2023     8     57 955600           2             NA 080579556002 -17564.71
-## 3:  2023    48    443 950100           1             NA 484439501001 -15097.03
+## 1:  2023     8     57 955600           1             NA 080579556001 -30102.26
+## 2:  2023     8     57 955600           2             NA 080579556002 -17424.08
+## 3:  2023    48    443 950100           1             NA 484439501001 -16749.82
 ##    exclude_from_ranking exclude_reason national_rank state_rank ADI_NATRANK
 ##                   <int>         <char>         <int>      <int>       <num>
-## 1:                    0                           49          9          NA
-## 2:                    0                           76         10          NA
-## 3:                    0                           84          8          NA
+## 1:                    0                           47          9          NA
+## 2:                    0                           81         10          NA
+## 3:                    0                           83          8          NA
 ##    ADI_STATERNK neighborhood_atlas_exclude_reason neighborhood_atlas_exclude
 ##           <num>                            <char>                      <int>
 ## 1:           NA                               QDI                          1
@@ -393,30 +393,30 @@ adi[
 <tbody>
   <tr>
    <td style="text-align:left;"> 2020 &amp; 2023 </td>
-   <td style="text-align:right;"> 0.9808 </td>
-   <td style="text-align:right;"> 0.9808 </td>
-   <td style="text-align:right;"> 0.9467 </td>
-   <td style="text-align:right;"> 0.9924 </td>
-   <td style="text-align:right;"> 0.9924 </td>
-   <td style="text-align:right;"> 0.9553 </td>
+   <td style="text-align:right;"> 0.9687 </td>
+   <td style="text-align:right;"> 0.9687 </td>
+   <td style="text-align:right;"> 0.9140 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9220 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020 </td>
-   <td style="text-align:right;"> 0.9819 </td>
-   <td style="text-align:right;"> 0.9819 </td>
-   <td style="text-align:right;"> 0.9490 </td>
-   <td style="text-align:right;"> 0.9927 </td>
-   <td style="text-align:right;"> 0.9927 </td>
-   <td style="text-align:right;"> 0.9563 </td>
+   <td style="text-align:right;"> 0.9694 </td>
+   <td style="text-align:right;"> 0.9694 </td>
+   <td style="text-align:right;"> 0.9152 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9219 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2023 </td>
-   <td style="text-align:right;"> 0.9798 </td>
-   <td style="text-align:right;"> 0.9798 </td>
-   <td style="text-align:right;"> 0.9444 </td>
-   <td style="text-align:right;"> 0.9922 </td>
-   <td style="text-align:right;"> 0.9922 </td>
-   <td style="text-align:right;"> 0.9542 </td>
+   <td style="text-align:right;"> 0.9680 </td>
+   <td style="text-align:right;"> 0.9680 </td>
+   <td style="text-align:right;"> 0.9127 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9865 </td>
+   <td style="text-align:right;"> 0.9221 </td>
   </tr>
 </tbody>
 </table>
@@ -471,57 +471,57 @@ adi[
 <tbody>
   <tr>
    <td style="text-align:left;"> 2020 &amp; 2023 </td>
-   <td style="text-align:right;"> 0.8014 </td>
-   <td style="text-align:right;"> 0.9839 </td>
-   <td style="text-align:right;"> 0.9938 </td>
-   <td style="text-align:right;"> 0.9973 </td>
-   <td style="text-align:right;"> 0.3216 </td>
-   <td style="text-align:right;"> 0.6762 </td>
-   <td style="text-align:right;"> 0.8278 </td>
-   <td style="text-align:right;"> 0.8986 </td>
-   <td style="text-align:right;"> 0.9344 </td>
-   <td style="text-align:right;"> 0.9541 </td>
-   <td style="text-align:right;"> 0.9656 </td>
-   <td style="text-align:right;"> 0.9733 </td>
-   <td style="text-align:right;"> 0.9786 </td>
-   <td style="text-align:right;"> 0.9823 </td>
-   <td style="text-align:right;"> 0.9851 </td>
+   <td style="text-align:right;"> 0.6718 </td>
+   <td style="text-align:right;"> 0.9662 </td>
+   <td style="text-align:right;"> 0.9913 </td>
+   <td style="text-align:right;"> 0.9967 </td>
+   <td style="text-align:right;"> 0.1683 </td>
+   <td style="text-align:right;"> 0.4245 </td>
+   <td style="text-align:right;"> 0.6000 </td>
+   <td style="text-align:right;"> 0.7230 </td>
+   <td style="text-align:right;"> 0.8082 </td>
+   <td style="text-align:right;"> 0.8657 </td>
+   <td style="text-align:right;"> 0.9036 </td>
+   <td style="text-align:right;"> 0.9290 </td>
+   <td style="text-align:right;"> 0.9464 </td>
+   <td style="text-align:right;"> 0.9587 </td>
+   <td style="text-align:right;"> 0.9677 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020 </td>
-   <td style="text-align:right;"> 0.8075 </td>
-   <td style="text-align:right;"> 0.9852 </td>
-   <td style="text-align:right;"> 0.9946 </td>
-   <td style="text-align:right;"> 0.9975 </td>
-   <td style="text-align:right;"> 0.3334 </td>
-   <td style="text-align:right;"> 0.6831 </td>
-   <td style="text-align:right;"> 0.8320 </td>
-   <td style="text-align:right;"> 0.9012 </td>
-   <td style="text-align:right;"> 0.9366 </td>
-   <td style="text-align:right;"> 0.9558 </td>
-   <td style="text-align:right;"> 0.9670 </td>
-   <td style="text-align:right;"> 0.9744 </td>
-   <td style="text-align:right;"> 0.9794 </td>
-   <td style="text-align:right;"> 0.9829 </td>
-   <td style="text-align:right;"> 0.9855 </td>
+   <td style="text-align:right;"> 0.6741 </td>
+   <td style="text-align:right;"> 0.9672 </td>
+   <td style="text-align:right;"> 0.9918 </td>
+   <td style="text-align:right;"> 0.9970 </td>
+   <td style="text-align:right;"> 0.1717 </td>
+   <td style="text-align:right;"> 0.4252 </td>
+   <td style="text-align:right;"> 0.5995 </td>
+   <td style="text-align:right;"> 0.7221 </td>
+   <td style="text-align:right;"> 0.8074 </td>
+   <td style="text-align:right;"> 0.8649 </td>
+   <td style="text-align:right;"> 0.9026 </td>
+   <td style="text-align:right;"> 0.9278 </td>
+   <td style="text-align:right;"> 0.9456 </td>
+   <td style="text-align:right;"> 0.9579 </td>
+   <td style="text-align:right;"> 0.9671 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2023 </td>
-   <td style="text-align:right;"> 0.7954 </td>
-   <td style="text-align:right;"> 0.9826 </td>
-   <td style="text-align:right;"> 0.9931 </td>
-   <td style="text-align:right;"> 0.9970 </td>
-   <td style="text-align:right;"> 0.3099 </td>
-   <td style="text-align:right;"> 0.6694 </td>
-   <td style="text-align:right;"> 0.8235 </td>
-   <td style="text-align:right;"> 0.8960 </td>
-   <td style="text-align:right;"> 0.9322 </td>
-   <td style="text-align:right;"> 0.9524 </td>
-   <td style="text-align:right;"> 0.9641 </td>
-   <td style="text-align:right;"> 0.9722 </td>
-   <td style="text-align:right;"> 0.9779 </td>
-   <td style="text-align:right;"> 0.9817 </td>
-   <td style="text-align:right;"> 0.9847 </td>
+   <td style="text-align:right;"> 0.6696 </td>
+   <td style="text-align:right;"> 0.9652 </td>
+   <td style="text-align:right;"> 0.9908 </td>
+   <td style="text-align:right;"> 0.9965 </td>
+   <td style="text-align:right;"> 0.1648 </td>
+   <td style="text-align:right;"> 0.4238 </td>
+   <td style="text-align:right;"> 0.6006 </td>
+   <td style="text-align:right;"> 0.7240 </td>
+   <td style="text-align:right;"> 0.8091 </td>
+   <td style="text-align:right;"> 0.8665 </td>
+   <td style="text-align:right;"> 0.9045 </td>
+   <td style="text-align:right;"> 0.9301 </td>
+   <td style="text-align:right;"> 0.9472 </td>
+   <td style="text-align:right;"> 0.9595 </td>
+   <td style="text-align:right;"> 0.9683 </td>
   </tr>
 </tbody>
 </table>
