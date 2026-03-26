@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 include Makevars
 
-.PHONY: all manifest zenodo release fips acs5 acs5-state acs5-county acs5-tract acs5-block-group decennial decennial-state decennial-county decennial-tract decennial-block-group adi
+.PHONY: all manifest zenodo release fips acs5 acs5-state acs5-county acs5-tract acs5-block-group acs5-metadata decennial decennial-state decennial-county decennial-tract decennial-block-group decennial-metadata census-metadata adi
 
 all: fips decennial acs5 adi manifest
 
@@ -10,6 +10,9 @@ fips:
 
 acs5: fips
 	$(MAKE) -C ACS5
+
+acs5-metadata:
+	$(MAKE) -C ACS5 metadata
 
 acs5-state: fips
 	$(MAKE) -C ACS5 state
@@ -25,6 +28,13 @@ acs5-block-group: fips
 
 decennial: fips
 	$(MAKE) -C Decennial
+
+decennial-metadata:
+	$(MAKE) -C Decennial metadata
+
+census-metadata:
+	$(MAKE) acs5-metadata
+	$(MAKE) decennial-metadata
 
 decennial-state: fips
 	$(MAKE) -C Decennial state

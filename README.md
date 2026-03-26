@@ -69,11 +69,24 @@ The API key is only required when fetching missing Census source files.
 If the needed local files already exist in `FIPS/`, `ACS5/`, and `Decennial/`,
 you can rebuild downstream outputs without setting `USCENSUSAPIKEY`.
 
+Table metadata JSON downloads do not require an API key, but they are fetched
+from the same Census API and are included in the `make acs5`,
+`make decennial`, and `make all` workflows.
+
+Additional metadata-only targets are available when you want to refresh table
+definitions without re-downloading Census extracts:
+
+- `make acs5-metadata`
+- `make decennial-metadata`
+- `make census-metadata`
+
 ## Repository Layout
 
 - `FIPS/`: reference geography inventories used by the Census download workflow.
-- `ACS5/`: ACS 5-year table extracts used to build the deprivation measures.
-- `Decennial/`: Decennial Census extracts used for population, housing, and
+- `ACS5/`: ACS 5-year table extracts plus `metadata/<year>/<table>.json`
+  definitions fetched from the Census API.
+- `Decennial/`: Decennial Census extracts plus
+  `metadata/<year>/<table>.json` definitions used for population, housing, and
   group quarters logic.
 - `ADI/`: ADI topic scripts, score assembly, validation report, and selected
   derived outputs.
