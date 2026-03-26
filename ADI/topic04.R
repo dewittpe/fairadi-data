@@ -4,7 +4,7 @@
 # Objective: build topic04 of the Area Deprivation Index
 #
 #   Topic: 4
-#   Topic Area: Median Family Income
+#   Topic Area: Median Household Income
 #   Detailed Table ID: B19013
 #   Calculations:
 #     Use B19013_001
