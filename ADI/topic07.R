@@ -43,7 +43,7 @@ DT[
   B25064_001EA == "100-" &
   B25064_001M  == -333333333 &
   B25064_001MA == "***",
-  `:=`(B25064_001E = NA_integer_, B25064_001M = NA_integer_, topic06_notes = "QDI-range")
+  `:=`(B25064_001E = NA_integer_, B25064_001M = NA_integer_, topic07_notes = "QDI-range")
 ]
 
 DT[
@@ -51,7 +51,7 @@ DT[
   B25064_001EA == "3,500+" &
   B25064_001M  == -333333333 &
   B25064_001MA == "***",
-  `:=`(B25064_001E = NA_integer_, B25064_001M = NA_integer_, topic06_notes = "QDI-range")
+  `:=`(B25064_001E = NA_integer_, B25064_001M = NA_integer_, topic07_notes = "QDI-range")
 ]
 
 # all annotations have been addressed
