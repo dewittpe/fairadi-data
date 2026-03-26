@@ -22,6 +22,8 @@ These data are in the public domain. Source: U.S. Census Bureau.
 |                 | B15003       | Educational attainment                                      |
 |                 | B17010       | Poverty status in the past 12 months by age                 |
 |                 | B19001       | Household income in the past 12 months                      |
+|                 | B19013       | Median household income in the past 12 months               |
+|                 | B19083       | Gini Index of Income Inequality                             |
 |                 | B19113       | Median family income in the past 12 months                  |
 |                 | B23025       | Employment status                                           |
 | H1              | B25001       | Housing Units                                               |
@@ -31,13 +33,15 @@ These data are in the public domain. Source: U.S. Census Bureau.
 |                 | B25044       | Tenure by vehicles available                                |
 |                 | B25047       | Plumbed facilities for occupied housing units               |
 |                 | B25063       | Gross rent                                                  |
+|                 | B25064       | Median gross rent                                           |
 |                 | B25077       | Median value (owner-occupied housing units)                 |
 |                 | B25087       | Mortgage status                                             |
+|                 | B25088       | Median monthly housing costs                                |
 | P18             | B26001       | Group Quarters                                              |
+|                 | B27010       | Types of health insurance coverage by age                   |
 |                 | B28002       | Presence and type of Internet subscription in household     |
 |                 | C17002       | Ratio of income to poverty level in the past 12 months      |
 |                 | C24010       | Occupation by sex and median earnings in the past 12 months |
-|                 | B19083       | Gini Index of Income Inequality                             |
 
 For the ADI suppression criteria, `fairadi` uses Decennial 2020 block-group
 group-quarters values across all modeled years. Public ACS 5-year data do not
