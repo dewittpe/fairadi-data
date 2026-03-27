@@ -10,6 +10,7 @@
 #     Use B25088_001
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25088")
 

@@ -15,6 +15,7 @@
 #
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25064")
 cfa <- check_for_anotations(DT)

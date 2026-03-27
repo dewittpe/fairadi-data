@@ -68,6 +68,11 @@ The current required namespace list is:
 - `qwraps2`
 - `scales`
 
+## import_census_table.R
+Defines a useful helper function for importing an ACS5 or Decennial Census
+dataset into R.  Expected to be evaluated within either the ADI or CDI
+directories.
+
 ## census_fetch.sh
 
 Robust wrapper around `curl` for fetching Census files to a specific output

@@ -6,6 +6,7 @@
 #   some topicXX.R scripts.
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT <- import_census_table("B01003")
 cfa <- check_for_anotations(DT)

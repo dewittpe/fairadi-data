@@ -4,6 +4,7 @@
 # Objective: build a data.table with the % of population in group quarters
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 pop <- import_census_table("P1")
 gq  <- import_census_table("P18")

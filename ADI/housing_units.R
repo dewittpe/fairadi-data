@@ -4,6 +4,7 @@
 # Objective: build a data.table with the number of housing units
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25001")
 cfa <- check_for_anotations(DT)

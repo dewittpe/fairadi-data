@@ -1,5 +1,7 @@
 include ../Makevars
 
+UTILITIES := ../utilities/import_census_table.R
+
 ADITOPICS := topic01.csv.gz topic02.csv.gz topic03.csv.gz topic04.csv.gz topic05.csv.gz topic06.csv.gz topic07.csv.gz topic08.csv.gz topic09.csv.gz topic10.csv.gz topic11.csv.gz topic12.csv.gz topic13.csv.gz topic14.csv.gz topic15.csv.gz topic16.csv.gz topic17.csv.gz
 ADITOPIC_CSV := $(ADITOPICS:.csv.gz=.csv)
 
@@ -25,55 +27,55 @@ housing_units.csv: housing_units.R adi_utilities.R $(call acsvar,B25001)
 group_quarters.csv: group_quarters.R adi_utilities.R ../Decennial/P18__2020.csv.gz ../Decennial/P1__2020.csv.gz total_population.csv.gz
 	$(RSCRIPTVANILLA) $<
 
-topic01.csv: topic01.R adi_utilities.R $(call acsvar,B15003)
+topic01.csv: topic01.R adi_utilities.R $(call acsvar,B15003) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic02.csv: topic02.R adi_utilities.R $(call acsvar,B15003)
+topic02.csv: topic02.R adi_utilities.R $(call acsvar,B15003) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic03.csv: topic03.R adi_utilities.R $(call acsvar,C24010)
+topic03.csv: topic03.R adi_utilities.R $(call acsvar,C24010) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic04.csv: topic04.R adi_utilities.R $(call acsvar,B19013)
+topic04.csv: topic04.R adi_utilities.R $(call acsvar,B19013) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic05.csv: topic05.R adi_utilities.R $(call acsvar,B19001) total_population.csv.gz
+topic05.csv: topic05.R adi_utilities.R $(call acsvar,B19001) total_population.csv.gz $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic06.csv: topic06.R adi_utilities.R $(call acsvar,B25077)
+topic06.csv: topic06.R adi_utilities.R $(call acsvar,B25077) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic07.csv: topic07.R adi_utilities.R $(call acsvar,B25064)
+topic07.csv: topic07.R adi_utilities.R $(call acsvar,B25064) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic08.csv: topic08.R adi_utilities.R $(call acsvar,B25088)
+topic08.csv: topic08.R adi_utilities.R $(call acsvar,B25088) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic09.csv: topic09.R adi_utilities.R $(call acsvar,B25003)
+topic09.csv: topic09.R adi_utilities.R $(call acsvar,B25003) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic10.csv: topic10.R adi_utilities.R $(call acsvar,B23025)
+topic10.csv: topic10.R adi_utilities.R $(call acsvar,B23025) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic11.csv: topic11.R adi_utilities.R $(call acsvar,B17010)
+topic11.csv: topic11.R adi_utilities.R $(call acsvar,B17010) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic12.csv: topic12.R adi_utilities.R $(call acsvar,C17002)
+topic12.csv: topic12.R adi_utilities.R $(call acsvar,C17002) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic13.csv: topic13.R adi_utilities.R $(call acsvar,B11012)
+topic13.csv: topic13.R adi_utilities.R $(call acsvar,B11012) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic14.csv: topic14.R adi_utilities.R $(call acsvar,B25044)
+topic14.csv: topic14.R adi_utilities.R $(call acsvar,B25044) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic15.csv: topic15.R adi_utilities.R $(call acsvar,B28002) $(call acsvar,B25043)
+topic15.csv: topic15.R adi_utilities.R $(call acsvar,B28002) $(call acsvar,B25043) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic16.csv: topic16.R adi_utilities.R $(call acsvar,B25047)
+topic16.csv: topic16.R adi_utilities.R $(call acsvar,B25047) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic17.csv: topic17.R adi_utilities.R $(call acsvar,B25014)
+topic17.csv: topic17.R adi_utilities.R $(call acsvar,B25014) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
 README.md: README.Rmd fairadi.csv.gz

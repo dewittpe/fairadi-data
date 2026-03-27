@@ -11,6 +11,7 @@
 #     Denominator: B23025_002
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT <- import_census_table("B23025")
 cfa <- check_for_anotations(DT)

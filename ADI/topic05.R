@@ -16,6 +16,7 @@
 #     that ratio is non-zero and the log does not return Inf.
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT <- import_census_table("B19001")
 cfa <- check_for_anotations(DT)

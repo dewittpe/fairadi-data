@@ -11,6 +11,7 @@
 #     Denominator: B25014_001
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25014")
 cfa <- check_for_anotations(DT)

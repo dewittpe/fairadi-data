@@ -94,6 +94,7 @@
 # C24010_073E  Female: !! Production, transportation, and material moving occupations:  !! Material moving occupations
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT <- import_census_table("C24010")
 cfa <- check_for_anotations(DT)

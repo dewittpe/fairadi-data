@@ -5,7 +5,6 @@
 #
 # Methods defined in this file:
 #
-#   import_census_table
 #   check_for_anotations
 #   geographic_imputation
 #   build_FIPS
@@ -16,40 +15,6 @@
 #
 ################################################################################
 COLS_TO_KEEP <- c("year", "state", "county", "tract", "block_group")
-
-################################################################################
-#                             Import census table
-#
-# Function to import all the yearly files for a specific variable
-#
-# @param x the table to import
-# @param ... passed to data.table::fread
-#
-# @example
-#
-import_census_table <- function(table, ...) {
-  stopifnot(!is.null(table), is.character(table), length(table) == 1L)
-  if (startsWith(table, "P")) {
-    path <- "Decennial"
-  } else if (startsWith(table, "B") | startsWith(table, "C")) {
-    path <- "ACS5"
-  } else {
-    stop("Expected table name to start with a 'P' for Decennial table, 'B' or 'C' for ACS5 table.")
-  }
-  path <- file.path("..", path)
-
-  files <-
-    list.files(
-      path = path,
-      pattern = sprintf("%s__\\d{4}\\.csv\\.gz$", table),
-      full.names = TRUE
-    )
-
-  message(paste("Importing data from:\n ", paste(files, collapse = "\n  "), "\n"))
-
-  DTs <- lapply(files, data.table::fread, na.strings = c("NA", "null"), ...)
-  data.table::rbindlist(DTs)
-}
 
 ################################################################################
 #                            Check for Annotations

@@ -45,6 +45,7 @@
 # | B15003_025 | Doctorate degree                           |                 |
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 
 # import needed data

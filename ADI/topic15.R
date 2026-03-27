@@ -21,6 +21,7 @@
 #     Denominator: B28002_001
 #
 ################################################################################
+source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 DT_old <- import_census_table("B25043")
 DT_new <- import_census_table("B28002")
