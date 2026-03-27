@@ -27,51 +27,16 @@ component02.csv: component02.R cdi_utilities.R $(call acsvar,B15003) $(UTILITIES
 component03.csv: component03.R cdi_utilities.R $(call acsvar,C24010) $(UTILITIES) total_population_and_housing_units.csv.gz
 	$(RSCRIPTVANILLA) $<
 
+component04.csv: component04.R cdi_utilities.R $(call acsvar,B17010) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
+component05.csv: component05.R cdi_utilities.R $(call acsvar,B25014) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
 total_population_and_housing_units.csv: total_population_and_housing_units.R $(call acsvar,B01001) $(call acsvar,B01003) $(call acsvar,B25032) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-#component04.csv: component04.R cdi_utilities.R $(call acsvar,B19013) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component05.csv: component05.R cdi_utilities.R $(call acsvar,B19001) total_population.csv.gz $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component06.csv: component06.R cdi_utilities.R $(call acsvar,B25077) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component07.csv: component07.R cdi_utilities.R $(call acsvar,B25064) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component08.csv: component08.R cdi_utilities.R $(call acsvar,B25088) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component09.csv: component09.R cdi_utilities.R $(call acsvar,B25003) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component10.csv: component10.R cdi_utilities.R $(call acsvar,B23025) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component11.csv: component11.R cdi_utilities.R $(call acsvar,B17010) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component12.csv: component12.R cdi_utilities.R $(call acsvar,C17002) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component13.csv: component13.R cdi_utilities.R $(call acsvar,B11012) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component14.csv: component14.R cdi_utilities.R $(call acsvar,B25044) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component15.csv: component15.R cdi_utilities.R $(call acsvar,B28002) $(call acsvar,B25043) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component16.csv: component16.R cdi_utilities.R $(call acsvar,B25047) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
-#component17.csv: component17.R cdi_utilities.R $(call acsvar,B25014) $(UTILITIES)
-#	$(RSCRIPTVANILLA) $<
-#
+
 #README.md: README.Rmd faircdi.csv.gz
 #	$(RSCRIPTVANILLA) -e "knitr::knit('$<', output='$@')"
 
