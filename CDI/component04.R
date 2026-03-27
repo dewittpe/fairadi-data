@@ -35,9 +35,13 @@ DT[ ,
 # Step 2: build the MOE
 DT[
   ,
-  component04M := 1/B17010_001E * sqrt(rowSums(.SD^2) - component04E / B17010_001E * B17010_001M^2),
+  `:=`(
+    radican0 = rowSums(.SD^2) - component04E / B17010_001E * B17010_001M^2,
+    radican1 = rowSums(.SD^2) + B17010_001M / component04E * B17010_001M^2
+  ),
   .SDcols = nVM
 ]
+DT[, component04M := 100 * 1/B17010_001E * sqrt(data.table::fifelse(radican0 > 0, radican0, radican1))]
 
 # Step 3: flag for replacement
 DT <- join_tphu(DT)
@@ -59,12 +63,6 @@ data.table::set(
   j = "component04",
   value = scale(DT[["component04"]])
 )
-
-if (interactive()) {
-  # some missing values? -- seems to all be state 11, county 1
-  B17010 <- import_census_table("B17010")
-  B17010[DT[is.na(component04)], on = c("year", "state", "county", "tract", "block_group")][, .(year, state, county, tract, block_group, B17010_001E, B17010_001M, B17010_002E, B17010_002M)] |> summary()
-}
 
 # save this data to disk
 data.table::fwrite(DT, file = "component04.csv")

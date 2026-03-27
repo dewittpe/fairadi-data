@@ -34,7 +34,7 @@ DT[ ,
 # Step 2: build the MOE
 DT[
   ,
-  component03M := 1/C24010_001E * sqrt(rowSums(.SD^2) - component03E / C24010_001E * C24010_001M^2),
+  component03M := 100 * 1/C24010_001E * sqrt(rowSums(.SD^2) - component03E / C24010_001E * C24010_001M^2),
   .SDcols = nVM
 ]
 
