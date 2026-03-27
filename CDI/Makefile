@@ -48,6 +48,30 @@ component09.csv: component09.R cdi_utilities.R $(call acsvar,B19001) $(UTILITIES
 component10.csv: component10.R cdi_utilities.R $(call acsvar,B19013) $(UTILITIES) total_population_and_housing_units.csv.gz
 	$(RSCRIPTVANILLA) $<
 
+component11.csv: component11.R cdi_utilities.R $(call acsvar,B25064) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
+component12.csv: component12.R cdi_utilities.R $(call acsvar,B25077) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
+component13.csv: component13.R cdi_utilities.R $(call acsvar,B25088) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
+component14.csv: component14.R cdi_utilities.R $(call acsvar,B11003) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
+component15.csv: component15.R cdi_utilities.R $(call acsvar,B25003) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
+component16.csv: component16.R cdi_utilities.R $(call acsvar,C17002) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
+component17.csv: component17.R cdi_utilities.R $(call acsvar,B23025) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
+component18.csv: component18.R cdi_utilities.R $(call acsvar,B27010) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
 total_population_and_housing_units.csv: total_population_and_housing_units.R $(call acsvar,B01001) $(call acsvar,B01003) $(call acsvar,B25032) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 

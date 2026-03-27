@@ -133,6 +133,7 @@ steps_4_and_5 <- function(DT, variable) {
       all.x = TRUE,
       by = c("year", "state", "county", "tract", "block_group")
     )
+
   data.table::set(
     x = rtn,
     i = which(rtn[["flag_for_replacement"]] == 1),

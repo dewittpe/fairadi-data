@@ -10,7 +10,7 @@
 # Table Name:
 #   Household income in the paste 12 months
 # Numerator Calculation:
-#   sum of the items B19001_003 to B19001_004
+#   sum of the items B19001_002 to B19001_004
 # Denominator Calculation:
 #   sum of the items B19001_014 to B19001_017
 # Value Calculation with Description:
@@ -51,9 +51,9 @@ stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 # • This approach captures the block groups with the greatest disparities by
 #   setting those values to the minimum/maximum values, rather than replacing
 #   those with the values for higher geographic levels.
-DT[, numerator   := rowSums(.SD), .SDcols = sprintf("B19001_%03dE", 3:4)]
+DT[, numerator   := rowSums(.SD), .SDcols = sprintf("B19001_%03dE", 2:4)]
 DT[, denominator := rowSums(.SD), .SDcols = sprintf("B19001_%03dE", 14:17)]
-DT[, numeratorMOEsq   := rowSums(.SD^2), .SDcols = sprintf("B19001_%03dM", 3:4)]
+DT[, numeratorMOEsq   := rowSums(.SD^2), .SDcols = sprintf("B19001_%03dM", 2:4)]
 DT[, denominatorMOEsq := rowSums(.SD^2), .SDcols = sprintf("B19001_%03dM", 14:17)]
 DT[, component09E := numerator/denominator]
 minmax_disparity_ratio <-
@@ -88,8 +88,6 @@ DT[numerator == 0 | denominator == 0, component09M := NA]
 #   That is the most defensible path because the exact CMS MOE rule is written for the ratio, not for log(ratio), and the min/max replacement logic also lives on the ratio scale.
 
 
-
-
 # Step 3: Flag values that need replacement -- I don't think this is to be done
 # here as the min/max values used above account for those issues.  Just set the
 # flag_for_replacement to 0
@@ -97,7 +95,13 @@ DT[, flag_for_replacement := 0L]
 
 # Step 4: Apply Shrinkage
 # Step 5: Replace invalid values from step 3
-DT <- steps_4_and_5(DT, "component09")
+DTa <- steps_4_and_5(DT[numerator > 0 & denominator > 0], "component09")
+DT <- rbind(
+  DT[numerator == 0 | denominator == 0, .(year, state, county, tract, block_group, component09 = component09E)],
+  DTa
+)
+
+DT[, component09 := log(100 * component09)]
 
 # Step 6: Standardize the component
 DT[, component09 := scale(component09), by = .(year)]
