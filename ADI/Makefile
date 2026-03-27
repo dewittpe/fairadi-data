@@ -1,6 +1,6 @@
 include ../Makevars
 
-UTILITIES := ../utilities/import_census_table.R
+UTILITIES := ../utilities/import_census_table.R ../utilities/check_for_annotations.R
 
 ADITOPICS := topic01.csv.gz topic02.csv.gz topic03.csv.gz topic04.csv.gz topic05.csv.gz topic06.csv.gz topic07.csv.gz topic08.csv.gz topic09.csv.gz topic10.csv.gz topic11.csv.gz topic12.csv.gz topic13.csv.gz topic14.csv.gz topic15.csv.gz topic16.csv.gz topic17.csv.gz
 ADITOPIC_CSV := $(ADITOPICS:.csv.gz=.csv)
@@ -15,7 +15,7 @@ all: README.md
 %.csv.gz: %.csv
 	gzip -9 -f -n $<
 
-fairadi.csv: fairadi.R adi_utilities.R $(ADITOPICS) total_population.csv.gz housing_units.csv.gz group_quarters.csv.gz
+fairadi.csv: fairadi.R adi_utilities.R $(ADITOPICS) total_population.csv.gz housing_units.csv.gz group_quarters.csv.gz ../utilities/build_FIPS.R
 	$(RSCRIPTVANILLA) $<
 
 total_population.csv: total_population.R adi_utilities.R $(call acsvar,B01003)

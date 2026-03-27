@@ -17,9 +17,10 @@
 #
 ################################################################################
 source("../utilities/import_census_table.R")
+source("../utilities/check_for_annotations.R")
 source("adi_utilities.R")
 DT <- import_census_table("B19001")
-cfa <- check_for_anotations(DT)
+cfa <- check_for_annotations(DT)
 stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 
 total_population <- data.table::fread("total_population.csv.gz")

@@ -7,9 +7,10 @@
 #
 ################################################################################
 source("../utilities/import_census_table.R")
+source("../utilities/check_for_annotations.R")
 source("adi_utilities.R")
 DT <- import_census_table("B01003")
-cfa <- check_for_anotations(DT)
+cfa <- check_for_annotations(DT)
 
 # B01003_001MA exists
 stopifnot(identical(cfa, list(E = character(0), M = "B01003_001MA")))

@@ -11,9 +11,10 @@
 #
 ################################################################################
 source("../utilities/import_census_table.R")
+source("../utilities/check_for_annotations.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25077")
-cfa <- check_for_anotations(DT)
+cfa <- check_for_annotations(DT)
 
 # there are annotations to deal with
 if (interactive()) {

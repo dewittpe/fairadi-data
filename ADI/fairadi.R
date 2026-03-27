@@ -8,6 +8,7 @@
 #
 ################################################################################
 # For the moment, no spatial data, so use data.table
+source("../utilities/build_FIPS.R")
 source("adi_utilities.R")
 
 adi <-

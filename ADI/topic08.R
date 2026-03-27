@@ -11,10 +11,11 @@
 #
 ################################################################################
 source("../utilities/import_census_table.R")
+source("../utilities/check_for_annotations.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25088")
 
-cfa <- check_for_anotations(DT)
+cfa <- check_for_annotations(DT)
 stopifnot(identical(cfa, list(E = c("B25088_001EA", "B25088_002EA", "B25088_003EA"), M = c("B25088_001MA", "B25088_002MA", "B25088_003MA"))))
 
 if (interactive()) {

@@ -42,11 +42,12 @@
 #
 ################################################################################
 source("../utilities/import_census_table.R")
+source("../utilities/check_for_annotations.R")
 source("adi_utilities.R")
 
 # import needed data
 DT <- import_census_table(table = "B15003")
-cfa <- check_for_anotations(DT)
+cfa <- check_for_annotations(DT)
 
 # B15003_001MA exists
 stopifnot(identical(cfa, list(E = character(0), M = "B15003_001MA")))

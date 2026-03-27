@@ -22,12 +22,13 @@
 #
 ################################################################################
 source("../utilities/import_census_table.R")
+source("../utilities/check_for_annotations.R")
 source("adi_utilities.R")
 DT_old <- import_census_table("B25043")
 DT_new <- import_census_table("B28002")
 DT <- merge(DT_old, DT_new, all = TRUE)
 
-cfa <- check_for_anotations(DT)
+cfa <- check_for_annotations(DT)
 stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 
 DT[
