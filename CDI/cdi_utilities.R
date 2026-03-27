@@ -44,9 +44,9 @@ steps_1_and_2 <- function(DT, component, numerator_variables, denominator_variab
       data.table::set(DT, j = compM, value = DT[, 1/x2 * sqrt(radican2)])
     } else {
       i <- which(DT[["radican1"]] >= 0)
-      data.table::set(DT, i = i, j = compM, value = DT[i, 100 * 1/x2 * sqrt(radican1)])
+      data.table::set(DT, i = i, j = compM, value = DT[i, 1/x2 * sqrt(radican1)])
       i <- which(DT[["radican1"]] < 0)
-      data.table::set(DT, i = i, j = compM, value = DT[i, 100 * 1/x2 * sqrt(radican2)])
+      data.table::set(DT, i = i, j = compM, value = DT[i, 1/x2 * sqrt(radican2)])
     }
   }
   DT
