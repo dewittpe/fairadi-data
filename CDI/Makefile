@@ -39,6 +39,9 @@ component06.csv: component06.R cdi_utilities.R $(call acsvar,B28002) $(UTILITIES
 component07.csv: component07.R cdi_utilities.R $(call acsvar,B25044) $(UTILITIES) total_population_and_housing_units.csv.gz
 	$(RSCRIPTVANILLA) $<
 
+component08.csv: component08.R cdi_utilities.R $(call acsvar,B25047) $(UTILITIES) total_population_and_housing_units.csv.gz
+	$(RSCRIPTVANILLA) $<
+
 total_population_and_housing_units.csv: total_population_and_housing_units.R $(call acsvar,B01001) $(call acsvar,B01003) $(call acsvar,B25032) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
