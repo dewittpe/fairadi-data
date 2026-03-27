@@ -30,7 +30,7 @@ steps_1_and_2 <- function(DT, component, numerator_variables, denominator_variab
   data.table::set(x = DT, j = compE, value = n/d)
 
   if (is.null(denominator_variables)) {
-    moe <- DT[, sqrt(rowSums(.SD^2)), .SDcols = numerator_variables]
+    moe <- DT[, sqrt(rowSums(.SD^2)), .SDcols = paste0(numerator_variables, "M")]
     data.table::set(DT, j = compM, value = moe)
   } else {
     DT[, m1sq := rowSums(.SD^2), .SDcols = paste0(numerator_variables, "M")]
