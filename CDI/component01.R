@@ -33,20 +33,10 @@ stopifnot(
 DT[!is.na(B15003_001MA), B15003_001M := 0L]
 
 # Step 1: build the component
-nVE <- sprintf("B15003_%03dE", 2:16)
-nVM <- sprintf("B15003_%03dM", 2:16)
-DT[
-  ,
-  component01E := rowSums(.SD) / B15003_001E,
-  .SDcols = nVE
-]
-
 # Step 2: build the MOE
-DT[
-  ,
-  component01M := 100 * 1/B15003_001E * sqrt(rowSums(.SD^2) - component01E / B15003_001E * B15003_001M^2),
-  .SDcols = nVM
-]
+nV <- sprintf("B15003_%03d", 2:16)
+dV <- sprintf("B15003_%03d", 1)
+steps_1_and_2(DT, 1, nV, dV)
 
 # Step 3: flag for replacement
 DT <- join_tphu(DT)
@@ -60,14 +50,12 @@ DT[
 
 # Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
 # geography level
-DT <- shrink(DT, "component01")
+DT <- steps_4_and_5(DT, "component01")
 
 # Step 6: Standardize the component
-data.table::set(
-  x = DT,
-  j = "component01",
-  value = scale(DT[["component01"]])
-)
+DT[, component01 := scale(component01), by = .(year)]
+
+# Steps 7, 8, and 9 are done in faircdi.R
 
 # save this data to disk
 data.table::fwrite(DT, file = "component01.csv")

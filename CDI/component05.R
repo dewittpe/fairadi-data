@@ -24,23 +24,10 @@ cfa <- check_for_annotations(DT)
 stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 
 # Step 1: build the component
-nVE <- sprintf("B25014_%03dE", c(5:7, 11:13))
-nVM <- sprintf("B25014_%03dM", c(5:7, 11:13))
-DT[ ,
-  component05E := rowSums(.SD) / B25014_001E,
-  .SDcols = nVE
-]
-
 # Step 2: build the MOE
-DT[
-  ,
-  `:=`(
-    radican0 = rowSums(.SD^2) - component05E / B25014_001E * B25014_001M^2,
-    radican1 = rowSums(.SD^2) + B25014_001M / component05E * B25014_001M^2
-  ),
-  .SDcols = nVM
-]
-DT[, component05M := 100 * 1/B25014_001E * sqrt(data.table::fifelse(radican0 > 0, radican0, radican1))]
+nV <- sprintf("B25014_%03d", c(5:7, 11:13))
+dV <- sprintf("B25014_%03d", 1)
+steps_1_and_2(DT, 5, nV, dV)
 
 # Step 3: flag for replacement
 DT <- join_tphu(DT)
@@ -54,19 +41,17 @@ DT[
 
 # Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
 # geography level
-if (interactive()) {
-  pre <- data.table::copy(DT)
-}
-DT <- shrink(DT, "component05")
+DT <- steps_4_and_5(DT, "component05")
 
 # Step 6: Standardize the component
 DT[, component05 := scale(component05), by = .(year)]
+
+# Steps 7, 8, and 9 are done in faircdi.R
 
 # missing values? It might be due to no population?
 if (interactive()) {
   B25014 <- import_census_table("B25014")
   B25014[DT[is.na(component05)], on = .NATURAL]
-  pre[DT[is.na(component05)], on = c("year", "state", "county")][tract == 201] |> summary()
 }
 
 # save this data to disk

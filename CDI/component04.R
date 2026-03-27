@@ -25,23 +25,10 @@ cfa <- check_for_annotations(DT)
 stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 
 # Step 1: build the component
-nVE <- sprintf("B17010_%03dE", 2)
-nVM <- sprintf("B17010_%03dM", 2)
-DT[ ,
-  component04E := rowSums(.SD) / B17010_001E,
-  .SDcols = nVE
-]
-
 # Step 2: build the MOE
-DT[
-  ,
-  `:=`(
-    radican0 = rowSums(.SD^2) - component04E / B17010_001E * B17010_001M^2,
-    radican1 = rowSums(.SD^2) + B17010_001M / component04E * B17010_001M^2
-  ),
-  .SDcols = nVM
-]
-DT[, component04M := 100 * 1/B17010_001E * sqrt(data.table::fifelse(radican0 > 0, radican0, radican1))]
+nV <- sprintf("B17010_%03d", 2)
+dV <- sprintf("B17010_%03d", 1)
+steps_1_and_2(DT, 4, nV, dV)
 
 # Step 3: flag for replacement
 DT <- join_tphu(DT)
@@ -55,14 +42,12 @@ DT[
 
 # Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
 # geography level
-DT <- shrink(DT, "component04")
+DT <- steps_4_and_5(DT, "component04")
 
 # Step 6: Standardize the component
-data.table::set(
-  x = DT,
-  j = "component04",
-  value = scale(DT[["component04"]])
-)
+DT[, component04 := scale(component04), by = .(year)]
+
+# Steps 7, 8, and 9 are done in faircdi.R
 
 # save this data to disk
 data.table::fwrite(DT, file = "component04.csv")

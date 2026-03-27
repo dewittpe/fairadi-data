@@ -12,9 +12,50 @@ join_tphu <- function(DT) {
 }
 
 ################################################################################
+steps_1_and_2 <- function(DT, component, numerator_variables, denominator_variables = NULL) {
+  stopifnot(inherits(DT, "data.table"))
+  stopifnot(as.integer(component) %in% as.integer(1:18))
+  compE <- sprintf("component%02dE", as.integer(component))
+  compM <- sprintf("component%02dM", as.integer(component))
+
+  # step1: build component estimate
+  n <- DT[, rowSums(.SD), .SDcols = paste0(numerator_variables, "E")]
+
+  if (!is.null(denominator_variables)) {
+    d <- DT[, rowSums(.SD), .SDcols = paste0(denominator_variables, "E")]
+  } else {
+    d <- rep(1, length(n))
+  }
+
+  data.table::set(x = DT, j = compE, value = n/d)
+
+  if (is.null(denominator_variables)) {
+    moe <- DT[, sqrt(rowSums(.SD^2)), .SDcols = numerator_variables]
+    data.table::set(DT, j = compM, value = moe)
+  } else {
+    DT[, m1sq := rowSums(.SD^2), .SDcols = paste0(numerator_variables, "M")]
+    DT[, m2sq := rowSums(.SD^2), .SDcols = paste0(denominator_variables, "M")]
+    DT[, x1   := .SD, .SDcols = compE]
+    DT[, x2   := rowSums(.SD), .SDcols = paste0(denominator_variables, "E")]
+    DT[, radican1 := m1sq - (x1/x2)^2 * m2sq]
+    DT[, radican2 := m1sq + (x1/x2)^2 * m2sq]
+
+    if (any(DT[["x1"]]/DT[["x2"]] > 1, na.rm = TRUE)) {
+      data.table::set(DT, j = compM, value = DT[, 1/x2 * sqrt(radican2)])
+    } else {
+      i <- which(DT[["radican1"]] >= 0)
+      data.table::set(DT, i = i, j = compM, value = DT[i, 100 * 1/x2 * sqrt(radican1)])
+      i <- which(DT[["radican1"]] < 0)
+      data.table::set(DT, i = i, j = compM, value = DT[i, 100 * 1/x2 * sqrt(radican2)])
+    }
+  }
+  DT
+}
+
+################################################################################
 # Step 4 and 5 of the CDI build requires shrinking the value and geographic
 # imputation.  The following function does that.
-shrink <- function(DT, variable) {
+steps_4_and_5 <- function(DT, variable) {
   stopifnot(inherits(DT, "data.table"))
   stopifnot(is.character(variable))
   VE <- paste0(variable, "E")
