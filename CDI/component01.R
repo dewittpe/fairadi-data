@@ -4,10 +4,15 @@
 # Build component 1 of the CDI
 #
 # Component: 1
-# ACS Data Table: B15003
-# Table Name: Educational attainment for the population over 25 years and over
-# Numerator Calculation: sum of the items B15003_002 to B15003_16
-# Denominator Calculation: B15003_001
+#   12 years or less of education, no diploma, %
+# ACS Data Table:
+#   B15003
+# Table Name:
+#   Educational attainment for the population over 25 years and over
+# Numerator Calculation:
+#   sum of the items B15003_002 to B15003_16
+# Denominator Calculation:
+#   B15003_001
 # Value Calculation with Description:
 #   [No schooling (B15003_002) + Nursery school (B15003_003) + … + 12th grade, no diploma (B15003_016)]/Total (B15003_001)
 ################################################################################
@@ -28,17 +33,19 @@ stopifnot(
 DT[!is.na(B15003_001MA), B15003_001M := 0L]
 
 # Step 1: build the component
+nVE <- sprintf("B15003_%03dE", 2:16)
+nVM <- sprintf("B15003_%03dM", 2:16)
 DT[
   ,
   component01E := rowSums(.SD) / B15003_001E,
-  .SDcols = sprintf("B15003_%03dE", 2:16)
+  .SDcols = nVE
 ]
 
 # Step 2: build the MOE
 DT[
-  , 
+  ,
   component01M := 1/B15003_001E * sqrt(rowSums(.SD^2) - component01E / B15003_001E * B15003_001M^2),
-  .SDcols = sprintf("B15003_%03dM", 2:16)
+  .SDcols = nVM
 ]
 
 # Step 3: flag for replacement
