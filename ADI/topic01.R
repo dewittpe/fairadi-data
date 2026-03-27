@@ -59,7 +59,7 @@ stopifnot(identical(cfa, list(E = character(0), M = "B15003_001MA")))
 stopifnot(
   DT[!is.na(B15003_001MA), all(B15003_001MA == "*****")]
 )
-# see notes in adi_utilities.R; error can be treated as zero in these cases
+# see notes in ../utilities/check_for_annotations.R; error can be treated as zero in these cases
 DT[!is.na(B15003_001MA), B15003_001M := 0L]
 
 # We are interested in working on the block_group level for the ADI

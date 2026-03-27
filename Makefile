@@ -3,7 +3,7 @@ include Makevars
 
 .PHONY: all manifest zenodo release fips acs5 acs5-state acs5-county acs5-tract acs5-block-group acs5-metadata decennial decennial-state decennial-county decennial-tract decennial-block-group decennial-metadata census-metadata adi
 
-all: fips decennial acs5 adi manifest
+all: fips decennial acs5 adi cdi manifest
 
 fips:
 	$(MAKE) -C FIPS
@@ -51,7 +51,10 @@ decennial-block-group: fips
 adi: acs5 decennial
 	$(MAKE) -C ADI
 
-manifest: adi
+cdi: acs5
+	$(MAKE) -C CDI
+
+manifest: adi cdi
 	./utilities/build_manifest.py
 
 zenodo: manifest
