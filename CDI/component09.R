@@ -70,24 +70,6 @@ DT[denominator == 0, component09E := max_disparity_ratio]
 DT[, component09M := 1/denominator * sqrt(numeratorMOEsq + (numerator/denominator)^2 * denominatorMOEsq)]
 DT[numerator == 0 | denominator == 0, component09M := NA]
 
-# 1. Build the raw disparity ratio
-#      R = 100 * numerator / denominator
-#   2. For rows with numerator > 0 and denominator > 0, compute MOE for R using the ratio formula:
-#      MOE(R) = 100 * 1/X2 * sqrt( MOE(X1)^2 + (X1/X2)^2 * MOE(X2)^2 )
-#      where:
-#       - X1 = sum(B19001_002:004)
-#       - X2 = sum(B19001_014:017)
-#       - MOE(X1) and MOE(X2) are root-sum-of-squares of the component MOEs
-#   3. For rows where numerator == 0 or denominator == 0, do the CMS min/max substitution on the ratio itself.
-#      I would set the MOE for those rows to NA, mark them for exclusion from shrinkage-weight estimation, and not do geographic imputation.
-#   4. Only take log(R) after that.
-#      If you need a log-scale MOE later, derive it from the ratio-scale SE with a delta-method approximation:
-#      SE(log R) ≈ SE(R) / R
-#      and then MOE(log R) ≈ 1.645 * SE(log R)
-#
-#   That is the most defensible path because the exact CMS MOE rule is written for the ratio, not for log(ratio), and the min/max replacement logic also lives on the ratio scale.
-
-
 # Step 3: Flag values that need replacement -- I don't think this is to be done
 # here as the min/max values used above account for those issues.  Just set the
 # flag_for_replacement to 0
@@ -95,7 +77,98 @@ DT[, flag_for_replacement := 0L]
 
 # Step 4: Apply Shrinkage
 # Step 5: Replace invalid values from step 3
-DTa <- steps_4_and_5(DT[numerator > 0 & denominator > 0], "component09")
+#
+# Component 09 is special. For the numerator == 0 or denominator == 0 cases, the
+# CMS specification uses min/max substitution on the block-group ratio instead
+# of higher-geography replacement. For the remaining valid rows, apply shrinkage
+# only when both the local MOE and the inter-geography variance are defined and
+# positive; otherwise keep the local estimate (weight = 1).
+DTa <- DT[numerator > 0 & denominator > 0]
+
+bgshrunk <-
+  merge(
+    DTa[!is.na(block_group),                 .SD, .SDcols = c("year", "state", "county", "tract", "block_group", "component09E", "component09M")],
+    DTa[ is.na(block_group) & !is.na(tract), .SD, .SDcols = c("year", "state", "county", "tract",                "component09E", "component09M")],
+    all.x = TRUE,
+    by = c("year", "state", "county", "tract"),
+    suffixes = c("_x", "_z")
+  )
+tractshrunk <-
+  merge(
+    DTa[ is.na(block_group) & !is.na(tract),                  .SD, .SDcols = c("year", "state", "county", "tract", "component09E", "component09M")],
+    DTa[ is.na(block_group) &  is.na(tract) & !is.na(county), .SD, .SDcols = c("year", "state", "county",          "component09E", "component09M")],
+    all.x = TRUE,
+    by = c("year", "state", "county"),
+    suffixes = c("_x", "_z")
+  )
+countyshrunk <-
+  merge(
+    DTa[ is.na(block_group) &  is.na(tract) & !is.na(county),                 .SD, .SDcols = c("year", "state", "county", "component09E", "component09M")],
+    DTa[ is.na(block_group) &  is.na(tract) &  is.na(county) & !is.na(state), .SD, .SDcols = c("year", "state",           "component09E", "component09M")],
+    all.x = TRUE,
+    by = c("year", "state"),
+    suffixes = c("_x", "_z")
+  )
+
+bgshrunk[,     tsq := 1/(.N - 1) * sum((component09E_x - component09E_z)^2), keyby = .(year, state, county, tract)]
+tractshrunk[,  tsq := 1/(.N - 1) * sum((component09E_x - component09E_z)^2), keyby = .(year, state, county)]
+countyshrunk[, tsq := 1/(.N - 1) * sum((component09E_x - component09E_z)^2), keyby = .(year, state)]
+
+bgshrunk[,     Ssq := (component09M_x / 1.645)^2]
+tractshrunk[,  Ssq := (component09M_x / 1.645)^2]
+countyshrunk[, Ssq := (component09M_x / 1.645)^2]
+
+bgshrunk[,     component09E_shrunk_block_group := component09E_x]
+tractshrunk[,  component09E_shrunk_tract := component09E_x]
+countyshrunk[, component09E_shrunk_county := component09E_x]
+
+bgshrunk[
+  !is.na(component09E_z) & !is.na(Ssq) & Ssq > 0 & !is.na(tsq) & tsq > 0,
+  `:=`(
+    w = (1/Ssq) / (1/Ssq + 1/tsq),
+    component09E_shrunk_block_group = ((1/Ssq) / (1/Ssq + 1/tsq)) * component09E_x +
+      (1 - ((1/Ssq) / (1/Ssq + 1/tsq))) * component09E_z
+  )
+]
+tractshrunk[
+  !is.na(component09E_z) & !is.na(Ssq) & Ssq > 0 & !is.na(tsq) & tsq > 0,
+  `:=`(
+    w = (1/Ssq) / (1/Ssq + 1/tsq),
+    component09E_shrunk_tract = ((1/Ssq) / (1/Ssq + 1/tsq)) * component09E_x +
+      (1 - ((1/Ssq) / (1/Ssq + 1/tsq))) * component09E_z
+  )
+]
+countyshrunk[
+  !is.na(component09E_z) & !is.na(Ssq) & Ssq > 0 & !is.na(tsq) & tsq > 0,
+  `:=`(
+    w = (1/Ssq) / (1/Ssq + 1/tsq),
+    component09E_shrunk_county = ((1/Ssq) / (1/Ssq + 1/tsq)) * component09E_x +
+      (1 - ((1/Ssq) / (1/Ssq + 1/tsq))) * component09E_z
+  )
+]
+
+DTa <-
+  merge(
+    merge(
+      bgshrunk[,    .SD, .SDcols = c("year", "state", "county", "tract", "block_group", "component09E_shrunk_block_group")],
+      tractshrunk[, .SD, .SDcols = c("year", "state", "county", "tract",                "component09E_shrunk_tract")],
+      all.x = TRUE,
+      by = c("year", "state", "county", "tract")
+    ),
+    countyshrunk[, .SD, .SDcols = c("year", "state", "county", "component09E_shrunk_county")],
+    all.x = TRUE,
+    by = c("year", "state", "county")
+  )
+DTa[
+  ,
+  component09 := data.table::fcoalesce(
+    component09E_shrunk_block_group,
+    component09E_shrunk_tract,
+    component09E_shrunk_county
+  )
+]
+DTa <- DTa[, .SD, .SDcols = c("year", "state", "county", "tract", "block_group", "component09")]
+
 DT <- rbind(
   DT[numerator == 0 | denominator == 0, .(year, state, county, tract, block_group, component09 = component09E)],
   DTa
