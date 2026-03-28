@@ -7,7 +7,7 @@ COMPONENT_CSV := $(COMPONENTS:.csv.gz=.csv)
 
 acsvar = $(foreach year,$(ACS5_YEARS),../ACS5/$(1)__$(year).csv.gz)
 
-.INTERMEDIATE: $(COMPONENT_CSV) total_population_and_housing_units.csv
+.INTERMEDIATE: $(COMPONENT_CSV) total_population_and_housing_units.csv faircdi.csv
 .PHONY: all clean
 
 all: README.md
