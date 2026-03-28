@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "date_released": "2026-03-25",
   "doi": "10.5281/zenodo.19222629",
-  "description": "Reproducible U.S. Area Deprivation Index build derived from U.S. Census Bureau ACS 5-year and Decennial Census tables. The repository contains tracked source tables, derived outputs, documentation, and integrity metadata for the annual release snapshot.",
+  "description": "Reproducible U.S. deprivation indices build derived from U.S. Census Bureau ACS 5-year and Decennial Census tables. The repository currently contains FAIR-oriented ADI release artifacts and in-progress CDI build outputs, along with tracked source tables, documentation, and integrity metadata for the annual release snapshot.",
   "resource_type": "dataset",
   "creators": [
     {
@@ -17,6 +17,8 @@
   "keywords": [
     "area deprivation index",
     "ADI",
+    "community deprivation index",
+    "CDI",
     "United States",
     "ACS5",
     "Decennial Census",
@@ -37,8 +39,16 @@
       "description": "Canonical released fairadi dataset."
     },
     {
+      "path": "CDI/faircdi.csv.gz",
+      "description": "Current CDI build output dataset."
+    },
+    {
       "path": "ADI/fairadi_data_dictionary.tsv",
       "description": "Column-level schema and value notes for the fairadi dataset."
+    },
+    {
+      "path": "CDI/README.md",
+      "description": "Process documentation for the CDI implementation."
     },
     {
       "path": "MANIFEST.tsv",
@@ -66,6 +76,11 @@
       "type": "website",
       "title": "Neighborhood Atlas",
       "url": "https://www.neighborhoodatlas.medicine.wisc.edu/"
+    },
+    {
+      "type": "document",
+      "title": "TEAM CDI Calculation Specifications",
+      "path": "CDI/2025-08-28-team-cdi-calculation-specifications.pdf"
     }
   ]
 }

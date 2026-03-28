@@ -49,7 +49,7 @@ def record_type(path: Path) -> str:
     if len(path.parts) == 1:
         return "project"
     head = path.parts[0]
-    if head in {"ACS5", "ADI", "Decennial", "FIPS", "utilities"}:
+    if head in {"ACS5", "ADI", "CDI", "Decennial", "FIPS", "utilities"}:
         return head.lower()
     return "other"
 

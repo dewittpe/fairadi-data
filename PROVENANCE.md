@@ -6,7 +6,7 @@ project. Provenance for a release is established by the combination of:
 - the git release reference and repository history
 - `MANIFEST.tsv`, which records tracked file paths, sizes, and SHA-256 digests
 - the build scripts under `Makefile`, `ACS5/`, `Decennial/`, `FIPS/`, `ADI/`,
-  and `utilities/`
+  `CDI/`, and `utilities/`
 - release metadata in `metadata.json` and `CITATION.cff`
 - the split-license statements in `LICENSE` and `LICENSE-data`
 
@@ -28,6 +28,14 @@ The column definitions for this file are documented in:
 
 - `ADI/fairadi_data_dictionary.tsv`
 
+The current tracked CDI build artifact is:
+
+- `CDI/faircdi.csv.gz`
+
+The CDI process documentation is:
+
+- `CDI/README.md`
+
 ## Primary Input Sources
 
 The public-data workflow draws from:
@@ -47,16 +55,20 @@ At a high level:
 2. `ACS5/` and `Decennial/` build the tracked Census table extracts.
 3. `ADI/` builds topic-level derived files, suppression inputs, and the final
    `fairadi.csv.gz` dataset.
-4. `MANIFEST.tsv` inventories the tracked release contents.
+4. `CDI/` builds the total-population / housing-unit replacement flags, the
+   18 CDI components, and the current `faircdi.csv.gz` output.
+5. `MANIFEST.tsv` inventories the tracked release contents.
 
 The top-level workflow is orchestrated by:
 
 - `Makefile`
 
-The final dataset build is orchestrated by:
+The final dataset builds are orchestrated by:
 
 - `ADI/Makefile`
 - `ADI/fairadi.R`
+- `CDI/Makefile`
+- `CDI/faircdi.R`
 
 ## Integrity Verification
 
