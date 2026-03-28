@@ -4,9 +4,7 @@
 # Steps 7, 8, and 9 for the CDI process
 #
 ################################################################################
-
 # step 7: PCA
-
 components <-
   list.files(
     path = ".",
@@ -39,17 +37,57 @@ pcas <-
     }
   )
 
+# Orient the first principal component so higher scores consistently reflect
+# higher deprivation. "Bad" components increase with deprivation, while "good"
+# components are protective and should decrease as deprivation worsens.
+bad_components <-
+  c(
+    "component01", # lower education
+    "component04", # families below poverty
+    "component05", # crowding
+    "component06", # no high-speed internet
+    "component07", # no vehicle
+    "component08", # incomplete plumbing
+    "component09", # income disparity
+    "component14", # one-parent households
+    "component16", # below 150% poverty
+    "component17", # unemployment
+    "component18"  # uninsured
+  )
+good_components <-
+  c(
+    "component02", # higher education
+    "component03", # white-collar employment
+    "component10", # higher household income
+    "component11", # higher gross rent as area affluence proxy
+    "component12", # higher home value
+    "component13", # higher mortgage costs as area affluence proxy
+    "component15"  # owner-occupied housing
+  )
+
+weights <-
+  lapply(
+    pcas,
+    function(p) {
+      w <- p$rotation[, 1]
+      if (sum(w[bad_components]) - sum(w[good_components]) < 0) {
+        w <- -w
+      }
+      w
+    }
+  )
+
 faircdi <-
   Map(f =
-    function(x,p) {
+    function(x, w) {
       data.table::set(
         x,
         j = "cdiraw",
-        value = as.numeric(as.matrix(x[, .SD, .SDcols = patterns("component")]) %*% p$rotation[, 1])
+        value = as.numeric(as.matrix(x[, .SD, .SDcols = patterns("^component")]) %*% w)
       )
     },
     x = components,
-    p = pcas
+    w = weights
   ) |>
   data.table::rbindlist()
 
@@ -61,6 +99,34 @@ faircdi[, faircdi := ceiling(100 * data.table::frank(cdiraw, ties.method = "aver
 
 # write to disk
 data.table::fwrite(faircdi, file = "faircdi.csv")
+
+
+
+
+#
+# positive correlations with the deprivation-direction components:
+#   component01, component04, component05, component06, component07,
+#   component08, component09, component14, component16, component17, component18
+#
+# negative correlations with the protective/affluence components:
+#   component02, component03, component10, component11, component12,
+#   component13, component15
+#
+cormat <-
+  cor(
+    faircdi[, .SD, .SDcols = c(bad_components, good_components, "faircdi")],
+    use = "pairwise.complete.obs"
+  )
+
+# sanity check
+stopifnot(
+  cormat[good_components, "faircdi"] < 0,
+  cormat[bad_components,  "faircdi"] > 0
+)
+
+pdf(file="corrplot.pdf")
+  corrplot::corrplot(cormat, method = "shade")
+dev.off()
 
 ################################################################################
 #                                 End of File                                  #
