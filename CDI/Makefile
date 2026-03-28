@@ -2,7 +2,7 @@ include ../Makevars
 
 UTILITIES := ../utilities/import_census_table.R ../utilities/check_for_annotations.R cdi_utilities.R
 
-COMPONENTS := component01.csv.gz component02.csv.gz component03.csv.gz component04.csv.gz component05.csv.gz component06.csv.gz component07.csv.gz component08.csv.gz component09.csv.gz component10.csv.gz component11.csv.gz component12.csv.gz component13.csv.gz component14.csv.gz component15.csv.gz component16.csv.gz component17.csv.gz
+COMPONENTS := component01.csv.gz component02.csv.gz component03.csv.gz component04.csv.gz component05.csv.gz component06.csv.gz component07.csv.gz component08.csv.gz component09.csv.gz component10.csv.gz component11.csv.gz component12.csv.gz component13.csv.gz component14.csv.gz component15.csv.gz component16.csv.gz component17.csv.gz component18.csv.gz
 COMPONENT_CSV := $(COMPONENTS:.csv.gz=.csv)
 
 acsvar = $(foreach year,$(ACS5_YEARS),../ACS5/$(1)__$(year).csv.gz)
