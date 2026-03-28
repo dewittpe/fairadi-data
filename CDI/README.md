@@ -178,10 +178,3 @@ block groups.
 - `cdistd`
 - `faircdi`
 
-## Notes
-
-- `corrplot.pdf` is a diagnostic artifact used to inspect component correlation
-  structure and the direction of the final CDI score.
-- Full CDI rebuilds may fail in the sandboxed environment with an OpenMP
-  shared-memory error. Static parsing and targeted checks are more reliable in
-  that environment.
