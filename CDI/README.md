@@ -186,4 +186,6 @@ block groups.
 
 
 
+![plot of chunk cormatplot](figure/cormatplot-1.png)
+
 

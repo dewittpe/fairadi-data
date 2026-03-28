@@ -442,7 +442,7 @@ deltas[name == "All States", .SD, .SDcols = patterns("year|within")] |>
   kableExtra::add_header_above(c("", "State Level Deciles" = 4, "National Level Percentiles" = 11))
 ```
 
-```{r corplot, include = FALSE}
+```{r forcorplot, include = FALSE}
 topics <-
   list.files(
     path = ".",
@@ -485,7 +485,9 @@ lvls <- c(lvls, "national")
 
 forcorplot[, rn := factor(rn, levels = lvls)]
 forcorplot[, variable := factor(variable, levels = rev(lvls))]
+```
 
+```{r corplot, echo = FALSE}
 ggplot2::ggplot(forcorplot) +
   ggplot2::aes(x = rn, y = variable, fill = value) +
   ggplot2::geom_tile() +

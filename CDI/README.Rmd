@@ -201,7 +201,7 @@ cormat <-
   )
 ```
 
-```{r cormatplot, include = FALSE}
+```{r cormatplot-setup, include = FALSE}
 d <-
   data.table::as.data.table(cormat, keep.rownames = TRUE) |>
   data.table::melt(id.vars = "rn", variable.factor = FALSE)
@@ -215,7 +215,9 @@ lvls <- c(lvls, "faircdi")
 
 d[, rn := factor(rn, levels = lvls)]
 d[, variable := factor(variable, levels = rev(lvls))]
+```
 
+```{r cormatplot, echo = FALSE}
 ggplot2::ggplot(d) +
   ggplot2::aes(x = rn, y = variable, fill = value) +
   ggplot2::geom_tile() +

@@ -522,6 +522,11 @@ adi[
 
 
 
+<div class="figure" style="text-align: center">
+<img src="figure/corplot-1.png" alt="plot of chunk corplot"  />
+<p class="caption">plot of chunk corplot</p>
+</div>
+
 ## Session Info
 
 
