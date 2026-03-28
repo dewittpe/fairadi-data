@@ -33,6 +33,12 @@ if (interactive()) {
   # 3:       2,500-          ***     585
   # 4:     250,000+          ***   13408
 }
+DT[B19013_001EA == "-", B19013_001E := NA]
+DT[!is.na(B19013_001MA), B19013_001M := NA]
+stopifnot(
+  DT[B19013_001EA == "2,500-", all(B19013_001E == 2499)],
+  DT[B19013_001EA == "250,000+", all(B19013_001E == 250001)]
+)
 
 # Step 1: build the component
 # Step 2: build the MOE
@@ -45,7 +51,7 @@ DT <- join_tphu(DT)
 DT[
   ,
   flag_for_replacement := data.table::fcase(
-    !is.na(B19013_001EA), 1L,
+    B19013_001EA == "-", 1L,
     default = flag_for_replacement
   )
 ]
