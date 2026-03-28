@@ -124,9 +124,9 @@ stopifnot(
   cormat[bad_components,  "faircdi"] > 0
 )
 
-pdf(file="corrplot.pdf")
-  corrplot::corrplot(cormat, method = "shade")
-dev.off()
+#pdf(file="corrplot.pdf")
+#corrplot::corrplot(cormat, method = "shade")
+#dev.off()
 
 ################################################################################
 #                                 End of File                                  #
