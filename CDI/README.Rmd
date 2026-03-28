@@ -1,6 +1,8 @@
 # Community Deprivation Index
 
-
+```{r setup, include = FALSE}
+source("cdi_utilities.R")
+```
 
 This directory contains an in-progress implementation of the Community
 Deprivation Index (CDI) based on the TEAM CDI specification tracked in
@@ -132,24 +134,9 @@ higher deprivation:
 - the first loading vector is multiplied by `-1` if needed so the grouped
   direction is consistent with deprivation
 
-
-``` r
+```{r}
 deprivation_components
-```
-
-```
-##  [1] "component01" "component04" "component05" "component06" "component07"
-##  [6] "component08" "component09" "component14" "component16" "component17"
-## [11] "component18"
-```
-
-``` r
 affluence_components
-```
-
-```
-## [1] "component02" "component03" "component10" "component11" "component12"
-## [6] "component13" "component15"
 ```
 
 
@@ -180,10 +167,66 @@ block groups.
 
 ## Summary Statistics
 
+```{r import-data, include = FALSE}
+components <-
+  list.files(
+    path = ".",
+    pattern = "^component\\d{2}\\.csv\\.gz",
+    full.names = TRUE
+  ) |>
+  lapply(data.table::fread) |>
+  Reduce(
+    function(x, y) {
+      merge(x, y, all = TRUE, by = c("year", "state", "county", "tract", "block_group"))
+    },
+    x = _
+  )
+components[, FIPS := build_FIPS(state, county, tract, block_group)]
+faircdi <- data.table::fread("faircdi.csv.gz", colClasses = c("FIPS" = "character"))
+faircdi <-
+  merge(
+    x = faircdi,
+    y = components,
+    all = TRUE,
+    by = c("year", "FIPS")
+  )
+```
 
+```{r build-cormat, include = FALSE}
+cormat <-
+  cor(
+    faircdi[, .SD, .SDcols = c(deprivation_components, affluence_components, "faircdi")],
+    use = "pairwise.complete.obs",
+    method = "pearson"
+  )
+```
 
+```{r cormatplot, include = FALSE}
+d <-
+  data.table::as.data.table(cormat, keep.rownames = TRUE) |>
+  data.table::melt(id.vars = "rn", variable.factor = FALSE)
 
+lvls <-
+  d[rn == "faircdi" & variable != "faircdi"][order(-value)][, variable]
+lvls <- c(lvls, "faircdi")
 
+#d[, rn := factor(rn, levels = c(deprivation_components, affluence_components, "faircdi"))]
+#d[, variable := factor(variable, levels = rev(levels(rn)))]
 
+d[, rn := factor(rn, levels = lvls)]
+d[, variable := factor(variable, levels = rev(lvls))]
+
+ggplot2::ggplot(d) +
+  ggplot2::aes(x = rn, y = variable, fill = value) +
+  ggplot2::geom_tile() +
+  ggplot2::scale_fill_gradient2(name = "Pearson\nCorrelation", low = "darkred", high = "darkblue", limits = c(-1, 1)) +
+  ggplot2::guides(fill = ggplot2::guide_colourbar(barheight = ggplot2::unit(0.6, "npc"))) +
+  ggplot2::coord_equal() +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(
+    axis.title = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_text(angle = 40, hjust = 1.0, vjust = 1.0)
+  )
+```
 
 

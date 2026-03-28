@@ -442,6 +442,63 @@ deltas[name == "All States", .SD, .SDcols = patterns("year|within")] |>
   kableExtra::add_header_above(c("", "State Level Deciles" = 4, "National Level Percentiles" = 11))
 ```
 
+```{r corplot, include = FALSE}
+topics <-
+  list.files(
+    path = ".",
+    pattern = "topic\\d{2}\\.csv\\.gz$",
+    full.name = TRUE
+  ) |>
+  lapply(data.table::fread) |>
+  Reduce(f = function(x, y) {merge(x, y, all = TRUE)})
+
+forcorplot <-
+  merge(
+    x = fairadi,
+    y = topics,
+    all.x = TRUE,
+    all.y = FALSE,
+    by = c("year", "state", "county", "tract", "block_group")
+  )
+
+forcorplot <-
+  cor(
+    forcorplot[, .SD,
+      .SDcols = c("national_rank", sprintf("topic%02d", c(1:3, 9:14, 16:17)),
+        "topic04_shrunk", "topic05_w_epsilon", "topic06_shrunk", "topic07_shrunk",
+        "topic08_shrunk")]
+    ,
+    use = "pairwise.complete.obs",
+    method = "pearson"
+    )
+
+forcorplot <-
+  data.table::as.data.table(forcorplot, keep.rownames = TRUE) |>
+  data.table::melt(id.vars = "rn", variable.factor = FALSE)
+
+forcorplot[, rn := sub("_.+$", "", rn)]
+forcorplot[, variable := sub("_.+$", "", variable)]
+
+lvls <-
+  forcorplot[rn == "national" & variable != "national"][order(-value)][, variable]
+lvls <- c(lvls, "national")
+
+forcorplot[, rn := factor(rn, levels = lvls)]
+forcorplot[, variable := factor(variable, levels = rev(lvls))]
+
+ggplot2::ggplot(forcorplot) +
+  ggplot2::aes(x = rn, y = variable, fill = value) +
+  ggplot2::geom_tile() +
+  ggplot2::scale_fill_gradient2(name = "Pearson\nCorrelation", low = "darkred", high = "darkblue", limits = c(-1, 1)) +
+  ggplot2::guides(fill = ggplot2::guide_colourbar(barheight = ggplot2::unit(0.6, "npc"))) +
+  ggplot2::coord_equal() +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(
+    axis.title = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_text(angle = 40, hjust = 1.0, vjust = 1.0)
+  )
+```
+
 ## Session Info
 
 ```{r}

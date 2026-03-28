@@ -2,7 +2,36 @@
 # file cdi_utilities.R
 source("../utilities/import_census_table.R")
 source("../utilities/check_for_annotations.R")
+source("../utilities/build_FIPS.R")
+
 COLS_TO_KEEP <- c("year", "state", "county", "tract", "block_group")
+
+################################################################################
+# Affluence and deprivation components
+deprivation_components <-
+  c(
+    "component01", # lower education
+    "component04", # families below poverty
+    "component05", # crowding
+    "component06", # no high-speed internet
+    "component07", # no vehicle
+    "component08", # incomplete plumbing
+    "component09", # income disparity
+    "component14", # one-parent households
+    "component16", # below 150% poverty
+    "component17", # unemployment
+    "component18"  # uninsured
+  )
+affluence_components <-
+  c(
+    "component02", # higher education
+    "component03", # white-collar employment
+    "component10", # higher household income
+    "component11", # higher gross rent as area affluence proxy
+    "component12", # higher home value
+    "component13", # higher mortgage costs as area affluence proxy
+    "component15"  # owner-occupied housing
+  )
 
 ################################################################################
 # Join Total Population and Houseing Units

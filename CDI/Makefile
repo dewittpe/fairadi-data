@@ -10,7 +10,7 @@ acsvar = $(foreach year,$(ACS5_YEARS),../ACS5/$(1)__$(year).csv.gz)
 .INTERMEDIATE: $(COMPONENT_CSV) total_population_and_housing_units.csv
 .PHONY: all clean
 
-all: faircdi.csv.gz
+all: README.md
 
 %.csv.gz: %.csv
 	gzip -9 -f -n $<
@@ -75,9 +75,8 @@ component18.csv: component18.R cdi_utilities.R $(call acsvar,B27010) $(UTILITIES
 total_population_and_housing_units.csv: total_population_and_housing_units.R $(call acsvar,B01001) $(call acsvar,B01003) $(call acsvar,B25032) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-
-#README.md: README.Rmd faircdi.csv.gz
-#	$(RSCRIPTVANILLA) -e "knitr::knit('$<', output='$@')"
+README.md: README.Rmd faircdi.csv.gz
+	$(RSCRIPTVANILLA) -e "knitr::knit('$<', output='$@')"
 
 clean:
 	$(RM) -r cache/
