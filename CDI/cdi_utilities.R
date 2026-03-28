@@ -61,11 +61,12 @@ steps_4_and_5 <- function(DT, variable) {
   VE <- paste0(variable, "E")
   VM <- paste0(variable, "M")
   stopifnot(VE %in% names(DT), VM %in% names(DT))
+  DT0 <- DT[flag_for_replacement == 0]
 
   # Inter geographic level variance
   bgshrunk <-
     merge(
-      DT[!is.na(block_group),                 .SD, .SDcols = c("year", "state", "county", "tract", "block_group", VE, VM)],
+      DT[!is.na(block_group),                 .SD, .SDcols = c("year", "state", "county", "tract", "block_group", VE, VM, "flag_for_replacement")],
       DT[ is.na(block_group) & !is.na(tract), .SD, .SDcols = c("year", "state", "county", "tract",                VE, VM)],
       all.x = TRUE,
       by = c("year", "state", "county", "tract"),
@@ -73,23 +74,34 @@ steps_4_and_5 <- function(DT, variable) {
     )
   tractshrunk <-
     merge(
-      DT[ is.na(block_group) & !is.na(tract),                  .SD, .SDcols = c("year", "state", "county", "tract", VE, VM)],
-      DT[ is.na(block_group) &  is.na(tract) & !is.na(county), .SD, .SDcols = c("year", "state", "county",          VE, VM)],
+      DT0[ is.na(block_group) & !is.na(tract),                  .SD, .SDcols = c("year", "state", "county", "tract", VE, VM)],
+      DT0[ is.na(block_group) &  is.na(tract) & !is.na(county), .SD, .SDcols = c("year", "state", "county",          VE, VM)],
       all.x = TRUE,
       by = c("year", "state", "county"),
       suffixes = c("_x", "_z")
     )
   countyshrunk <-
     merge(
-      DT[ is.na(block_group) &  is.na(tract) & !is.na(county),                 .SD, .SDcols = c("year", "state", "county", VE, VM)],
-      DT[ is.na(block_group) &  is.na(tract) &  is.na(county) & !is.na(state), .SD, .SDcols = c("year", "state",           VE, VM)],
+      DT0[ is.na(block_group) &  is.na(tract) & !is.na(county),                 .SD, .SDcols = c("year", "state", "county", VE, VM)],
+      DT0[ is.na(block_group) &  is.na(tract) &  is.na(county) & !is.na(state), .SD, .SDcols = c("year", "state",           VE, VM)],
       all.x = TRUE,
       by = c("year", "state"),
       suffixes = c("_x", "_z")
     )
 
   etsq <- parse(text = sprintf("1/(.N - 1) * sum((%s_x - %s_z)^2)", VE, VE))
-  bgshrunk[,     tsq := eval(etsq), keyby = .(year, state, county, tract)]
+  # Values flagged for replacement are excluded from the block-group shrinkage
+  # factor calculation, but retained here so they can still be replaced in Step 5.
+  bgshrunk[
+    ,
+    tsq := if (sum(flag_for_replacement == 0L, na.rm = TRUE) > 1L) {
+      1 / (sum(flag_for_replacement == 0L, na.rm = TRUE) - 1L) *
+        sum(((get(paste0(VE, "_x")) - get(paste0(VE, "_z")))^2)[flag_for_replacement == 0L], na.rm = TRUE)
+    } else {
+      NA_real_
+    },
+    keyby = .(year, state, county, tract)
+  ]
   tractshrunk[,  tsq := eval(etsq), keyby = .(year, state, county)]
   countyshrunk[, tsq := eval(etsq), keyby = .(year, state)]
 
@@ -97,9 +109,15 @@ steps_4_and_5 <- function(DT, variable) {
   tractshrunk[,  Ssq := (.SD/1.645)^2, .SDcols = paste0(VM, "_x")]
   countyshrunk[, Ssq := (.SD/1.645)^2, .SDcols = paste0(VM, "_x")]
 
-  bgshrunk[,     w := (1/Ssq) / (1/Ssq + 1/tsq)]
-  tractshrunk[,  w := (1/Ssq) / (1/Ssq + 1/tsq)]
-  countyshrunk[, w := (1/Ssq) / (1/Ssq + 1/tsq)]
+  bgshrunk[,     w := 1]
+  tractshrunk[,  w := 1]
+  countyshrunk[, w := 1]
+
+  # TEAM CDI spec: if the local SE or inter-geography variance is missing or
+  # zero, do not apply shrinkage. Keeping w = 1 preserves the local estimate.
+  bgshrunk[!is.na(Ssq) & Ssq > 0 & !is.na(tsq) & tsq > 0,     w := (1/Ssq) / (1/Ssq + 1/tsq)]
+  tractshrunk[!is.na(Ssq) & Ssq > 0 & !is.na(tsq) & tsq > 0,  w := (1/Ssq) / (1/Ssq + 1/tsq)]
+  countyshrunk[!is.na(Ssq) & Ssq > 0 & !is.na(tsq) & tsq > 0, w := (1/Ssq) / (1/Ssq + 1/tsq)]
 
   eshrunk <- parse(text = sprintf("%s_shrunk := w * %s_x + (1 - w) * %s_z", VE, VE, VE))
   bgshrunk[,     eval(eshrunk)]
@@ -125,7 +143,6 @@ steps_4_and_5 <- function(DT, variable) {
      by = c("year", "state", "county")
    )
 
-  # set the block_group value to NA if flag_for_replacement is 1
   rtn <-
     merge(
       x = rtn,

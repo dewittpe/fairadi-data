@@ -57,7 +57,7 @@ DT[, numeratorMOEsq   := rowSums(.SD^2), .SDcols = sprintf("B19001_%03dM", 2:4)]
 DT[, denominatorMOEsq := rowSums(.SD^2), .SDcols = sprintf("B19001_%03dM", 14:17)]
 DT[, component09E := numerator/denominator]
 minmax_disparity_ratio <-
-  DT[!is.na(component09E)][is.finite(component09E)][numerator > 0][denominator > 0][,
+  DT[!is.na(block_group)][!is.na(component09E)][is.finite(component09E)][numerator > 0][denominator > 0][,
     .(min_disparity_ratio = min(component09E),
       max_disparity_ratio = max(component09E)),
     by = .(year)
@@ -70,10 +70,12 @@ DT[denominator == 0, component09E := max_disparity_ratio]
 DT[, component09M := 1/denominator * sqrt(numeratorMOEsq + (numerator/denominator)^2 * denominatorMOEsq)]
 DT[numerator == 0 | denominator == 0, component09M := NA]
 
-# Step 3: Flag values that need replacement -- I don't think this is to be done
-# here as the min/max values used above account for those issues.  Just set the
-# flag_for_replacement to 0
-DT[, flag_for_replacement := 0L]
+# Step 3: Flag values that need replacement
+#
+# Keep the component-09 min/max substitution for numerator == 0 or denominator
+# == 0. For the remaining rows, use the shared low-population/low-housing rule
+# from total_population_and_housing_units.csv.gz.
+DT <- join_tphu(DT)
 
 # Step 4: Apply Shrinkage
 # Step 5: Replace invalid values from step 3
@@ -83,7 +85,7 @@ DT[, flag_for_replacement := 0L]
 # of higher-geography replacement. For the remaining valid rows, apply shrinkage
 # only when both the local MOE and the inter-geography variance are defined and
 # positive; otherwise keep the local estimate (weight = 1).
-DTa <- DT[numerator > 0 & denominator > 0]
+DTa <- DT[numerator > 0 & denominator > 0 & flag_for_replacement == 0L]
 
 bgshrunk <-
   merge(
@@ -169,8 +171,32 @@ DTa[
 ]
 DTa <- DTa[, .SD, .SDcols = c("year", "state", "county", "tract", "block_group", "component09")]
 
+DTr <-
+  merge(
+    DT[numerator > 0 & denominator > 0 & flag_for_replacement == 1L, .(year, state, county, tract, block_group)],
+    tractshrunk[, .SD, .SDcols = c("year", "state", "county", "tract", "component09E_shrunk_tract")],
+    all.x = TRUE,
+    by = c("year", "state", "county", "tract")
+  )
+DTr <-
+  merge(
+    DTr,
+    countyshrunk[, .SD, .SDcols = c("year", "state", "county", "component09E_shrunk_county")],
+    all.x = TRUE,
+    by = c("year", "state", "county")
+  )
+DTr[
+  ,
+  component09 := data.table::fcoalesce(
+    component09E_shrunk_tract,
+    component09E_shrunk_county
+  )
+]
+DTr <- DTr[, .SD, .SDcols = c("year", "state", "county", "tract", "block_group", "component09")]
+
 DT <- rbind(
   DT[numerator == 0 | denominator == 0, .(year, state, county, tract, block_group, component09 = component09E)],
+  DTr,
   DTa
 )
 
