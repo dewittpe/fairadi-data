@@ -15,7 +15,7 @@ all: faircdi.csv.gz
 %.csv.gz: %.csv
 	gzip -9 -f -n $<
 
-faircdi.csv: faircdi.R cdi_utilities.R $(COMPONENTS)
+faircdi.csv: faircdi.R cdi_utilities.R $(COMPONENTS) ../utilities/build_FIPS.R
 	$(RSCRIPTVANILLA) $<
 
 component01.csv: component01.R cdi_utilities.R $(call acsvar,B15003) $(UTILITIES) total_population_and_housing_units.csv.gz

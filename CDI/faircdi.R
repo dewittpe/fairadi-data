@@ -4,6 +4,8 @@
 # Steps 7, 8, and 9 for the CDI process
 #
 ################################################################################
+source("../utilities/build_FIPS.R")
+
 # step 7: PCA
 components <-
   list.files(
@@ -97,12 +99,6 @@ faircdi[, cdistd := 100 + 20 * scale(cdiraw), by = .(year)]
 # step 9, set percentiles
 faircdi[, faircdi := ceiling(100 * data.table::frank(cdiraw, ties.method = "average") / .N), by = .(year)]
 
-# write to disk
-data.table::fwrite(faircdi, file = "faircdi.csv")
-
-
-
-
 #
 # positive correlations with the deprivation-direction components:
 #   component01, component04, component05, component06, component07,
@@ -127,6 +123,16 @@ stopifnot(
 #pdf(file="corrplot.pdf")
 #corrplot::corrplot(cormat, method = "shade")
 #dev.off()
+
+################################################################################
+# save fairadi to disk
+faircdi[, FIPS := build_FIPS(state, county, tract, block_group)]
+# write to disk
+data.table::fwrite(
+  faircdi[, .SD, .SDcols = c("year", "FIPS", "cdiraw", "cdistd", "faircdi")],
+  file = "faircdi.csv"
+)
+
 
 ################################################################################
 #                                 End of File                                  #
