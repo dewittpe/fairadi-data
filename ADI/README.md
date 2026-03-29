@@ -86,38 +86,25 @@ Atlas](https://www.neighborhoodatlas.medicine.wisc.edu/)
 data sets. They are for public use.  However, Neighborhood Atlas asks that you
 create an account with them before downloading the data.
 
-- University of Wisconsin School of Medicine and Public Health. 2020 Area Deprivation Index v4.0.1. Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/ March 20 2026
-- University of Wisconsin School of Medicine and Public Health. 2023 Area Deprivation Index v4.0.1. Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/ March 20 2026
+Two files were used in this work:
+
+- neighborhood-atlas-2020-adi-v4_0_1.csv
+  - 2020 Area Deprivation Index v4.0.1.
+  - University of Wisconsin School of Medicine and Public Health.
+  - Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/
+  - March 20 2026
+  - SHA256: 8c575a7ff78cacde1d9d7dfd644d36bc49bf2a9992029ae17e3e35be8c283adc
+
+- neighborhood-atlas-2023-adi-v4_0_1.csv
+  - 2023 Area Deprivation Index v4.0.1.
+  - University of Wisconsin School of Medicine and Public Health.
+  - Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/
+  - March 20 2026
+  - SHA256: 396d02228b13f6ae45196d416218e69889696aa99c14730aad631adb8659b08b
 
 
 Import the Neighborhood Atlas 2020 and 2023 data.
 
-``` r
-neighborhood_atlas <-
-  list(
-    "2020" = data.table::fread(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401"), colClasses = "character"),
-    "2023" = data.table::fread(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2023_V401"), colClasses = "character")
-  ) |>
-  data.table::rbindlist(idcol = "year", fill = TRUE, use.names = TRUE)
-neighborhood_atlas[, year := as.integer(year)]
-neighborhood_atlas[, V1 := NULL]
-neighborhood_atlas[, GISJOIN := NULL]
-
-# set the ADI_STATERNK and ADI_NATRANK to numeric values
-neighborhood_atlas[, neighborhood_atlas_exclude_reason := data.table::fifelse(ADI_STATERNK %in% as.character(1:10), "", ADI_STATERNK)]
-neighborhood_atlas[, neighborhood_atlas_exclude := as.integer(neighborhood_atlas_exclude_reason != "")]
-neighborhood_atlas[, ADI_STATERNK := suppressWarnings(as.numeric(ADI_STATERNK))]
-neighborhood_atlas[, ADI_NATRANK  := suppressWarnings(as.numeric(ADI_NATRANK))]
-str(neighborhood_atlas)
-## Classes 'data.table' and 'data.frame':	484671 obs. of  6 variables:
-##  $ year                             : int  2020 2020 2020 2020 2020 2020 2020 2020 2020 2020 ...
-##  $ FIPS                             : chr  "010010201001" "010010201002" "010010202001" "010010202002" ...
-##  $ ADI_NATRANK                      : num  72 61 83 87 73 85 62 50 72 71 ...
-##  $ ADI_STATERNK                     : num  5 3 6 7 5 7 3 2 5 5 ...
-##  $ neighborhood_atlas_exclude_reason: chr  "" "" "" "" ...
-##  $ neighborhood_atlas_exclude       : int  0 0 0 0 0 0 0 0 0 0 ...
-##  - attr(*, ".internal.selfref")=<externalptr>
-```
 
 ### `fairadi` Data
 Read in the `fairadi` data.
@@ -140,32 +127,67 @@ str(fairadi)
 ##  - attr(*, ".internal.selfref")=<externalptr>
 ```
 
-In this README we will subset to the two years of Neighborhood Atlas data.
 
-``` r
-fairadi <- subset(fairadi, year %in% c(2020, 2023))
-adi <- merge(x = fairadi, y = neighborhood_atlas, all = TRUE, by = c("year", "FIPS"))
-```
 
 ### Exclusion Criteria
 As noted above, Neighborhood Atlas does exclude some block groups from ranking.  
 Here we report how similar our exclusion flagging is.
 
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> fairadi </th>
+   <th style="text-align:left;"> Neighborhood Atlas </th>
+   <th style="text-align:right;"> Number of Block Groups </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr grouplength="4"><td colspan="3" style="border-bottom: 1px solid;"><strong>2020</strong></td></tr>
+<tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> Include </td>
+   <td style="text-align:left;"> Include </td>
+   <td style="text-align:right;"> 235329 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> Include </td>
+   <td style="text-align:left;"> Exclude </td>
+   <td style="text-align:right;"> 773 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> Exclude </td>
+   <td style="text-align:left;"> Include </td>
+   <td style="text-align:right;"> 557 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> Exclude </td>
+   <td style="text-align:left;"> Exclude </td>
+   <td style="text-align:right;"> 5676 </td>
+  </tr>
+  <tr grouplength="4"><td colspan="3" style="border-bottom: 1px solid;"><strong>2023</strong></td></tr>
+<tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1">  </td>
+   <td style="text-align:left;"> Exclude </td>
+   <td style="text-align:right;"> 40 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> Include </td>
+   <td style="text-align:left;"> Include </td>
+   <td style="text-align:right;"> 236102 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> Include </td>
+   <td style="text-align:left;"> Exclude </td>
+   <td style="text-align:right;"> 26 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> Exclude </td>
+   <td style="text-align:left;"> Exclude </td>
+   <td style="text-align:right;"> 6168 </td>
+  </tr>
+</tbody>
+</table>
 
-``` r
-adi[, .N, keyby = .(year, exclude_from_ranking, neighborhood_atlas_exclude)]
-## Key: <year, exclude_from_ranking, neighborhood_atlas_exclude>
-##     year exclude_from_ranking neighborhood_atlas_exclude      N
-##    <int>                <int>                      <int>  <int>
-## 1:  2020                    0                          0 235329
-## 2:  2020                    0                          1    773
-## 3:  2020                    1                          0    557
-## 4:  2020                    1                          1   5676
-## 5:  2023                   NA                          1     40
-## 6:  2023                    0                          0 236102
-## 7:  2023                    0                          1     26
-## 8:  2023                    1                          1   6168
-```
+
 
 There are 40 GEOIDs in the 2023 Neighborhood Atlas only.
 - In the 2023 Neighborhood Atlas file, all 40 are marked QDI for both
@@ -198,18 +220,12 @@ What that means:
   in the Census geography inventory you are using.
 
 So the reason for the mismatch is a geography-vintage mismatch between
-Neighborhood Atlas 2023 and the 2023 Census geography returned by your workflow
-
-
-``` r
-# remove these 40 rows
-adi <- subset(adi, !(is.na(exclude_from_ranking)))
-```
+Neighborhood Atlas 2023 and the 2023 Census geography returned by the fairadi workflow.
 
 
 ``` r
 exin <-
-  adi[,
+  deltas[!is.na(exclude_from_ranking),
     .(
       both_exclude = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1, digits = 1),
       both_include = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0, digits = 1),
@@ -250,16 +266,8 @@ exin <-
 
 
 
-Let's look at the block groups that are excluded in Neighborhood Atlas but not
-in the reproduction.
 
-
-``` r
-adi[
-  exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1,
-  .N,
-  keyby = .(year, neighborhood_atlas_exclude_reason)
-]
+```
 ## Key: <year, neighborhood_atlas_exclude_reason>
 ##     year neighborhood_atlas_exclude_reason     N
 ##    <int>                            <char> <int>
@@ -267,87 +275,26 @@ adi[
 ## 2:  2020                               QDI    22
 ## 3:  2023                               QDI    26
 ```
-The primary reason for exclusion by Neighborhood Atlas is group quarters.
-
-
-``` r
-group_quarters <- data.table::fread("group_quarters.csv.gz")
-bg_gh <-
-  group_quarters[
-    adi[exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1],
-    on = c("year", "state", "county", "tract", "block_group")
-  ]
-```
-
-
+The primary reason for exclusion by Neighborhood Atlas is group quarters, 751/799 (93.99%).
 
 If the exclusion by group quarters is based on the Decennial census values, then
-a block group should be excluded in both 2020 and 2023.  However, only a few
-block groups are excluded due to group quarters in both Neighborhood Atlas
-data sets.
+a block group should be excluded in both 2020 and 2023.  However, no block group
+is excluded from the Neighborhood Atlas rankings due to group quarters in both
+2020 and 2023.
 
-``` r
-bg_gh[, .SD[duplicated(.SD, by = c("state", "county", "tract", "block_group"))]]
-## Empty data.table (0 rows and 16 cols): year,state,county,tract,block_group,group_quarters...
-```
 
 There are many ways the reason for exclusion will change from 2020 to 2023
 within the Neighborhood Atlas data.
-
-``` r
-data.table::dcast(
-  neighborhood_atlas[
-    neighborhood_atlas[, .(N = length(unique(neighborhood_atlas_exclude_reason))), by = .(FIPS)][N > 1],
-    on = "FIPS"
-  ]
-  ,
-  FIPS ~ year,
-  value.var = "neighborhood_atlas_exclude_reason"
-)[, .N, keyby = .(`2020`, `2023`)] |>
-print(nrow = Inf)
-## Key: <2020, 2023>
-##       2020   2023     N
-##     <char> <char> <int>
-##  1:            GQ   546
-##  2:            PH   126
-##  3:           QDI   225
-##  4:     GQ          744
-##  5:     GQ  GQ-PH    35
-##  6:     GQ     PH     2
-##  7:     GQ    QDI    25
-##  8:  GQ-PH           10
-##  9:  GQ-PH     GQ    54
-## 10:  GQ-PH     PH    58
-## 11:  GQ-PH    QDI     3
-## 12:     PH          168
-## 13:     PH     GQ     5
-## 14:     PH  GQ-PH   127
-## 15:     PH    QDI    10
-## 16:    QDI          155
-## 17:    QDI     GQ     9
-## 18:    QDI     PH    11
-```
+<div class="figure" style="text-align: center">
+<img src="figure/neighborhood-atlas-exclude-reasons-1.png" alt="Block group exclusion reason by year for Neighborhood Atlas data.  GQ: group quarters, PH: total population, QDI: questionable data quality, blank: included in that years rankings."  />
+<p class="caption">Block group exclusion reason by year for Neighborhood Atlas data.  GQ: group quarters, PH: total population, QDI: questionable data quality, blank: included in that years rankings.</p>
+</div>
 We speculate that the reason the exclusion based on group quarters changes from
 2020 to 2023 within the Neighborhood Atlas data is that they have access to the
 non-public ACS5 block group level data.  That data can be acquired with a signed
 data-use agreement.  For the reproduction, and using only publicly available
 data, we are restricted to using the Decennial census values for both 2020 and
 2023.
-
-Note that for the block groups that our reproduction excludes but Neighborhood
-Atlas does not, it is all due to grouped quarters.
-
-``` r
-adi[
-  exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0,
-  .N,
-  by = .(year, exclude_reason)
-]
-##     year exclude_reason     N
-##    <int>         <char> <int>
-## 1:  2020             GQ   552
-## 2:  2020            QDI     5
-```
 
 ### Rank Correlations
 
@@ -418,14 +365,18 @@ adi[
 
 
 <div class="figure" style="text-align: center">
-<img src="figure/abs-rank-delta-national-1.png" alt="plot of chunk abs-rank-delta-national"  />
-<p class="caption">plot of chunk abs-rank-delta-national</p>
+<img src="figure/abs-rank-delta-national-1.png" alt="Cumulative percentage of block groups with differences in national percentile ranking between fairadi and Neighborhood Atlas.  Each black line is an individual state/territory, and the red line with dots is for the whole dataset."  />
+<p class="caption">Cumulative percentage of block groups with differences in national percentile ranking between fairadi and Neighborhood Atlas.  Each black line is an individual state/territory, and the red line with dots is for the whole dataset.</p>
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="figure/abs-rank-delta-state-1.png" alt="plot of chunk abs-rank-delta-state"  />
-<p class="caption">plot of chunk abs-rank-delta-state</p>
+<img src="figure/abs-rank-delta-state-1.png" alt="Cumulative percentage of block groups with differences in national percentile ranking between fairadi and Neighborhood Atlas.  Each black line is an individual state/territory, and the red line with dots is for the whole dataset."  />
+<p class="caption">Cumulative percentage of block groups with differences in national percentile ranking between fairadi and Neighborhood Atlas.  Each black line is an individual state/territory, and the red line with dots is for the whole dataset.</p>
 </div>
+
+```
+## [1] "Cumulative percentage of block groups with differences in state decile ranking between fairadi and Neighborhood Atlas.  Each black line is an individual state/territory, and the red line with dots is for the whole dataset."
+```
 
 <table>
  <thead>
@@ -523,8 +474,8 @@ adi[
 
 
 <div class="figure" style="text-align: center">
-<img src="figure/corplot-1.png" alt="plot of chunk corplot"  />
-<p class="caption">plot of chunk corplot</p>
+<img src="figure/corplot-1.png" alt="Pearson correlation between each of the ADI topics and the fairadi National Percentile Ranking"  />
+<p class="caption">Pearson correlation between each of the ADI topics and the fairadi National Percentile Ranking</p>
 </div>
 
 ## Session Info
@@ -556,15 +507,15 @@ sessionInfo()
 ## [10] textshaping_1.0.5   ggh4x_0.3.1         fastmap_1.2.0      
 ## [13] ggplot2_4.0.2       R6_2.6.1            labeling_0.4.3     
 ## [16] generics_0.1.4      pcaPP_2.0-5         knitr_1.51         
-## [19] tibble_3.3.1        kableExtra_1.4.0    svglite_2.2.2      
+## [19] kableExtra_1.4.0    tibble_3.3.1        svglite_2.2.2      
 ## [22] pillar_1.11.1       RColorBrewer_1.1-3  qwraps2_0.6.2      
 ## [25] R.utils_2.13.0      rlang_1.1.7         stringi_1.8.7      
 ## [28] xfun_0.57           S7_0.2.1            otel_0.2.0         
 ## [31] viridisLite_0.4.3   cli_3.6.5           withr_3.0.2        
 ## [34] magrittr_2.0.4      digest_0.6.39       grid_4.5.3         
-## [37] rstudioapi_0.18.0   mvtnorm_1.3-5       lifecycle_1.0.5    
+## [37] mvtnorm_1.3-5       rstudioapi_0.18.0   lifecycle_1.0.5    
 ## [40] R.methodsS3_1.8.2   R.oo_1.27.1         vctrs_0.7.2        
 ## [43] evaluate_1.0.5      glue_1.8.0          data.table_1.18.2.1
-## [46] farver_2.1.2        codetools_0.2-20    rmarkdown_2.30     
-## [49] pkgconfig_2.0.3     tools_4.5.3         htmltools_0.5.9
+## [46] farver_2.1.2        rmarkdown_2.30      tools_4.5.3        
+## [49] pkgconfig_2.0.3     htmltools_0.5.9
 ```

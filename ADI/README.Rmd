@@ -3,7 +3,8 @@
 ```{r sefup, include = FALSE}
 options(qwraps2_markup = "markdown")
 options(knitr.kable.NA = '')
-knitr::opts_chunk$set(collapse = TRUE, fig.align = "center", cache = TRUE)
+knitr::opts_chunk$set(collapse = TRUE, fig.align = "center")
+knitr::opts_knit$set(eval.after = c('fig.cap'))
 ```
 
 The Area Deprivation Index (ADI)
@@ -90,8 +91,21 @@ Atlas](https://www.neighborhoodatlas.medicine.wisc.edu/)
 data sets. They are for public use.  However, Neighborhood Atlas asks that you
 create an account with them before downloading the data.
 
-- University of Wisconsin School of Medicine and Public Health. 2020 Area Deprivation Index v4.0.1. Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/ March 20 2026
-- University of Wisconsin School of Medicine and Public Health. 2023 Area Deprivation Index v4.0.1. Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/ March 20 2026
+Two files were used in this work:
+
+- `r basename(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401"))`
+  - 2020 Area Deprivation Index v4.0.1.
+  - University of Wisconsin School of Medicine and Public Health.
+  - Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/
+  - March 20 2026
+  - SHA256: 8c575a7ff78cacde1d9d7dfd644d36bc49bf2a9992029ae17e3e35be8c283adc
+
+- `r basename(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2023_V401"))`
+  - 2023 Area Deprivation Index v4.0.1.
+  - University of Wisconsin School of Medicine and Public Health.
+  - Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/
+  - March 20 2026
+  - SHA256: 396d02228b13f6ae45196d416218e69889696aa99c14730aad631adb8659b08b
 
 ```{r check-for-neighborhood-atlas-files, include = FALSE}
 stopifnot(
@@ -116,7 +130,7 @@ stopifnot(
 )
 ```
 Import the Neighborhood Atlas 2020 and 2023 data.
-```{r import-neighborhood-atlas}
+```{r import-neighborhood-atlas, include = FALSE}
 neighborhood_atlas <-
   list(
     "2020" = data.table::fread(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401"), colClasses = "character"),
@@ -142,18 +156,25 @@ fairadi <- data.table::fread("fairadi.csv.gz", colClasses = c("FIPS" = "characte
 str(fairadi)
 ```
 
-In this README we will subset to the two years of Neighborhood Atlas data.
-```{r merge-fairadi-neighborhood-atlas}
+```{r merge-fairadi-neighborhood-atlas, include = FALSE}
+# In this README we will subset to the two years of Neighborhood Atlas data.
 fairadi <- subset(fairadi, year %in% c(2020, 2023))
-adi <- merge(x = fairadi, y = neighborhood_atlas, all = TRUE, by = c("year", "FIPS"))
+deltas <- merge(x = fairadi, y = neighborhood_atlas, all = TRUE, by = c("year", "FIPS"))
 ```
 
 ### Exclusion Criteria
 As noted above, Neighborhood Atlas does exclude some block groups from ranking.  
 Here we report how similar our exclusion flagging is.
 
-```{r exlcusion-criterial}
-adi[, .N, keyby = .(year, exclude_from_ranking, neighborhood_atlas_exclude)]
+```{r exlcusion-criterial, echo = FALSE, results = "asis"}
+x <- deltas[, .N, keyby = .(year, f = exclude_from_ranking, n = neighborhood_atlas_exclude)]
+x[, f := factor(f, c(0, 1), c("Include", "Exclude"))]
+x[, n := factor(n, c(0, 1), c("Include", "Exclude"))]
+kableExtra::kbl(
+  x = x[, -"year"],
+  col.names = c("fairadi", "Neighborhood Atlas", "Number of Block Groups")
+) |>
+kableExtra::pack_rows(index = table(x$year))
 ```
 
 There are 40 GEOIDs in the 2023 Neighborhood Atlas only.
@@ -187,16 +208,11 @@ What that means:
   in the Census geography inventory you are using.
 
 So the reason for the mismatch is a geography-vintage mismatch between
-Neighborhood Atlas 2023 and the 2023 Census geography returned by your workflow
-
-```{r remove-the-40}
-# remove these 40 rows
-adi <- subset(adi, !(is.na(exclude_from_ranking)))
-```
+Neighborhood Atlas 2023 and the 2023 Census geography returned by the fairadi workflow.
 
 ```{r fairadi-v-neighborhood-atlas-exclude, results = "hide"}
 exin <-
-  adi[,
+  deltas[!is.na(exclude_from_ranking),
     .(
       both_exclude = qwraps2::n_perc(exclude_from_ranking == 1 & neighborhood_atlas_exclude == 1, digits = 1),
       both_include = qwraps2::n_perc(exclude_from_ranking == 0 & neighborhood_atlas_exclude == 0, digits = 1),
@@ -220,53 +236,51 @@ kableExtra::kbl(
 )
 ```
 
-Let's look at the block groups that are excluded in Neighborhood Atlas but not
-in the reproduction.
-
-```{r bggq}
-adi[
+```{r bggq, echo = FALSE}
+deltas[
   exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1,
   .N,
   keyby = .(year, neighborhood_atlas_exclude_reason)
 ]
-```
-The primary reason for exclusion by Neighborhood Atlas is group quarters.
 
-```{r add-gq}
-group_quarters <- data.table::fread("group_quarters.csv.gz")
-bg_gh <-
-  group_quarters[
-    adi[exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1],
-    on = c("year", "state", "county", "tract", "block_group")
+bggq <-
+  deltas[
+    exclude_from_ranking == 0 & neighborhood_atlas_exclude == 1,
+    qwraps2::n_perc(neighborhood_atlas_exclude_reason == "GQ", show_denom =
+      "always")
   ]
 ```
-
-```{r sanity-check, include = FALSE}
-#Sanity check, for those with a value for group quarters all of them are, in the reproduction, under 1/3.
-stopifnot(all(bg_gh$group_quarters < 1/3, na.rm = TRUE))
-```
+The primary reason for exclusion by Neighborhood Atlas is group quarters, `r bggq`.
 
 If the exclusion by group quarters is based on the Decennial census values, then
-a block group should be excluded in both 2020 and 2023.  However, only a few
-block groups are excluded due to group quarters in both Neighborhood Atlas
-data sets.
-```{r}
-bg_gh[, .SD[duplicated(.SD, by = c("state", "county", "tract", "block_group"))]]
+a block group should be excluded in both 2020 and 2023.  However, no block group
+is excluded from the Neighborhood Atlas rankings due to group quarters in both
+2020 and 2023.
+```{r, include = FALSE}
+stopifnot(
+  deltas[neighborhood_atlas_exclude == "GQ", .SD[duplicated(.SD, by = c("state", "county", "tract", "block_group", "neighborhood_atlas_exclude_reason"))]][, .N == 0]
+)
 ```
 
 There are many ways the reason for exclusion will change from 2020 to 2023
 within the Neighborhood Atlas data.
-```{r}
-data.table::dcast(
-  neighborhood_atlas[
-    neighborhood_atlas[, .(N = length(unique(neighborhood_atlas_exclude_reason))), by = .(FIPS)][N > 1],
-    on = "FIPS"
-  ]
-  ,
-  FIPS ~ year,
-  value.var = "neighborhood_atlas_exclude_reason"
-)[, .N, keyby = .(`2020`, `2023`)] |>
-print(nrow = Inf)
+```{r neighborhood-atlas-exclude-reasons, echo = FALSE, fig.cap = "Block group exclusion reason by year for Neighborhood Atlas data.  GQ: group quarters, PH: total population, QDI: questionable data quality, blank: included in that years rankings."}
+x <-
+  data.table::dcast(
+    neighborhood_atlas[
+      neighborhood_atlas[, .(N = length(unique(neighborhood_atlas_exclude_reason))), by = .(FIPS)][N > 1],
+      on = "FIPS"
+    ]
+    ,
+    FIPS ~ year,
+    value.var = "neighborhood_atlas_exclude_reason"
+  )[, .N, keyby = .(`2020`, `2023`)]
+
+ggplot2::ggplot(x) +
+ggplot2::aes(x = `2020`, y = `2023`, fill = N, label = N) +
+ggplot2::scale_fill_viridis_c(name = "Block Groups") +
+ggplot2::geom_tile() +
+ggplot2::theme_classic()
 ```
 We speculate that the reason the exclusion based on group quarters changes from
 2020 to 2023 within the Neighborhood Atlas data is that they have access to the
@@ -275,20 +289,10 @@ data-use agreement.  For the reproduction, and using only publicly available
 data, we are restricted to using the Decennial census values for both 2020 and
 2023.
 
-Note that for the block groups that our reproduction excludes but Neighborhood
-Atlas does not, it is all due to grouped quarters.
-```{r fairadi-gq}
-adi[
-  exclude_from_ranking == 1 & neighborhood_atlas_exclude == 0,
-  .N,
-  by = .(year, exclude_reason)
-]
-```
-
 ### Rank Correlations
 
 ```{r build-deltas, include = FALSE}
-deltas <- merge(adi, data.table::fread("../FIPS/2020__states.csv"), by = "state")
+deltas <- merge(deltas, data.table::fread("../FIPS/2020__states.csv"), by = "state")
 deltas[, adi_raw := NULL]
 deltas[, county := NULL]
 deltas[, tract := NULL]
@@ -423,12 +427,17 @@ abs_rank_delta_plot <- function(data) {
 }
 ```
 
-```{r abs-rank-delta-national, echo = FALSE}
-abs_rank_delta_plot(deltas_long[startsWith(variable, "within") & Level == "national"])
+```{r abs-rank-delta-national, echo = FALSE, fig.cap = cap}
+abs_rank_delta_plot(deltas_long[startsWith(variable, "within") & Level == "national"]) +
+ggplot2::scale_x_continuous(breaks = seq(0, 12, by = 2))
+cap <-
+"Cumulative percentage of block groups with differences in national percentile ranking between fairadi and Neighborhood Atlas.  Each black line is an individual state/territory, and the red line with dots is for the whole dataset."
 ```
 
-```{r abs-rank-delta-state, echo = FALSE}
-abs_rank_delta_plot(deltas_long[startsWith(variable, "within") & Level == "state"])
+```{r abs-rank-delta-state, echo = FALSE, fig.cap = cap}
+abs_rank_delta_plot(deltas_long[startsWith(variable, "within") & Level == "state"]) +
+ggplot2::scale_x_continuous(breaks = seq(0, 5, by = 1))
+"Cumulative percentage of block groups with differences in state decile ranking between fairadi and Neighborhood Atlas.  Each black line is an individual state/territory, and the red line with dots is for the whole dataset."
 ```
 
 ```{r abs-rank-delta-table, echo = FALSE, results = "asis"}
@@ -487,7 +496,7 @@ forcorplot[, rn := factor(rn, levels = lvls)]
 forcorplot[, variable := factor(variable, levels = rev(lvls))]
 ```
 
-```{r corplot, echo = FALSE}
+```{r corplot, echo = FALSE, fig.cap = cap}
 ggplot2::ggplot(forcorplot) +
   ggplot2::aes(x = rn, y = variable, fill = value) +
   ggplot2::geom_tile() +
@@ -499,6 +508,7 @@ ggplot2::ggplot(forcorplot) +
     axis.title = ggplot2::element_blank(),
     axis.text.x = ggplot2::element_text(angle = 40, hjust = 1.0, vjust = 1.0)
   )
+cap <- "Pearson correlation between each of the ADI topics and the fairadi National Percentile Ranking"
 ```
 
 ## Session Info

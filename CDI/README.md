@@ -135,19 +135,10 @@ higher deprivation:
 
 ``` r
 deprivation_components
-```
-
-```
 ##  [1] "component01" "component04" "component05" "component06" "component07"
 ##  [6] "component08" "component09" "component14" "component16" "component17"
 ## [11] "component18"
-```
-
-``` r
 affluence_components
-```
-
-```
 ## [1] "component02" "component03" "component10" "component11" "component12"
 ## [6] "component13" "component15"
 ```
@@ -186,6 +177,9 @@ block groups.
 
 
 
-![plot of chunk cormatplot](figure/cormatplot-1.png)
+<div class="figure" style="text-align: center">
+<img src="figure/cormatplot-1.png" alt="plot of chunk cormatplot"  />
+<p class="caption">plot of chunk cormatplot</p>
+</div>
 
 

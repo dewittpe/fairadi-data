@@ -1,6 +1,9 @@
 # Community Deprivation Index
 
 ```{r setup, include = FALSE}
+options(qwraps2_markup = "markdown")
+options(knitr.kable.NA = '')
+knitr::opts_chunk$set(collapse = TRUE, fig.align = "center", cache = TRUE)
 source("cdi_utilities.R")
 ```
 
