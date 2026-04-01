@@ -8,10 +8,8 @@ ifeq ($(strip $(OUTDIR)),)
 OUTDIR := .
 endif
 
-DECENNIAL_DATASET ?= dhc
-
 OUTPUTS := $(foreach year,$(DECENNIAL_YEARS), \
-					 $(foreach tab,$(DECENNIAL_TABLES), \
+					 $(foreach tab,$(call decennial_tables,$(year)), \
 					 $(OUTDIR)/$(year)/$(tab).csv.gz))
 
 .PHONY: all
@@ -22,11 +20,12 @@ $(OUTDIR)/%.csv.gz:
 	$(eval TEMP_LIST := $(subst /, , $*))
 	$(eval year := $(word 1,$(TEMP_LIST)))
 	$(eval tab := $(word 2,$(TEMP_LIST)))
+	$(eval dataset := $(call decennial_dataset,$(year)))
 	@$(REQUIRE_API_KEY); \
 	raw="$@.raw"; \
 	tmp="$@.tmp"; \
 	mkdir -p "$(dir $@)"; \
-	url="https://api.census.gov/data/$(year)/dec/$(DECENNIAL_DATASET)?get=group($(tab))&for=county:*&in=state:*&outputFormat=csv&key=$(API_KEY)"; \
+	url="https://api.census.gov/data/$(year)/dec/$(dataset)?get=group($(tab))&for=county:*&in=state:*&outputFormat=csv&key=$(API_KEY)"; \
 	echo " Writing $@"; \
 	$(FETCH) "$$url" "$$raw"; \
 	gzip -9c "$$raw" > "$$tmp"; \
