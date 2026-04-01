@@ -40,10 +40,12 @@ check_for_annotations <- function(x) {
   E <- endsWith(names(x), "EA")
   M <- endsWith(names(x), "MA")
 
-  if (!any(E) && !any(M)) {
-    message("No annotation columns")
-  } else {
-    message("annotated columns exist!")
+  if (interactive()) {
+    if (!any(E) && !any(M)) {
+      message("No annotation columns")
+    } else {
+      message("annotated columns exist!")
+    }
   }
   list(E = names(x)[E], M = names(x)[M])
 }
