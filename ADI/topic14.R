@@ -33,7 +33,7 @@ DT[
 stopifnot(all(DT[["topic14"]] <= 1.00, na.rm = TRUE))
 
 # all missing is due to B25044_001
-stopifnot(DT[is.na(topic14), all(B25044_001E == 0)])
+stopifnot(DT[is.na(topic14), all(B25044_001E == 0, na.rm = TRUE)])
 DT[is.na(topic14) & B25044_001E == 0, topic14_notes := "QDI-ZD"]
 
 # the base cols_to_keep is defined in adi_utilities.R

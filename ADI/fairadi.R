@@ -48,7 +48,7 @@ adi[,
     topic12 *  0.1037 +
     topic13 *  0.0719 +
     topic14 *  0.0694 +
-    topic15_new *  0.0877 +
+    topic15 *  0.0877 +
     topic16 *  0.0510 +
     topic17 *  0.0556
   ]
@@ -90,14 +90,48 @@ adi <-
 # join group quarters only on state, county, tract, and block_group, not year.
 # Public ACS 5-year data do not provide group-quarters counts at the block-group
 # level, only at the tract level. Because the suppression rule is defined at
-# the block-group level, fairadi uses Decennial 2020 block-group group-quarters
-# values as the public-data source for this criterion across all modeled years.
+# the block-group level, fairadi uses Decennial 2010 and 2020 block-group
+# group-quarters values as the public-data source for this criterion across all
+# modeled years.
+#
+# As such, all the 2010 group quarters needs to merge to the 2010-2019 ACS5 data
+# and all the 2020 group quarters need to map to 2020-2029 data
+
+yrs <- unique(adi$year)
+
+pre_2020 <-
+  replicate(
+    n = sum(yrs >= 2010 & yrs < 2020),
+    expr = group_quarters[year == 2010, ],
+    simplify = FALSE
+  )
+
+post_2020 <-
+  replicate(
+    n = sum(yrs >= 2020 & yrs < 2030),
+    expr = group_quarters[year == 2020, ],
+    simplify = FALSE
+  )
+
+pre2020_yrs <- yrs[yrs < 2020]
+post2020_yrs <- yrs[yrs >= 2020]
+
+for (i in seq_len(length(pre2020_yrs))) {
+  data.table::set(pre_2020[[i]], j = "year", value = pre2020_yrs[i])
+}
+
+for (i in seq_len(length(post2020_yrs))) {
+  data.table::set(post_2020[[i]], j = "year", value = post2020_yrs[i])
+}
+
+group_quarters <- rbind(data.table::rbindlist(pre_2020), data.table::rbindlist(post_2020))
+
 adi <-
   merge(
     x = adi,
-    y = group_quarters[, -"year"],
+    y = group_quarters,
     all.x = TRUE,
-    by = c("state", "county", "tract", "block_group")
+    by = c("year", "state", "county", "tract", "block_group")
   )
 
 # exclude reason

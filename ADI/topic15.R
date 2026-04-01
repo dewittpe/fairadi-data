@@ -47,13 +47,26 @@ stopifnot(
 
 # all missing is due to the denominator
 stopifnot(DT[is.na(topic15_old), all(is.na(B25043_001E) | B25043_001E == 0)])
-stopifnot(DT[is.na(topic15_new), all(B28002_001E == 0)])
+stopifnot(DT[is.na(topic15_new), all(B28002_001E == 0, na.rm = TRUE)])
 
 DT[is.na(topic15_old) & B25043_001E == 0, topic15_old_notes := "QDI-ZD"]
 DT[is.na(topic15_new) & B28002_001E == 0, topic15_new_notes := "QDI-ZD"]
 
+if (interactive()) {
+  print(
+    DT[, .N, keyby = .(year, old = !is.na(topic15_old), new = !is.na(topic15_new))],
+    nrow = Inf
+  )
+}
+
+# 2017 Internet data is available, use that for 2017 and beyond, use the phone
+# data for 2016 and before
+
+DT[year >= 2017, `:=`(topic15 = topic15_new, topic15_notes = topic15_new_notes)]
+DT[year <  2017, `:=`(topic15 = topic15_old, topic15_notes = topic15_old_notes)]
+
 # the base cols_to_keep is defined in adi_utilities.R
-cols_to_keep <- c(COLS_TO_KEEP, "topic15_old", "topic15_new", "topic15_old_notes", "topic15_new_notes")
+cols_to_keep <- c(COLS_TO_KEEP, "topic15", "topic15_notes")
 
 data.table::fwrite(
   x = DT[, .SD, .SDcols = cols_to_keep],

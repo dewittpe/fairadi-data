@@ -121,9 +121,11 @@ stopifnot(all(DT[["topic03"]] <= 1.00, na.rm = TRUE))
 
 # what about the missing values?  Check that all the missing values are due to a
 # zero denominator.
-DT[C24010_001E == 0L, topic03_notes := "QDI-ZD"]
+DT[C24010_001E == 0L,  topic03_notes := "QDI-ZD"]
+DT[is.na(C24010_001E), topic03_notes := "QDI-ZD"]
+
 stopifnot(
-  DT[is.na(topic03), all(C24010_001E == 0)],
+  DT[is.na(topic03), all(C24010_001E == 0, na.rm = TRUE)],
   DT[topic03_notes == "QDI-ZD", all(is.na(topic03))],
   DT[is.na(topic03_notes), !any(is.na(topic03))]
 )

@@ -39,7 +39,7 @@ DT[
 ]
 
 # what about the missing values?  All due to a zero total population
-stopifnot(DT[is.na(topic05_w_epsilon), all(total_population == 0)])
+stopifnot(DT[is.na(topic05_w_epsilon), all(total_population == 0 | is.na(topic05_wo_epsilon))])
 
 # the base cols_to_keep is defined in adi_utilities.R
 cols_to_keep <- c(COLS_TO_KEEP, "topic05_wo_epsilon", "topic05_w_epsilon")

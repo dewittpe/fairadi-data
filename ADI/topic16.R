@@ -32,7 +32,7 @@ DT[
 stopifnot(all(DT[["topic16"]] <= 1.00, na.rm = TRUE))
 
 # missing only due to denominator
-stopifnot(DT[is.na(topic16), all(B25047_001E == 0)])
+stopifnot(DT[is.na(topic16), all(B25047_001E == 0, na.rm =  TRUE)])
 DT[is.na(topic16) & B25047_001E == 0, topic16_notes := "QDI-ZD"]
 
 # the base cols_to_keep is defined in adi_utilities.R

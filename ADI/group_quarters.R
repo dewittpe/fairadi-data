@@ -9,20 +9,23 @@ source("adi_utilities.R")
 pop <- import_census_table("P1")
 gq  <- import_census_table("P18")
 
+pop[, pop := data.table::fcoalesce(P1_001N, P001001)]
+gq[,  gq  := data.table::fcoalesce(P18_001N, P018001)]
+
 DT <-
   merge(
-    x = pop[, .SD, .SDcols = c(COLS_TO_KEEP, "P1_001N")],
-    y = gq[,  .SD, .SDcols = c(COLS_TO_KEEP, "P18_001N")],
+    x = pop[, .SD, .SDcols = c(COLS_TO_KEEP, "pop")],
+    y = gq[,  .SD, .SDcols = c(COLS_TO_KEEP, "gq")],
     all = TRUE,
     by = COLS_TO_KEEP
   )
 
-DT[, group_quarters := P18_001N / P1_001N]
+DT[, group_quarters := gq / pop]
 
 # Sanity checks: all the percent_group_quarters should be between 0 and 100. NA
 # values are due to zero total population.
 stopifnot(
-  DT[is.na(group_quarters), all(P1_001N == 0)],
+  DT[is.na(group_quarters), all(pop == 0)],
   DT[, all(group_quarters >=   0, na.rm = TRUE)],
   DT[, all(group_quarters <=   1, na.rm = TRUE)]
 )
