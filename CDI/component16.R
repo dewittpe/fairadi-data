@@ -27,7 +27,7 @@ stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 # Step 2: build the MOE
 nV <- sprintf("C17002_%03d", 2:5)
 dV <- sprintf("C17002_%03d", 1)
-steps_1_and_2(DT, 16, nV, dV)
+DT <- steps_1_and_2(DT, 16, nV, dV)
 
 # Step 3: flag for replacement
 DT <- join_tphu(DT)

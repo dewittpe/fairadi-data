@@ -36,7 +36,7 @@ DT[!is.na(B15003_001MA), B15003_001M := 0L]
 # Step 2: build the MOE
 nV <- sprintf("B15003_%03d", 2:16)
 dV <- sprintf("B15003_%03d", 1)
-steps_1_and_2(DT, 1, nV, dV)
+DT <- steps_1_and_2(DT, 1, nV, dV)
 
 # Step 3: flag for replacement
 DT <- join_tphu(DT)

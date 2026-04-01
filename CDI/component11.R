@@ -44,7 +44,7 @@ stopifnot(
 # Step 2: build the MOE
 nV <- sprintf("B25064_%03d", 1)
 dV <- NULL
-steps_1_and_2(DT, 11, nV, dV)
+DT <- steps_1_and_2(DT, 11, nV, dV)
 
 # Step 3: flag for replacement
 DT <- join_tphu(DT)
