@@ -5,6 +5,53 @@ options(qwraps2_markup = "markdown")
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(collapse = TRUE, fig.align = "center")
 knitr::opts_knit$set(eval.after = c('fig.cap'))
+
+atlas_requirements <-
+  data.table::data.table(
+    envvar = c(
+      "NEIGHBORHOOD_ATLAS_ADI_2020_V401",
+      "NEIGHBORHOOD_ATLAS_ADI_2023_V401"
+    ),
+    label = c("2020 Area Deprivation Index v4.0.1", "2023 Area Deprivation Index v4.0.1"),
+    sha256 = c(
+      "8c575a7ff78cacde1d9d7dfd644d36bc49bf2a9992029ae17e3e35be8c283adc",
+      "396d02228b13f6ae45196d416218e69889696aa99c14730aad631adb8659b08b"
+    )
+  )
+
+atlas_basename <- function(envvar) {
+  path <- Sys.getenv(envvar, unset = "")
+  if (!nzchar(path)) {
+    return(sprintf("<unset: %s>", envvar))
+  }
+  basename(path)
+}
+
+atlas_preflight <- function(requirements = atlas_requirements) {
+  result <- data.table::copy(requirements)
+  result[, path := Sys.getenv(envvar, unset = "")]
+  result[, is_set := nzchar(path)]
+  result[, exists := is_set & file.exists(path)]
+  result[, actual_sha256 := NA_character_]
+  result[exists == TRUE, actual_sha256 := vapply(
+    path[exists == TRUE],
+    digest::digest,
+    character(1),
+    algo = "sha256",
+    file = TRUE
+  )]
+  result[, sha_ok := exists & !is.na(actual_sha256) & actual_sha256 == sha256]
+  result[
+    ,
+    status := data.table::fcase(
+      !is_set, "path not defined",
+      !exists, "file not found",
+      !sha_ok, "sha256 mismatch",
+      default = "ok"
+    )
+  ]
+  list(ok = all(result$status == "ok"), details = result)
+}
 ```
 
 The Area Deprivation Index (ADI)
@@ -93,41 +140,51 @@ create an account with them before downloading the data.
 
 Two files were used in this work:
 
-- `r basename(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401"))`
+- `r atlas_basename("NEIGHBORHOOD_ATLAS_ADI_2020_V401")`
   - 2020 Area Deprivation Index v4.0.1.
   - University of Wisconsin School of Medicine and Public Health.
   - Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/
   - March 20 2026
   - SHA256: 8c575a7ff78cacde1d9d7dfd644d36bc49bf2a9992029ae17e3e35be8c283adc
 
-- `r basename(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2023_V401"))`
+- `r atlas_basename("NEIGHBORHOOD_ATLAS_ADI_2023_V401")`
   - 2023 Area Deprivation Index v4.0.1.
   - University of Wisconsin School of Medicine and Public Health.
   - Downloaded from https://www.neighborhoodatlas.medicine.wisc.edu/
   - March 20 2026
   - SHA256: 396d02228b13f6ae45196d416218e69889696aa99c14730aad631adb8659b08b
 
-```{r check-for-neighborhood-atlas-files, include = FALSE}
-stopifnot(
-  file.exists(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401")),
-  file.exists(Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2023_V401")),
-  identical(
-    digest::digest(
-      Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2020_V401"),
-      algo = "sha256",
-      file = TRUE
-    ),
-    "8c575a7ff78cacde1d9d7dfd644d36bc49bf2a9992029ae17e3e35be8c283adc"
-  ),
-  identical(
-    digest::digest(
-      Sys.getenv("NEIGHBORHOOD_ATLAS_ADI_2023_V401"),
-      algo = "sha256",
-      file = TRUE
-    ),
-    "396d02228b13f6ae45196d416218e69889696aa99c14730aad631adb8659b08b"
+```{r check-for-neighborhood-atlas-files, echo = FALSE, results = "asis"}
+atlas_status <- atlas_preflight()
+
+if (!atlas_status$ok) {
+  cat(
+    "Neighborhood Atlas diagnostics were not run because the required file",
+    "paths were not configured or did not pass SHA256 verification.\n\n"
   )
-)
+  cat("Set the following environment variables to the expected files and rebuild:\n\n")
+
+  for (i in seq_len(nrow(atlas_status$details))) {
+    row <- atlas_status$details[i]
+    cat(
+      sprintf(
+        "- `%s` (%s): %s",
+        row$envvar,
+        row$label,
+        row$status
+      )
+    )
+    if (!is.na(row$actual_sha256) && row$status == "sha256 mismatch") {
+      cat(sprintf(" (expected `%s`, got `%s`)", row$sha256, row$actual_sha256))
+    }
+    cat("\n")
+  }
+
+  cat(
+    "\nThe README was knitted up to this point and then exited intentionally.\n"
+  )
+  knitr::knit_exit()
+}
 ```
 Import the Neighborhood Atlas 2020 and 2023 data.
 ```{r import-neighborhood-atlas, include = FALSE}
