@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 include ../Makevars
 
-OUTPUTS := $(foreach year,$(ACS5_YEARS),$(foreach tab,$(ACS5_TABLES), $(tab)__$(year).csv.gz))
-METADATA_OUTPUTS := $(foreach year,$(ACS5_YEARS),$(foreach tab,$(ACS5_TABLES), metadata/$(year)/$(tab).json))
+OUTPUTS := $(foreach pair,$(acs5_pairs),$(pair).csv.gz)
+METADATA_OUTPUTS := $(foreach pair,$(acs5_pairs),metadata/$(call acs5_pair_year,$(pair))/$(call acs5_pair_table,$(pair)).json)
 
 .PHONY: all metadata state county tract block_group clean
 

@@ -21,7 +21,7 @@ $(shell tail -n +2 $(FIPS_DIR)/$(1)__states.csv | cut -d, -f1 | tr -d '"')
 endef
 
 OUTPUTS := $(foreach year,$(ACS5_YEARS), \
-					 $(foreach tab,$(ACS5_TABLES), \
+					 $(foreach tab,$(filter-out $(foreach pair,$(filter %__$(year),$(ACS5_EXCLUDE)),$(patsubst %__$(year),%,$(pair))),$(ACS5_TABLES)), \
 					 $(foreach fips,$(call get_state_fips,$(year)), \
 					 $(OUTDIR)/$(year)/$(fips)/$(tab).csv.gz)))
 

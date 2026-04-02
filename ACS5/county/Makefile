@@ -8,9 +8,8 @@ ifeq ($(strip $(OUTDIR)),)
 OUTDIR := .
 endif
 
-OUTPUTS := $(foreach year,$(ACS5_YEARS), \
-					 $(foreach tab,$(ACS5_TABLES), \
-					 $(OUTDIR)/$(year)/$(tab).csv.gz))
+OUTPUTS := $(foreach pair,$(acs5_pairs), \
+					 $(OUTDIR)/$(call acs5_pair_year,$(pair))/$(call acs5_pair_table,$(pair)).csv.gz)
 
 .PHONY: all
 
