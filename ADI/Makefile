@@ -5,7 +5,7 @@ UTILITIES := ../utilities/import_census_table.R ../utilities/check_for_annotatio
 ADITOPICS := topic01.csv.gz topic02.csv.gz topic03.csv.gz topic04.csv.gz topic05.csv.gz topic06.csv.gz topic07.csv.gz topic08.csv.gz topic09.csv.gz topic10.csv.gz topic11.csv.gz topic12.csv.gz topic13.csv.gz topic14.csv.gz topic15.csv.gz topic16.csv.gz topic17.csv.gz
 ADITOPIC_CSV := $(ADITOPICS:.csv.gz=.csv)
 
-acsvar = $(foreach year,$(ACS5_YEARS),../ACS5/$(1)__$(year).csv.gz)
+acsvar = $(foreach year,$(call acs5_years_for,$(1)),../ACS5/$(1)__$(year).csv.gz)
 
 .INTERMEDIATE: $(ADITOPIC_CSV) total_population.csv housing_units.csv group_quarters.csv fairadi.csv
 .PHONY: all clean
