@@ -63,7 +63,7 @@ topic11.csv: topic11.R adi_utilities.R $(call acsvar,B17010) $(UTILITIES)
 topic12.csv: topic12.R adi_utilities.R $(call acsvar,C17002) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
-topic13.csv: topic13.R adi_utilities.R $(call acsvar,B11012) $(UTILITIES)
+topic13.csv: topic13.R adi_utilities.R $(call acsvar,B11003) $(UTILITIES)
 	$(RSCRIPTVANILLA) $<
 
 topic14.csv: topic14.R adi_utilities.R $(call acsvar,B25044) $(UTILITIES)

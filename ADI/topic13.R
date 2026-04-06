@@ -5,17 +5,17 @@
 #
 #   Topic: 13
 #   Topic Area: % One-Parent Households (Children < 18)
-#   Detailed Table ID: B11012
+#   Detailed Table ID: B11003
 #   Calculations:
-#     Numerator: B11012_010 + B11012_015.
-#     Denominator: B11012_001
+#     Numerator: B11003_010 + B11003_016
+#     Denominator: B11003_001
 #
 ################################################################################
 source("../utilities/import_census_table.R")
 source("../utilities/check_for_annotations.R")
 source("../utilities/verify_integer.R")
 source("adi_utilities.R")
-DT <- import_census_table("B11012")
+DT <- import_census_table("B11003")
 
 # verify that columns you expect to be integers are integers
 verify_integer(DT)
@@ -27,19 +27,19 @@ stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 DT[
   ,
   topic13 := data.table::fifelse(
-               B11012_001E > 0,
-               rowSums(.SD, na.rm = TRUE) / B11012_001E,
+               B11003_001E > 0,
+               rowSums(.SD, na.rm = TRUE) / B11003_001E,
                NA_real_
              ),
-  .SDcols = sprintf("B11012_%03dE", c(10, 15))
+  .SDcols = sprintf("B11003_%03dE", c(10, 16))
   ]
 
 # Sanity check, all the proportions should be less than 1
 stopifnot(all(DT[["topic13"]] <= 1.00, na.rm = TRUE))
 
-# all missing is due to B11012_001
-stopifnot(DT[is.na(topic13), all(B11012_001E == 0, na.rm = TRUE)])
-DT[is.na(topic13) & B11012_001E == 0, topic13_notes := "QDI-ZD"]
+# all missing is due to B11003_001
+stopifnot(DT[is.na(topic13), all(B11003_001E == 0, na.rm = TRUE)])
+DT[is.na(topic13) & B11003_001E == 0, topic13_notes := "QDI-ZD"]
 
 # the base cols_to_keep is defined in adi_utilities.R
 cols_to_keep <- c(COLS_TO_KEEP, "topic13", "topic13_notes")
