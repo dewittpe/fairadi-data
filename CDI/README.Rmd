@@ -3,7 +3,7 @@
 ```{r setup, include = FALSE}
 options(qwraps2_markup = "markdown")
 options(knitr.kable.NA = '')
-knitr::opts_chunk$set(collapse = TRUE, fig.align = "center", cache = TRUE)
+knitr::opts_chunk$set(collapse = TRUE, fig.align = "center", cache = FALSE)
 source("cdi_utilities.R")
 ```
 
@@ -137,7 +137,7 @@ higher deprivation:
 - the first loading vector is multiplied by `-1` if needed so the grouped
   direction is consistent with deprivation
 
-```{r}
+```{r deprivation-affluence-components}
 deprivation_components
 affluence_components
 ```
@@ -168,6 +168,100 @@ block groups.
 - `cdistd`
 - `faircdi`
 
+## Technical Validation
+
+The [CMS Gov GitHub repo](https://github.com/CMSgov/community-deprivation-index)
+provides SAS code and a data set for the publication
+[The development of the Community Deprivation Index and its application to
+accountable care organizations](https://doi.org/10.1093/haschl/qxae161).  We
+compare our faircdi national ranks for 2019 to the data provided on GitHub.
+
+**There are notable differnces in the methods**.  The `faircdi` data built in
+this repo is based on
+The TEAM CDI specification in
+  [`2025-08-28-team-cdi-calculation-specifications.pdf`](./2025-08-28-team-cdi-calculation-specifications.pdf)
+
+Method comparison notes:
+
+- The [published paper](https://doi.org/10.1093/haschl/qxae161) and its supplemental material describe a `2019` block-group
+  CDI build and say missing block-group component values are imputed from the
+  tract, or county if tract is also missing.
+- The TEAM CDI specification in
+  [`2025-08-28-team-cdi-calculation-specifications.pdf`](./2025-08-28-team-cdi-calculation-specifications.pdf)
+  extends that replacement hierarchy to `block group < tract < county < state`.
+  This appears to be a real method change between the published paper and the
+  later implementation specification.
+- For component 8, the TEAM CDI specification explicitly uses `B25047` for
+  households with incomplete plumbing, while the CMS SAS code in
+  [`community-deprivation-index/cdi_construction_s1.sas`](https://raw.githubusercontent.com/CMSgov/community-deprivation-index/6a1cd08a0c07d6bce23844c997218be836f5ab61/cdi_construction_s1.sas)
+  computes the plumbing component from `B25016`.
+- The paper text itself refers to the component conceptually as incomplete
+  plumbing but does not clearly identify the ACS table in the main text or
+  supplemental material reviewed here, so this plumbing-table discrepancy is
+  best described as a disagreement between the later TEAM specification and the
+  released SAS implementation, not as a confirmed paper-to-spec method change.
+
+That said, the comparison here serves as a sanity check that the rankings are
+generally in the same direction.
+
+```{r vs-cmsgov2019-setup}
+faircdi <- data.table::fread("faircdi.csv.gz", colClasses = c("FIPS" = "character"))
+
+# 2019 National Rankings from CMSgov
+cms_cdi <-
+  data.table::fread(
+    "https://raw.githubusercontent.com/CMSgov/community-deprivation-index/6a1cd08a0c07d6bce23844c997218be836f5ab61/CDI_NATRANK.csv",
+    colClasses = "character"
+  )
+cms_cdi[, exclude_reason := CDI_NATRANK]
+cms_cdi[, CDI_NATRANK := suppressWarnings(as.integer(CDI_NATRANK))]
+cms_cdi[!is.na(CDI_NATRANK), exclude_reason := NA_character_]
+
+deltas <-
+  merge(
+    x = faircdi,
+    y = cms_cdi,
+    all = TRUE,
+    by.x = "FIPS",
+    by.y = "FIPS_BG"
+  )
+```
+
+```{r vs-cmsgov2019, echo = FALSE, warning = FALSE}
+deltas[!is.na(exclude_reason), .(.N, min(faircdi), max(faircdi)), by = .(exclude_reason)]
+
+deltas[, absd := abs(faircdi - CDI_NATRANK)]
+
+ggplot2::ggplot(
+  deltas[, .N, keyby = .(year, absd)][, p := cumsum(N)/sum(N), by = .(year)]
+) +
+ggplot2::aes(x = absd, y = p, group = year, color = factor(year == 2019, c(TRUE, FALSE), c("2019", "Other Year"))) +
+ggplot2::scale_color_hue(name = "Year") +
+ggplot2::scale_y_continuous(name = "Cumulative Percentage", label = scales::label_percent()) +
+ggplot2::geom_line() +
+ggplot2::xlab("Abs(faircdi - CDI_NATRANK)")
+```
+
+Correlations:
+
+```{r cor-with-cmsgov}
+# Pearson
+with(
+  deltas[year == 2019],
+  cor(faircdi, CDI_NATRANK, method = "pearson", use = "pairwise.complete.obs")
+)
+# Spearman
+with(
+  deltas[year == 2019],
+  cor(faircdi, CDI_NATRANK, method = "spearman", use = "pairwise.complete.obs")
+)
+# Kendall
+with(
+  deltas[year == 2019, .SD[complete.cases(faircdi, CDI_NATRANK)]],
+  pcaPP::cor.fk(faircdi, CDI_NATRANK)
+)
+```
+
 ## Summary Statistics
 
 ```{r import-data, include = FALSE}
@@ -185,7 +279,6 @@ components <-
     x = _
   )
 components[, FIPS := build_FIPS(state, county, tract, block_group)]
-faircdi <- data.table::fread("faircdi.csv.gz", colClasses = c("FIPS" = "character"))
 faircdi <-
   merge(
     x = faircdi,
@@ -233,5 +326,3 @@ ggplot2::ggplot(d) +
     axis.text.x = ggplot2::element_text(angle = 40, hjust = 1.0, vjust = 1.0)
   )
 ```
-
-
