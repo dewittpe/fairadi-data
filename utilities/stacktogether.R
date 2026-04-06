@@ -1,5 +1,5 @@
 if (interactive()) {
-  cargs <- list("B11012__2018")
+  cargs <- list("C17002__2011")
 } else {
   cargs <- commandArgs(trailingOnly = TRUE)
 }
@@ -26,7 +26,7 @@ if ("block group" %in% names(DT)) {
 # if a column is all "null" there is no reason to save it to disk
 keep <- DT[, sapply(.SD, function(x) !all(x == "null"))]
 if (length(keep)) {
-  keep <- keep[keep]
+  keep <- na.omit(keep[keep])
   DT <- DT[, .SD, .SDcols = names(keep)]
 }
 if ("NAME" %in% names(DT)) {

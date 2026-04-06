@@ -32,7 +32,7 @@ import_census_table <- function(table, verbose = interactive(), ...) {
     message(paste("Importing data from:\n ", paste(files, collapse = "\n  "), "\n"))
   }
 
-  DTs <- lapply(files, data.table::fread, na.strings = c("NA", "null"), ...)
+  DTs <- lapply(files, data.table::fread, na.strings = c("NA", "null", "."), ...)
   data.table::rbindlist(DTs, use.names = TRUE, fill = TRUE)
 }
 
