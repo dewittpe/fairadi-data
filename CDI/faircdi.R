@@ -3,10 +3,29 @@
 #
 # Steps 7, 8, and 9 for the CDI process
 #
+# NOTES:
+#
+#   Component01: ACS-5-Year Estimates for B15003 eariliest availablity is 2012.
+#     ACS-1-Year estimates do go back to 2010, but since we are working with
+#     ACS-5-year estiamtes we will not have this component for 2010 and 2011
+#
+#   Component02: ACS-5-Year Estimates for B15003 eariliest availablity is 2012.
+#     ACS-1-Year estimates do go back to 2010, but since we are working with
+#     ACS-5-year estiamtes we will not have this component for 2010 and 2011
+#
+#   Component09: due to a unique shrinkage and build process, this component
+#     can, and does, appear in 
+#
+#   Component17: ACS-5-Year estimtes for B23025 first availablity is 2011
+#
+#   Component18: ACS-5-Year estimtes for B27010 first availablity is 2013
+#
 ################################################################################
 source("cdi_utilities.R")
 
 # step 7: PCA
+
+# import all the components
 components <-
   list.files(
     path = ".",
@@ -19,8 +38,13 @@ components <-
       merge(x, y, all = TRUE, by = c("year", "state", "county", "tract", "block_group"))
     },
     x = _
-  ) |>
-  split(by = "year")
+  )
+
+# subset to viable years
+components <- components[year >= 2013L]
+
+# split by year and run PCA
+components <- split(components, by = "year")
 
 pcas <-
   lapply(components,
