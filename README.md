@@ -77,6 +77,12 @@ Table metadata JSON downloads do not require an API key, but they are fetched
 from the same Census API and are included in the `make acs5`,
 `make decennial`, and `make all` workflows.
 
+For ACS5 block-group extracts, the public Census API workflow applies starting
+in `2013`. For `2010` to `2012`, the public API does not support ACS5
+block-group geography, so this repository uses the ACS5 Summary File workflow
+for those years instead. State, county, and tract ACS5 downloads are not the
+reason for that special-case handling.
+
 Additional metadata-only targets are available when you want to refresh table
 definitions without re-downloading Census extracts:
 
