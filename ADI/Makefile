@@ -1,6 +1,6 @@
 include ../Makevars
 
-UTILITIES := ../utilities/import_census_table.R ../utilities/check_for_annotations.R
+UTILITIES := ../utilities/import_census_table.R ../utilities/check_for_annotations.R ../utilities/verify_integer.R
 
 ADITOPICS := topic01.csv.gz topic02.csv.gz topic03.csv.gz topic04.csv.gz topic05.csv.gz topic06.csv.gz topic07.csv.gz topic08.csv.gz topic09.csv.gz topic10.csv.gz topic11.csv.gz topic12.csv.gz topic13.csv.gz topic14.csv.gz topic15.csv.gz topic16.csv.gz topic17.csv.gz
 ADITOPIC_CSV := $(ADITOPICS:.csv.gz=.csv)

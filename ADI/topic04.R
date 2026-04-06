@@ -67,8 +67,13 @@
 ################################################################################
 source("../utilities/import_census_table.R")
 source("../utilities/check_for_annotations.R")
+source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT <- import_census_table("B19013")
+
+# verify that columns you expect to be integers are integers
+verify_integer(DT)
+
 cfa <- check_for_annotations(DT)
 
 # there are annotations to deal with

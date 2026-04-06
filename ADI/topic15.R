@@ -23,10 +23,14 @@
 ################################################################################
 source("../utilities/import_census_table.R")
 source("../utilities/check_for_annotations.R")
+source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT_old <- import_census_table("B25043")
 DT_new <- import_census_table("B28002")
 DT <- merge(DT_old, DT_new, all = TRUE)
+
+# verify that columns you expect to be integers are integers
+verify_integer(DT)
 
 cfa <- check_for_annotations(DT)
 stopifnot(identical(cfa, list(E = character(0), M = character(0))))

@@ -12,8 +12,13 @@
 ################################################################################
 source("../utilities/import_census_table.R")
 source("../utilities/check_for_annotations.R")
+source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25077")
+
+# verify that columns you expect to be integers are integers
+verify_integer(DT)
+
 cfa <- check_for_annotations(DT)
 
 # there are annotations to deal with
@@ -43,18 +48,27 @@ DT[
 ]
 
 DT[
-  B25077_001E  == 2000001 &
-  B25077_001EA == "2,000,000+" &
+  (
+    (B25077_001E == 1000001 & B25077_001EA == "1,000,000+") |
+    (B25077_001E == 2000001 & B25077_001EA == "2,000,000+")
+  ) &
   B25077_001M  == -333333333 &
   B25077_001MA == "***",
   `:=`(B25077_001E = NA_integer_, B25077_001M = NA_integer_, topic06_notes = "QDI-range")
 ]
 
+# for the 2010-2012 data there are 1000001 values with NA MOE.  Set those values
+# to NA 
+DT[
+  (year %in% 2010:2012) & (B25077_001E == 1000001 & is.na(B25077_001M)),
+  `:=`(B25077_001E = NA_integer_, B25077_001M = NA_integer_, topic06_notes = "QDI-range")
+  ]
+
 # There are missing values, we will use a geographic imputation.
 # We also apply a shrinkage
 DT <-
   merge(
-    x = shrink(DT, "B25077_001"),
+    x = shrink(DT, variable = "B25077_001"),
     DT[, .SD, .SDcols = c(COLS_TO_KEEP, "topic06_notes")],
     all = TRUE,
     by = COLS_TO_KEEP

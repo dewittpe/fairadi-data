@@ -43,10 +43,15 @@
 ################################################################################
 source("../utilities/import_census_table.R")
 source("../utilities/check_for_annotations.R")
+source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 
 # import needed data
 DT <- import_census_table(table = "B15003")
+
+# verify that columns you expect to be integers are integers
+verify_integer(DT)
+
 cfa <- check_for_annotations(DT)
 
 # B15003_001MA exists

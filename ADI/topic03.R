@@ -96,8 +96,13 @@
 ################################################################################
 source("../utilities/import_census_table.R")
 source("../utilities/check_for_annotations.R")
+source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT <- import_census_table("C24010")
+
+# verify that columns you expect to be integers are integers
+verify_integer(DT)
+
 cfa <- check_for_annotations(DT)
 stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 
