@@ -9,13 +9,51 @@ RSCRIPTVANILLA ?= Rscript --vanilla
 # ------------------------------------------------------------------------------
 # Years and tables of the ACS5 to download
 # ------------------------------------------------------------------------------
-ACS5_YEARS := 2024 2023 2022 2021 2020
+ACS5_YEARS := 2024 2023 2022 2021 2020 2019 2018 2017 2016 2015 2014 2013 2012 2011 2010
 ACS5_DATASET := acs/acs5
 ACS5_TABLES := B01001 B01003 B11003 B11012 B15003 B17010 B19001 B19013 B19083 B19113 B23025 B25001 B25003 B25014 B25032 B25043 B25044 B25047 B25063 B25064 B25077 B25087 B25088 B26001 B27010 B28002 C17002 C24010
+ACS5_EXCLUDE := B11012__2015 B11012__2016 B11012__2017 B11012__2018 \
+	B15003__2010 B15003__2011 \
+	B23025__2010 \
+	B27010__2010 B27010__2011 B27010__2012 \
+	B28002__2010 B28002__2011 B28002__2012 B28002__2013 B28002__2014 B28002__2015 B28002__2016
+
+acs5_pairs = $(filter-out $(ACS5_EXCLUDE),$(foreach year,$(ACS5_YEARS),$(foreach tab,$(ACS5_TABLES),$(tab)__$(year))))
+acs5_years_for = $(filter-out $(foreach pair,$(filter $(1)__%,$(ACS5_EXCLUDE)),$(patsubst $(1)__%,%,$(pair))),$(ACS5_YEARS))
+acs5_pair_table = $(word 1,$(subst __, ,$(1)))
+acs5_pair_year = $(word 2,$(subst __, ,$(1)))
 
 # ------------------------------------------------------------------------------
 # Years and tables of the Decennial Census to download
 # ------------------------------------------------------------------------------
-DECENNIAL_YEARS := 2020
-DECENNIAL_DATASET := dhc
-DECENNIAL_TABLES := P1 P16 H1 H4 P18
+DECENNIAL_YEARS := 2020 2010
+DECENNIAL_DATASET_2020 := dhc
+DECENNIAL_DATASET_2010 := sf1
+DECENNIAL_TABLES_2020 := P1 P16 H1 H4 P18
+DECENNIAL_TABLES_2010 := P1 P16 H1 H4 P18
+
+decennial_dataset = $(DECENNIAL_DATASET_$(1))
+decennial_tables = $(DECENNIAL_TABLES_$(1))
+
+# ------------------------------------------------------------------------------
+# Years and data sets to pull FIPS from
+# ------------------------------------------------------------------------------
+FIPS_YEARS := $(sort $(DECENNIAL_YEARS) $(ACS5_YEARS))
+
+FIPS_DATASET_2024 := $(ACS5_DATASET)
+FIPS_DATASET_2023 := $(ACS5_DATASET)
+FIPS_DATASET_2022 := $(ACS5_DATASET)
+FIPS_DATASET_2021 := $(ACS5_DATASET)
+FIPS_DATASET_2020 := $(ACS5_DATASET)
+FIPS_DATASET_2019 := $(ACS5_DATASET)
+FIPS_DATASET_2018 := $(ACS5_DATASET)
+FIPS_DATASET_2017 := $(ACS5_DATASET)
+FIPS_DATASET_2016 := $(ACS5_DATASET)
+FIPS_DATASET_2015 := $(ACS5_DATASET)
+FIPS_DATASET_2014 := $(ACS5_DATASET)
+FIPS_DATASET_2013 := $(ACS5_DATASET)
+FIPS_DATASET_2012 := $(ACS5_DATASET)
+FIPS_DATASET_2011 := $(ACS5_DATASET)
+FIPS_DATASET_2010 := dec/sf1
+
+fips_dataset = $(FIPS_DATASET_$(1))
