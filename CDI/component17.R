@@ -15,6 +15,8 @@
 #   B23025_002
 # Value Calculation with Description:
 #   Unemployed (B23025_005)/Labor Force (B23025_002)
+#
+# NOTE: ACS-5-Year estimtes for B23025 first availablity is 2011
 ################################################################################
 source("cdi_utilities.R")
 
@@ -49,6 +51,8 @@ DT[, component17 := scale(component17), by = .(year)]
 # Steps 7, 8, and 9 are done in faircdi.R
 
 # save this data to disk
+# only need block group level data to be saved
+DT <- subset(DT, !is.na(block_group))
 data.table::fwrite(DT, file = "component17.csv")
 
 ################################################################################

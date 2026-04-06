@@ -55,6 +55,8 @@ if (interactive()) {
 }
 
 # save this data to disk
+# only need block group level data to be saved
+DT <- subset(DT, !is.na(block_group))
 data.table::fwrite(DT, file = "component07.csv")
 
 ################################################################################

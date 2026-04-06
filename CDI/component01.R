@@ -15,6 +15,11 @@
 #   B15003_001
 # Value Calculation with Description:
 #   [No schooling (B15003_002) + Nursery school (B15003_003) + … + 12th grade, no diploma (B15003_016)]/Total (B15003_001)
+#
+# NOTE: ACS-5-Year Estimates for B15003 eariliest availablity is 2012.
+# ACS-1-Year estimates do go back to 2010, but since we are working with
+# ACS-5-year estiamtes we will not have this component for 2010 
+# and 2011
 ################################################################################
 source("cdi_utilities.R")
 
@@ -58,6 +63,8 @@ DT[, component01 := scale(component01), by = .(year)]
 # Steps 7, 8, and 9 are done in faircdi.R
 
 # save this data to disk
+# only need block group level data to be saved
+DT <- subset(DT, !is.na(block_group))
 data.table::fwrite(DT, file = "component01.csv")
 
 ################################################################################

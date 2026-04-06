@@ -15,6 +15,8 @@
 #   B27010_001
 # Value Calculation with Description:
 #   No insurance under 19 (B27010_017) + No insurance 19-34 (B27010_033) + no insurance 35- 65 (B27010_050) + no insurance 65 and over (B27010_066)/ Total (B27010_001)
+#
+# NOTE: ACS-5-Year estimtes for B27010 first availablity is 2013
 ################################################################################
 source("cdi_utilities.R")
 
@@ -49,6 +51,8 @@ DT[, component18 := scale(component18), by = .(year)]
 # Steps 7, 8, and 9 are done in faircdi.R
 
 # save this data to disk
+# only need block group level data to be saved
+DT <- subset(DT, !is.na(block_group))
 data.table::fwrite(DT, file = "component18.csv")
 
 ################################################################################

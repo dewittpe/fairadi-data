@@ -37,6 +37,7 @@ DT[B25077_001EA == "-", B25077_001E := NA]
 DT[!is.na(B25077_001MA), B25077_001M := NA]
 stopifnot(
   DT[B25077_001EA == "10,000-", all(B25077_001E == 9999)],
+  DT[B25077_001EA == "1,000,000+", all(B25077_001E == 1000001)],
   DT[B25077_001EA == "2,000,000+", all(B25077_001E == 2000001)]
 )
 
@@ -66,6 +67,8 @@ DT[, component12 := scale(component12), by = .(year)]
 # Steps 7, 8, and 9 are done in faircdi.R
 
 # save this data to disk
+# only need block group level data to be saved
+DT <- subset(DT, !is.na(block_group))
 data.table::fwrite(DT, file = "component12.csv")
 
 ################################################################################

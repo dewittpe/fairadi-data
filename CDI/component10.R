@@ -66,6 +66,8 @@ DT[, component10 := scale(component10), by = .(year)]
 # Steps 7, 8, and 9 are done in faircdi.R
 
 # save this data to disk
+# only need block group level data to be saved
+DT <- subset(DT, !is.na(block_group))
 data.table::fwrite(DT, file = "component10.csv")
 
 ################################################################################
