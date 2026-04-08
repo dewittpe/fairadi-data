@@ -7,15 +7,29 @@
 source("../utilities/import_census_table.R")
 source("adi_utilities.R")
 pop <- import_census_table("P1")
-gq  <- import_census_table("P18")
+gq18 <- import_census_table("P18")
+gq18 <- gq18[year == 2020]
+gq42 <- import_census_table("P42")
+gq42 <- gq42[year == 2010]
 
 pop[, pop := data.table::fcoalesce(P1_001N, P001001)]
-gq[,  gq  := data.table::fcoalesce(P18_001N, P018001)]
+gq18[, gq := P18_001N]
+gq42[, gq := P042001]
+
+gq <-
+  data.table::rbindlist(
+    list(
+      gq18[, .SD, .SDcols = c(COLS_TO_KEEP, "gq")],
+      gq42[, .SD, .SDcols = c(COLS_TO_KEEP, "gq")]
+    ),
+    use.names = TRUE,
+    fill = TRUE
+  )
 
 DT <-
   merge(
     x = pop[, .SD, .SDcols = c(COLS_TO_KEEP, "pop")],
-    y = gq[,  .SD, .SDcols = c(COLS_TO_KEEP, "gq")],
+    y = gq,
     all = TRUE,
     by = COLS_TO_KEEP
   )
