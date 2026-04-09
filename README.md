@@ -18,7 +18,6 @@ These data are in the public domain. Source: U.S. Census Bureau.
 | Decennial Year | Decennial Table | ACS5 Table   | ACS5 Years           | ADI Use             | CDI Use              | Description                                                 |
 | :------------: | :-------------: | :----------: | :------------------- | :------------------ | :------------------- | :---------------------------------------------------------- |
 | 2010, 2020     | P1              | B01003       | 2010-2024            | suppression         | Step 3 flag helper   | Total population                                            |
-| 2010, 2020     | P16             | B11012       | 2010-2014, 2019-2024 | none                | none                 | Households by type                                          |
 |                |                 | B15003       | 2012-2024            | topics 01, 02       | components 01, 02    | Educational attainment                                      |
 |                |                 | B17010       | 2010-2024            | topic 11            | component 04         | Poverty status in the past 12 months by age                 |
 |                |                 | B19001       | 2010-2024            | topic 05            | component 09         | Household income in the past 12 months                      |
