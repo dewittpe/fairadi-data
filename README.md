@@ -23,7 +23,6 @@ These data are in the public domain. Source: U.S. Census Bureau.
 |                |                 | B19001       | 2010-2024            | topic 05            | component 09         | Household income in the past 12 months                      |
 |                |                 | B19013       | 2010-2024            | topic 04            | component 10         | Median household income in the past 12 months               |
 |                |                 | B19083       | 2010-2024            | none                | none                 | Gini Index of Income Inequality                             |
-|                |                 | B19113       | 2010-2024            | none                | none                 | Median family income in the past 12 months                  |
 |                |                 | B23025       | 2011-2024            | topic 10            | component 17         | Employment status                                           |
 | 2010, 2020     | H1              | B25001       | 2010-2024            | suppression         | none                 | Housing units                                               |
 | 2010, 2020     | H4              | B25003       | 2010-2024            | topic 09            | component 15         | Tenure (owner-occupied vs renter-occupied)                  |
