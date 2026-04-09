@@ -32,7 +32,6 @@ These data are in the public domain. Source: U.S. Census Bureau.
 |                |                 | B25047       | 2010-2024            | topic 16            | component 08         | Plumbed facilities for occupied housing units               |
 |                |                 | B25064       | 2010-2024            | topic 07            | component 11         | Median gross rent                                           |
 |                |                 | B25077       | 2010-2024            | topic 06            | component 12         | Median value (owner-occupied housing units)                 |
-|                |                 | B25087       | 2010-2024            | none                | none                 | Mortgage status                                             |
 |                |                 | B25088       | 2010-2024            | topic 08            | component 13         | Median monthly housing costs                                |
 | 2020           | P18             | B26001       | 2010-2024            | suppression         | none                 | Group quarters population                                   |
 | 2010           | P42             | B26001       | 2010-2024            | suppression         | none                 | Group quarters population                                   |
