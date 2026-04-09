@@ -15,39 +15,44 @@ American Community Survey (ACS) and Decennial Census.
 
 These data are in the public domain. Source: U.S. Census Bureau.
 
-| Decennial Year | Decennial Table | ACS5 Table   | ACS5 Years           | Description                                                 |
-| :------------: | :-------------: | :----------: | :------------------- | :---------------------------------------------------------- |
-| 2010, 2020     | P1              | B01003       | 2010-2024            | Total population                                            |
-| 2010, 2020     | P16             | B11012       | 2010-2014, 2019-2024 | Households by type                                          |
-|                |                 | B15003       | 2012-2024            | Educational attainment                                      |
-|                |                 | B17010       | 2010-2024            | Poverty status in the past 12 months by age                 |
-|                |                 | B19001       | 2010-2024            | Household income in the past 12 months                      |
-|                |                 | B19013       | 2010-2024            | Median household income in the past 12 months               |
-|                |                 | B19083       | 2010-2024            | Gini Index of Income Inequality                             |
-|                |                 | B19113       | 2010-2024            | Median family income in the past 12 months                  |
-|                |                 | B23025       | 2011-2024            | Employment status                                           |
-| 2010, 2020     | H1              | B25001       | 2010-2024            | Housing units                                               |
-| 2010, 2020     | H4              | B25003       | 2010-2024            | Tenure (owner-occupied vs renter-occupied)                  |
-|                |                 | B25014       | 2010-2024            | Tenure by occupancy status                                  |
-|                |                 | B25043       | 2010-2024            | Tenure by year structure built                              |
-|                |                 | B25044       | 2010-2024            | Tenure by vehicles available                                |
-|                |                 | B25047       | 2010-2024            | Plumbed facilities for occupied housing units               |
-|                |                 | B25063       | 2010-2024            | Gross rent                                                  |
-|                |                 | B25064       | 2010-2024            | Median gross rent                                           |
-|                |                 | B25077       | 2010-2024            | Median value (owner-occupied housing units)                 |
-|                |                 | B25087       | 2010-2024            | Mortgage status                                             |
-|                |                 | B25088       | 2010-2024            | Median monthly housing costs                                |
-| 2020           | P18             | B26001       | 2010-2024            | Group quarters population                                   |
-| 2010           | P42             | B26001       | 2010-2024            | Group quarters population                                   |
-|                |                 | B27010       | 2013-2024            | Types of health insurance coverage by age                   |
-|                |                 | B28002       | 2017-2024            | Presence and type of Internet subscription in household     |
-|                |                 | C17002       | 2010-2024            | Ratio of income to poverty level in the past 12 months      |
-|                |                 | C24010       | 2010-2024            | Occupation by sex and median earnings in the past 12 months |
+| Decennial Year | Decennial Table | ACS5 Table   | ACS5 Years           | ADI Use             | CDI Use              | Description                                                 |
+| :------------: | :-------------: | :----------: | :------------------- | :------------------ | :------------------- | :---------------------------------------------------------- |
+| 2010, 2020     | P1              | B01003       | 2010-2024            | suppression         | Step 3 flag helper   | Total population                                            |
+| 2010, 2020     | P16             | B11012       | 2010-2014, 2019-2024 | none                | none                 | Households by type                                          |
+|                |                 | B15003       | 2012-2024            | topics 01, 02       | components 01, 02    | Educational attainment                                      |
+|                |                 | B17010       | 2010-2024            | topic 11            | component 04         | Poverty status in the past 12 months by age                 |
+|                |                 | B19001       | 2010-2024            | topic 05            | component 09         | Household income in the past 12 months                      |
+|                |                 | B19013       | 2010-2024            | topic 04            | component 10         | Median household income in the past 12 months               |
+|                |                 | B19083       | 2010-2024            | none                | none                 | Gini Index of Income Inequality                             |
+|                |                 | B19113       | 2010-2024            | none                | none                 | Median family income in the past 12 months                  |
+|                |                 | B23025       | 2011-2024            | topic 10            | component 17         | Employment status                                           |
+| 2010, 2020     | H1              | B25001       | 2010-2024            | suppression         | none                 | Housing units                                               |
+| 2010, 2020     | H4              | B25003       | 2010-2024            | topic 09            | component 15         | Tenure (owner-occupied vs renter-occupied)                  |
+|                |                 | B25014       | 2010-2024            | topic 17            | component 05         | Tenure by occupancy status                                  |
+|                |                 | B25043       | 2010-2024            | topic 15 pre-2017   | component 06 pre-2017| Tenure by year structure built                              |
+|                |                 | B25044       | 2010-2024            | topic 14            | component 07         | Tenure by vehicles available                                |
+|                |                 | B25047       | 2010-2024            | topic 16            | component 08         | Plumbed facilities for occupied housing units               |
+|                |                 | B25063       | 2010-2024            | none                | none                 | Gross rent                                                  |
+|                |                 | B25064       | 2010-2024            | topic 07            | component 11         | Median gross rent                                           |
+|                |                 | B25077       | 2010-2024            | topic 06            | component 12         | Median value (owner-occupied housing units)                 |
+|                |                 | B25087       | 2010-2024            | none                | none                 | Mortgage status                                             |
+|                |                 | B25088       | 2010-2024            | topic 08            | component 13         | Median monthly housing costs                                |
+| 2020           | P18             | B26001       | 2010-2024            | suppression         | none                 | Group quarters population                                   |
+| 2010           | P42             | B26001       | 2010-2024            | suppression         | none                 | Group quarters population                                   |
+|                |                 | B27010       | 2013-2024            | none                | component 18         | Types of health insurance coverage by age                   |
+|                |                 | B28002       | 2017-2024            | topic 15 2017+      | component 06 2017+   | Presence and type of Internet subscription in household     |
+|                |                 | C17002       | 2010-2024            | topic 12            | component 16         | Ratio of income to poverty level in the past 12 months      |
+|                |                 | C24010       | 2010-2024            | topic 03            | component 03         | Occupation by sex and median earnings in the past 12 months |
 
 For the ADI suppression criteria, `fairadi` uses Decennial block-group
 group-quarters population as the public-data source because public ACS 5-year
 data do not provide group-quarters counts at the block-group level. The source
 table differs by decennial year: `P42` for `2010` and `P18` for `2020`.
+
+For ADI, `B15003` is required for topics `01` and `02`. In this workflow,
+`B15003` is currently available starting in `2012`, so `2010` and `2011`
+cannot produce full ADI coverage and are expected to contain mostly `QDI`
+block groups rather than complete rankings.
 
 ## Running the Workflow
 

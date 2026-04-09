@@ -36,6 +36,20 @@ the repository and produces:
 | 17        | Unemployed, %                                               |
 | 18        | Uninsured, %                                                |
 
+Availability caveat:
+
+- `B15003` is required for components `01` and `02`, but in this workflow it
+  is only available starting in `2012`.
+- As a result, a full CDI cannot currently be constructed for `2010-2011` from
+  the public-data workflow in this repository.
+- `B27010` is required for component `18`, but in this workflow it is only
+  available starting in `2013`.
+- As a result, `2012` also cannot currently produce a full CDI, and the current
+  `faircdi.csv.gz` build starts in `2013`.
+- The current `faircdi.csv.gz` build is restricted to `2013+`, so this
+  limitation affects early component coverage but does not currently affect the
+  published CDI output file.
+
 ## Process
 
 The implementation follows the specification’s Step 1 through Step 9 workflow.

@@ -42,6 +42,14 @@ The current `fairadi` build uses `B19013`, `B25064`, and `B25088` for topics
 Neighborhood Atlas relative to the earlier `B19113`, `B25063`, and `B25087`
 choices.
 
+Two important year-availability caveats affect early ADI coverage:
+
+- `B15003` is required for topics `01` and `02`, but in this workflow it is
+  only available starting in `2012`.
+- As a result, `2010` and `2011` cannot currently produce full ADI coverage and
+  are expected to contain mostly `QDI` block groups rather than complete
+  rankings.
+
 Neighborhood Atlas also [uses block group suppression](https://www.neighborhoodatlas.medicine.wisc.edu/changelog#:~:text=Changes%20between%20versions%20of%20the%20ADI%2C%2011/19/2020)
 before building the state and national rankings.
 
@@ -112,20 +120,22 @@ Read in the `fairadi` data.
 ``` r
 fairadi <- data.table::fread("fairadi.csv.gz", colClasses = c("FIPS" = "character"))
 str(fairadi)
-## Classes 'data.table' and 'data.frame':	3414930 obs. of  11 variables:
-##  $ year                : int  2010 2010 2010 2010 2010 2010 2010 2010 2010 2010 ...
+## Classes 'data.table' and 'data.frame':	2974263 obs. of  11 variables:
+##  $ year                : int  2012 2012 2012 2012 2012 2012 2012 2012 2012 2012 ...
 ##  $ state               : int  1 1 1 1 1 1 1 1 1 1 ...
 ##  $ county              : int  1 1 1 1 1 1 1 1 1 1 ...
 ##  $ tract               : int  20100 20100 20200 20200 20300 20300 20400 20400 20400 20400 ...
 ##  $ block_group         : int  1 2 1 2 1 2 1 2 3 4 ...
 ##  $ FIPS                : chr  "010010201001" "010010201002" "010010202001" "010010202002" ...
-##  $ adi_raw             : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ exclude_from_ranking: int  1 1 1 1 1 1 1 1 1 1 ...
-##  $ exclude_reason      : chr  "GQ" "GQ" "GQ" "GQ" ...
-##  $ national_rank       : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ state_rank          : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ adi_raw             : num  -13741 -13742 -12898 -12898 -12252 ...
+##  $ exclude_from_ranking: int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ exclude_reason      : chr  "" "" "" "" ...
+##  $ national_rank       : int  63 63 67 67 70 73 52 59 65 65 ...
+##  $ state_rank          : int  3 3 4 4 4 5 2 3 4 4 ...
 ##  - attr(*, ".internal.selfref")=<externalptr>
 ```
+
+
 
 
 
@@ -501,7 +511,7 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gtable_0.3.6        dplyr_1.2.0         compiler_4.5.3     
+##  [1] gtable_0.3.6        dplyr_1.2.1         compiler_4.5.3     
 ##  [4] tidyselect_1.2.1    Rcpp_1.1.1          xml2_1.5.2         
 ##  [7] stringr_1.6.0       systemfonts_1.3.2   scales_1.4.0       
 ## [10] textshaping_1.0.5   ggh4x_0.3.1         fastmap_1.2.0      
@@ -509,10 +519,10 @@ sessionInfo()
 ## [16] generics_0.1.4      pcaPP_2.0-5         knitr_1.51         
 ## [19] kableExtra_1.4.0    tibble_3.3.1        svglite_2.2.2      
 ## [22] pillar_1.11.1       RColorBrewer_1.1-3  qwraps2_0.6.2      
-## [25] R.utils_2.13.0      rlang_1.1.7         stringi_1.8.7      
+## [25] R.utils_2.13.0      rlang_1.2.0         stringi_1.8.7      
 ## [28] xfun_0.57           S7_0.2.1            otel_0.2.0         
 ## [31] viridisLite_0.4.3   cli_3.6.5           withr_3.0.2        
-## [34] magrittr_2.0.4      digest_0.6.39       grid_4.5.3         
+## [34] magrittr_2.0.5      digest_0.6.39       grid_4.5.3         
 ## [37] mvtnorm_1.3-6       rstudioapi_0.18.0   lifecycle_1.0.5    
 ## [40] R.methodsS3_1.8.2   R.oo_1.27.1         vctrs_0.7.2        
 ## [43] evaluate_1.0.5      glue_1.8.0          data.table_1.18.2.1

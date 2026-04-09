@@ -171,6 +171,9 @@ adi[!is.na(adi_raw) & exclude_from_ranking == 0,
 
 ################################################################################
 # save fairadi to disk
+#
+# Restrict to 2012 or later because topic01 and topic02 based on B15003 are not
+# available for 2010 and 2011.
 adi[, FIPS := build_FIPS(state, county, tract, block_group)]
 cols_to_keep <-
   c(
@@ -180,7 +183,7 @@ cols_to_keep <-
     "exclude_from_ranking", "exclude_reason",
     "national_rank", "state_rank"
   )
-adi <- adi[, .SD, .SDcols = cols_to_keep]
+adi <- adi[year >= 2012, .SD, .SDcols = cols_to_keep]
 data.table::fwrite(x = adi, file = "fairadi.csv")
 
 ################################################################################

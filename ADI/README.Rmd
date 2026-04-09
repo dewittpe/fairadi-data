@@ -94,6 +94,14 @@ The current `fairadi` build uses `B19013`, `B25064`, and `B25088` for topics
 Neighborhood Atlas relative to the earlier `B19113`, `B25063`, and `B25087`
 choices.
 
+Two important year-availability caveats affect early ADI coverage:
+
+- `B15003` is required for topics `01` and `02`, but in this workflow it is
+  only available starting in `2012`.
+- As a result, `2010` and `2011` cannot currently produce full ADI coverage and
+  are expected to contain mostly `QDI` block groups rather than complete
+  rankings.
+
 Neighborhood Atlas also [uses block group suppression](https://www.neighborhoodatlas.medicine.wisc.edu/changelog#:~:text=Changes%20between%20versions%20of%20the%20ADI%2C%2011/19/2020)
 before building the state and national rankings.
 
@@ -211,6 +219,10 @@ Read in the `fairadi` data.
 ```{r read-fairadi}
 fairadi <- data.table::fread("fairadi.csv.gz", colClasses = c("FIPS" = "character"))
 str(fairadi)
+```
+
+```{r eda, include = FALSE}
+print(fairadi[year <= 2012, .N, keyby = .(year, exclude_reason)], nrow = Inf)
 ```
 
 ```{r merge-fairadi-neighborhood-atlas, include = FALSE}
