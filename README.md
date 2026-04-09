@@ -30,7 +30,6 @@ These data are in the public domain. Source: U.S. Census Bureau.
 |                |                 | B25043       | 2010-2024            | topic 15 pre-2017   | component 06 pre-2017| Tenure by year structure built                              |
 |                |                 | B25044       | 2010-2024            | topic 14            | component 07         | Tenure by vehicles available                                |
 |                |                 | B25047       | 2010-2024            | topic 16            | component 08         | Plumbed facilities for occupied housing units               |
-|                |                 | B25063       | 2010-2024            | none                | none                 | Gross rent                                                  |
 |                |                 | B25064       | 2010-2024            | topic 07            | component 11         | Median gross rent                                           |
 |                |                 | B25077       | 2010-2024            | topic 06            | component 12         | Median value (owner-occupied housing units)                 |
 |                |                 | B25087       | 2010-2024            | none                | none                 | Mortgage status                                             |
