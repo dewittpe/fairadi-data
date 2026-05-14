@@ -56,6 +56,7 @@ block groups rather than complete rankings.
 * GNU Make
 * R
 * Python 3
+* GDAL, including the `ogr2ogr` command-line tool
 * `dos2unix`
 
 R packages used by the workflow and reporting include:

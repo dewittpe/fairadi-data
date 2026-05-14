@@ -6,6 +6,14 @@ REQUIRE_API_KEY = test -n "$(API_KEY)" || { echo "API_KEY is empty. Export USCEN
 
 RSCRIPTVANILLA ?= Rscript --vanilla
 
+define PUBLISH_GZIP_CSV
+if [ -f "$@" ] && cmp -s <(gzip -cd "$@") <(gzip -cd "$$tmp"); then \
+	rm -f "$$tmp"; \
+else \
+	mv -f "$$tmp" "$@"; \
+fi
+endef
+
 # ------------------------------------------------------------------------------
 # Years and tables of the ACS5 to download
 # ------------------------------------------------------------------------------
@@ -37,7 +45,7 @@ decennial_tables = $(DECENNIAL_TABLES_$(1))
 # ------------------------------------------------------------------------------
 # Years and data sets to pull FIPS from
 # ------------------------------------------------------------------------------
-FIPS_YEARS := $(sort $(DECENNIAL_YEARS) $(ACS5_YEARS))
+FIPS_YEARS := $(sort $(DECENNIAL_YEARS) 2011 $(ACS5_YEARS))
 
 FIPS_DATASET_2024 := $(ACS5_DATASET)
 FIPS_DATASET_2023 := $(ACS5_DATASET)

@@ -278,6 +278,12 @@ def tiger_zip_urls(year: int, level: str) -> list[str]:
         directory = "COUNTY/2010" if year == 2010 else "COUNTY"
         return [f"{root}/{directory}/tl_{year}_us_{suffix}.zip"]
 
+    if level == "tract" and year == 2010:
+        return [f"{root}/TRACT/2010/tl_{year}_{state}_tract10.zip" for state in sorted(SUPPORTED_STATE_FIPS)]
+
+    if level == "block_group" and year == 2010:
+        return [f"{root}/BG/2010/tl_{year}_{state}_bg10.zip" for state in sorted(SUPPORTED_STATE_FIPS)]
+
     if year >= 2011 and level == "tract":
         return [f"{root}/TRACT/tl_{year}_{state}_tract.zip" for state in sorted(SUPPORTED_STATE_FIPS)]
 
