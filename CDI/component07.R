@@ -10,7 +10,7 @@
 # Table Name:
 #   Tenure by vehicles available
 # Numerator Calculation:
-#   B25044_003 + B25044_0010
+#   B25044_003 + B25044_010
 # Denominator Calculation:
 #   B25044_001
 # Value Calculation with Description:
