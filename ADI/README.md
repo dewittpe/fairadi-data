@@ -132,7 +132,7 @@ str(fairadi)
 ##  $ exclude_reason      : chr  "" "" "" "" ...
 ##  $ national_rank       : int  63 63 67 67 70 73 52 59 65 65 ...
 ##  $ state_rank          : int  3 3 4 4 4 5 2 3 4 4 ...
-##  - attr(*, ".internal.selfref")=<externalptr>
+##  - attr(*, ".internal.selfref")=<pointer: 0x1014f2400>
 ```
 
 
@@ -493,13 +493,13 @@ data, we are restricted to using the Decennial census values for both 2020 and
 
 ``` r
 sessionInfo()
-## R version 4.5.3 (2026-03-11)
-## Platform: x86_64-apple-darwin20
-## Running under: macOS Sonoma 14.8.3
+## R version 4.6.0 (2026-04-24)
+## Platform: aarch64-apple-darwin23
+## Running under: macOS Tahoe 26.4.1
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/lib/libRblas.0.dylib 
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -511,21 +511,17 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gtable_0.3.6        dplyr_1.2.1         compiler_4.5.3     
-##  [4] tidyselect_1.2.1    Rcpp_1.1.1          xml2_1.5.2         
-##  [7] stringr_1.6.0       systemfonts_1.3.2   scales_1.4.0       
-## [10] textshaping_1.0.5   ggh4x_0.3.1         fastmap_1.2.0      
-## [13] ggplot2_4.0.2       R6_2.6.1            labeling_0.4.3     
-## [16] generics_0.1.4      pcaPP_2.0-5         knitr_1.51         
-## [19] kableExtra_1.4.0    tibble_3.3.1        svglite_2.2.2      
-## [22] pillar_1.11.1       RColorBrewer_1.1-3  qwraps2_0.6.2      
-## [25] R.utils_2.13.0      rlang_1.2.0         stringi_1.8.7      
-## [28] xfun_0.57           S7_0.2.1            otel_0.2.0         
-## [31] viridisLite_0.4.3   cli_3.6.5           withr_3.0.2        
-## [34] magrittr_2.0.5      digest_0.6.39       grid_4.5.3         
-## [37] mvtnorm_1.3-6       rstudioapi_0.18.0   lifecycle_1.0.5    
-## [40] R.methodsS3_1.8.2   R.oo_1.27.1         vctrs_0.7.2        
-## [43] evaluate_1.0.5      glue_1.8.0          data.table_1.18.2.1
-## [46] farver_2.1.2        rmarkdown_2.31      tools_4.5.3        
-## [49] pkgconfig_2.0.3     htmltools_0.5.9
+##  [1] gtable_0.3.6       dplyr_1.2.1        compiler_4.6.0     tidyselect_1.2.1  
+##  [5] Rcpp_1.1.1-1.1     xml2_1.5.2         stringr_1.6.0      systemfonts_1.3.2 
+##  [9] scales_1.4.0       textshaping_1.0.5  ggh4x_0.3.1        fastmap_1.2.0     
+## [13] ggplot2_4.0.3      R6_2.6.1           labeling_0.4.3     generics_0.1.4    
+## [17] pcaPP_2.0-5        knitr_1.51         kableExtra_1.4.0   tibble_3.3.1      
+## [21] svglite_2.2.2      pillar_1.11.1      RColorBrewer_1.1-3 qwraps2_0.6.2     
+## [25] R.utils_2.13.0     rlang_1.2.0        stringi_1.8.7      xfun_0.57         
+## [29] S7_0.2.2           otel_0.2.0         viridisLite_0.4.3  cli_3.6.6         
+## [33] withr_3.0.2        magrittr_2.0.5     digest_0.6.39      grid_4.6.0        
+## [37] mvtnorm_1.3-7      rstudioapi_0.18.0  lifecycle_1.0.5    R.methodsS3_1.8.2 
+## [41] R.oo_1.27.1        vctrs_0.7.3        evaluate_1.0.5     glue_1.8.1        
+## [45] data.table_1.18.4  farver_2.1.2       rmarkdown_2.31     tools_4.6.0       
+## [49] pkgconfig_2.0.3    htmltools_0.5.9
 ```
