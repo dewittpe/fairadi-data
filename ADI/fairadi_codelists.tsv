@@ -1,0 +1,12 @@
+field	code	description	used_in
+exclude_reason	PH	Excluded because the block group fails the low-population suppression rule.	fairadi.csv.gz
+exclude_reason	GQ	Excluded because the block group fails the group-quarters suppression rule.	fairadi.csv.gz
+exclude_reason	GQ-PH	Excluded because the block group fails both the low-population and group-quarters suppression rules.	fairadi.csv.gz
+exclude_reason	QDI	Excluded because the block group cannot support a complete deprivation index build from the available public inputs.	fairadi.csv.gz
+note_code	QDI-ZD	Quality/derivation note meaning the denominator is zero, so the topic value is not directly estimable.	topic01.csv.gz, topic02.csv.gz, topic03.csv.gz, topic09.csv.gz, topic10.csv.gz, topic11.csv.gz, topic12.csv.gz, topic13.csv.gz, topic14.csv.gz, topic15.csv.gz, topic16.csv.gz, topic17.csv.gz
+note_code	QDI-n	Quality/derivation note meaning the source median estimate was unavailable or unusable before shrinkage/replacement handling.	topic04.csv.gz, topic06.csv.gz, topic07.csv.gz, topic08.csv.gz
+note_code	QDI-range	Quality/derivation note meaning the source median estimate used an open-ended Census range code and required special handling before shrinkage/replacement.	topic04.csv.gz, topic06.csv.gz, topic07.csv.gz, topic08.csv.gz
+geo_level	block_group	Value was retained at the block-group level without higher-geography replacement.	topic04.csv.gz, topic06.csv.gz, topic07.csv.gz, topic08.csv.gz
+geo_level	tract	Value was replaced or imputed from the tract level.	topic04.csv.gz, topic06.csv.gz, topic07.csv.gz, topic08.csv.gz
+geo_level	county	Value was replaced or imputed from the county level.	topic04.csv.gz, topic06.csv.gz, topic07.csv.gz, topic08.csv.gz
+geo_level	state	Value was replaced or imputed from the state level.	topic04.csv.gz, topic06.csv.gz, topic07.csv.gz, topic08.csv.gz

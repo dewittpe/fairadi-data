@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 include Makevars
 
-.PHONY: all manifest zenodo release fips acs5 acs5-state acs5-county acs5-tract acs5-block-group acs5-metadata decennial decennial-state decennial-county decennial-tract decennial-block-group decennial-metadata census-metadata adi
+.PHONY: all manifest validate-provenance validate-ro-crate validate-dcat-us validate-zenodo-package zenodo release fips acs5 acs5-state acs5-county acs5-tract acs5-block-group acs5-metadata decennial decennial-state decennial-county decennial-tract decennial-block-group decennial-metadata census-metadata adi
 
 all: fips decennial acs5 adi cdi manifest
 
@@ -54,10 +54,23 @@ adi: acs5 decennial
 cdi: acs5
 	$(MAKE) -C CDI
 
-manifest: adi cdi
+validate-provenance:
+	./utilities/validate_provenance.py
+
+validate-ro-crate:
+	./utilities/validate_ro_crate.py
+
+validate-dcat-us:
+	./utilities/validate_dcat_us.py
+
+validate-zenodo-package:
+	./utilities/validate_zenodo_package.py
+
+manifest: adi cdi validate-provenance validate-ro-crate validate-dcat-us
 	./utilities/build_manifest.py
 
-zenodo: manifest
+zenodo: manifest validate-provenance validate-ro-crate validate-dcat-us
 	./utilities/zenodo_package.sh
+	./utilities/validate_zenodo_package.py
 
 release: all zenodo

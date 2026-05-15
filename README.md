@@ -1,8 +1,9 @@
-# fairadi: A FAIR-Compliant U.S. Deprivation Indices Dataset
+# fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets
 
 Workflow for downloading data from the US Census for building Deprivation
-Indices.  The focus of this repo is only getting the needed tables from the US
-Census and packaging the results in a format for upload to zenodo.
+Indices. The focus of this repo is getting the needed tables from the U.S.
+Census and packaging release-grade ADI and CDI outputs, along with the
+metadata and provenance needed for archiving and reuse.
 
 GitHub is the working repository for the code, build scripts, documentation,
 and selected tracked artifacts. Zenodo releases are intended to archive a
@@ -59,6 +60,10 @@ block groups rather than complete rankings.
 * GDAL, including the `ogr2ogr` command-line tool
 * `dos2unix`
 
+Optional:
+`provconvert` can be present as an additional provenance parse check, but it
+is not required for normal repository builds or release validation.
+
 R packages used by the workflow and reporting include:
 `data.table`, `knitr`, `digest`, `qwraps2`, `kableExtra`, `pcaPP`,
 `ggplot2`, `ggh4x`, and `scales`.
@@ -91,6 +96,10 @@ definitions without re-downloading Census extracts:
 - `make acs5-metadata`
 - `make decennial-metadata`
 - `make census-metadata`
+- `make validate-provenance`
+- `make validate-ro-crate`
+- `make validate-dcat-us`
+- `make validate-zenodo-package`
 
 ## Repository Layout
 
@@ -105,9 +114,54 @@ definitions without re-downloading Census extracts:
 - `utilities/`: helper scripts for fetching and reshaping Census data.
 - `CITATION.cff`: citation metadata for the repository and released dataset.
 - `metadata.json`: machine-readable dataset metadata for release and archiving.
+- `dcat-us.json`: DCAT-US 3.0 catalog record for the release snapshot and its
+  ADI/CDI distributions.
+- `FAIR_TODO.md`: concrete next-step FAIR implementation checklist for the
+  repository and release artifacts.
+- `ro-crate-metadata.json`: attached RO-Crate JSON-LD metadata for the release
+  snapshot and its key files, directories, identifiers, creators, and sources.
+- `provenance.provn`: formal W3C PROV-N serialization for the release
+  snapshot, selected artifacts, build activities, and derivation links.
 - `PROVENANCE.md`: release provenance and integrity guidance.
 - `MANIFEST.tsv`: generated inventory of tracked project files with file type,
   size in bytes, and SHA-256 digest.
+
+## Metadata and Provenance Files
+
+The repository intentionally uses several metadata and provenance files because
+they serve different audiences and standards:
+
+- `CITATION.cff`: citation-focused metadata for GitHub, humans, and citation
+  managers.
+- `metadata.json`: compact project-specific release summary used by this
+  repository's own scripts and release workflow.
+- `dcat-us.json`: DCAT-US discovery metadata for catalog-style dataset
+  discovery and distribution listing.
+- `ADI/fairadi_codelists.tsv`: machine-readable codelists for ADI exclusion,
+  note, and replacement-level codes.
+- `ro-crate-metadata.json`: standards-based machine-readable package metadata
+  describing the release snapshot, its files, and their relationships.
+- `MANIFEST.tsv`: integrity inventory of tracked release files with SHA-256
+  digests and file sizes.
+- `PROVENANCE.md`: human-readable explanation of where the release came from,
+  what the canonical artifacts are, and how they relate.
+- `provenance.provn`: formal machine-readable provenance graph for the release
+  workflow and core derivation relationships.
+
+These files overlap on purpose. The overlap keeps the release usable in
+different contexts without forcing one file to do every job.
+
+Validate the RO-Crate metadata with:
+
+```sh
+make validate-ro-crate
+```
+
+Validate the DCAT-US metadata with:
+
+```sh
+make validate-dcat-us
+```
 
 ## Manifest
 
@@ -115,6 +169,10 @@ The project includes a generated manifest file, `MANIFEST.tsv`, that inventories
 the tracked release contents of the repository. The manifest is built from
 `git ls-files`, so it reflects the files that are part of the tracked project
 snapshot rather than untracked local scratch files.
+
+`MANIFEST.tsv` covers the tracked GitHub repository release snapshot, not the
+Zenodo upload archives. The Zenodo packaging step produces its own
+`SHA256SUMS.txt` file for the packaged upload artifacts in `zenodo-dist/`.
 
 Columns in the manifest:
 
@@ -137,6 +195,11 @@ Build the Zenodo upload package with:
 make zenodo
 ```
 
+The Zenodo package includes archive-level checksums in
+`fairadi-data-<label>-SHA256SUMS.txt`. Those checksums apply to the packaged
+Zenodo release files, while `MANIFEST.tsv` applies to the tracked repository
+snapshot itself.
+
 This uses the release label declared in `metadata.json`, currently the git
 reference `v1.0.0`, when naming the package files. To build the full project
 and then package it for Zenodo, use:
@@ -144,6 +207,61 @@ and then package it for Zenodo, use:
 ```sh
 make release
 ```
+
+## FAIR Implementation Profile Mini-Questionnaire
+
+The repository can answer most of the mini-questionnaire from current tracked
+artifacts. Where the project does not yet implement a formal FAIR mechanism,
+the answer below says so directly.
+
+### Community Description
+
+| Field | Current answer |
+| :---- | :------------- |
+| Name of Community | `fairadi` maintainers and reusers of U.S. deprivation index datasets |
+| Description of Community | This project supports researchers, analysts, and data stewards building and reusing U.S. Area Deprivation Index (ADI) and Community Deprivation Index (CDI) datasets derived from public U.S. Census inputs. |
+| Supporting Links | GitHub repository: `https://github.com/dewittpe/fairadi-data`; reserved Zenodo DOI: `10.5281/zenodo.19222629` |
+| Research Domain | Public health, health services research, social determinants of health, and census-derived deprivation measurement |
+| Data Steward | Peter DeWitt (`https://orcid.org/0000-0002-6391-0795`); Ardelia Clarke (`https://orcid.org/0000-0001-7253-7171`) |
+| Date of FIP creation | `2026-05-14` |
+
+### Questionnaire Answers
+
+| FAIR principle | Question | Current answer in this project | Evidence / notes |
+| :------------- | :------- | :----------------------------- | :--------------- |
+| `F1` | What globally unique, persistent, resolvable identifiers do you use for metadata records? | Zenodo DOI at the release level: `10.5281/zenodo.19222629` | Declared in `metadata.json`, `CITATION.cff`, `README.md`, and `PROVENANCE.md`. There is not yet a separate PID for each individual metadata file in the repository. |
+| `F1` | What globally unique, persistent, resolvable identifiers do you use for datasets? | Zenodo DOI at the released dataset level: `10.5281/zenodo.19222629` | The canonical released dataset is `ADI/fairadi.csv.gz`. Internal file paths are stable within a git release, but they are not global persistent identifiers by themselves. |
+| `F2` | Which metadata schemas do you use for findability? | RO-Crate 1.2 (`ro-crate-metadata.json`), `CITATION.cff` 1.2.0, project `metadata.json`, and the Zenodo release record | RO-Crate provides standardized machine-readable release metadata. `CITATION.cff` supports repository citation and discovery. `metadata.json` remains a project-specific release summary. |
+| `F3` | What is the technology that links the persistent identifiers of your data to the metadata description? | DOI landing page plus RO-Crate / repository metadata files linked by release version and file path | The DOI resolves to the archived release record, while `ro-crate-metadata.json`, `metadata.json`, `CITATION.cff`, `PROVENANCE.md`, and `MANIFEST.tsv` describe the released contents. |
+| `F4` | In which search engines are your metadata records indexed? | GitHub repository search and Zenodo record search | Additional external indexing is not yet documented in this repository. |
+| `F4` | In which search engines are your datasets indexed? | Zenodo record search and GitHub repository discovery | Dataset-specific search-engine coverage beyond repository/release hosting is not yet documented here. |
+| `A1.1` | Which standardized communication protocol do you use for metadata records? | `HTTPS` | Repository, release metadata, and citation metadata are published over standard web protocols. |
+| `A1.1` | Which standardized communication protocol do you use for datasets? | `HTTPS` | Released files are distributed through the repository and Zenodo release channel over `HTTPS`. |
+| `A1.2` | Which authentication & authorisation technique do you use for metadata records? | None for public access | Repository metadata and release metadata are intended to be publicly readable. |
+| `A1.2` | Which authentication & authorisation technique do you use for datasets? | None for public released artifacts; API key for rebuilding upstream source downloads | Released artifacts are public. Rebuilding from the Census API uses `USCENSUSAPIKEY` for source acquisition, but that requirement applies to workflow execution, not public reuse of released outputs. |
+| `A2` | Which metadata longevity plan do you use? | Versioned git history, archived Zenodo release DOI, tracked manifest, RO-Crate metadata, and provenance documentation | See `PROVENANCE.md`, `MANIFEST.tsv`, `ro-crate-metadata.json`, `metadata.json`, `CITATION.cff`, and the git release reference `v1.0.0`. |
+| `I1` | Which knowledge representation languages (allowing machine interoperation) do you use for metadata records? | JSON-LD, YAML, JSON, and tabular text | `ro-crate-metadata.json` is JSON-LD, `CITATION.cff` is YAML, `metadata.json` and Census metadata files are JSON, and `MANIFEST.tsv` is tabular text. |
+| `I1` | Which knowledge representation languages (allowing machine interoperation) do you use for datasets? | CSV/TSV, typically compressed as `.csv.gz` | Primary released and intermediate datasets are tabular files documented by the data dictionary and Census metadata JSON. |
+| `I2` | Which structured vocabularies do you use to annotate your metadata records? | DOI, ORCID, SPDX license identifiers, git release tags, Census table identifiers, and FIPS geography codes | These identifiers appear across `CITATION.cff`, `metadata.json`, file names, and repository documentation. |
+| `I2` | Which structured vocabularies do you use to encode your datasets? | Census FIPS geography codes, Census table identifiers, and project-defined coded values | Examples include `state`, `county`, `tract`, `block_group`, table names such as `B01003`, and dataset codes such as `PH`, `GQ`, `GQ-PH`, and `QDI`. |
+| `I3` | Which models, schema(s) do you use for your metadata records? | RO-Crate 1.2, `CITATION.cff` 1.2.0, project `metadata.json`, and `MANIFEST.tsv` | Provenance and release structure are further described in `PROVENANCE.md`. |
+| `I3` | Which models, schema(s) do you use for your datasets? | Flat tabular schemas documented in `ADI/fairadi_data_dictionary.tsv` and `CDI/faircdi_data_dictionary.tsv`, plus `ADI/fairadi_schema.json`, `CDI/faircdi_schema.json`, and Census source table definitions in `ACS5/metadata/` and `Decennial/metadata/` | The canonical released dataset artifacts are `ADI/fairadi.csv.gz` and `CDI/faircdi.csv.gz`. |
+| `R1.1` | Which usage license do you use for your metadata records? | `CC BY 4.0` for repository data/documentation metadata; `BSD-3-Clause` for code-related repository artifacts | The repository uses a split-license model documented in `LICENSE` and `LICENSE-data`. |
+| `R1.1` | Which usage license do you use for your datasets? | `CC BY 4.0` for released derived datasets; upstream Census source data are public domain | See `LICENSE-data` and the licensing section below. |
+| `R1.2` | Which metadata schemas do you use for describing the provenance of your metadata records? | W3C PROV-N (`provenance.provn`), RO-Crate 1.2, plus project-specific provenance documentation in `PROVENANCE.md`, `metadata.json`, `CITATION.cff`, git history, and `MANIFEST.tsv` | The PROV-N file provides a formal machine-readable provenance graph for the release snapshot and core relationships. |
+| `R1.2` | Which metadata schemas do you use for describing the provenance of your datasets? | W3C PROV-N (`provenance.provn`), RO-Crate 1.2 with explicit build actions, and project-specific provenance documentation using build scripts, `PROVENANCE.md`, `MANIFEST.tsv`, and release metadata | Build relationships are documented in the top-level `Makefile`, subdirectory `Makefile`s, workflow scripts, the formal PROV-N serialization, and RO-Crate `CreateAction` entities. |
+
+### Gaps and Recommended Additions
+
+The questionnaire also highlights FAIR features that are only partially
+implemented today. If the project wants stronger machine-actionable FAIR
+support, the next additions should be:
+
+- document any confirmed third-party indexing targets beyond GitHub and Zenodo
+- decide whether individual released files need their own persistent
+  identifiers in addition to the release-level DOI
+- map project-defined dataset codes to a documented controlled vocabulary where
+  appropriate
 
 ## Licensing and Reuse
 
@@ -159,7 +277,8 @@ This repository uses a split-license model:
 
 The tracked derived release artifacts in this repository are distributed with
 the repository, and release metadata for citation, provenance, and reuse are
-provided in `CITATION.cff`, `metadata.json`, `PROVENANCE.md`, and
-`ADI/fairadi_data_dictionary.tsv`.
+provided in `CITATION.cff`, `metadata.json`, `PROVENANCE.md`,
+`ADI/fairadi_data_dictionary.tsv`, `ADI/fairadi_schema.json`,
+`CDI/faircdi_data_dictionary.tsv`, and `CDI/faircdi_schema.json`.
 
 The reserved Zenodo DOI for the current release is `10.5281/zenodo.19222629`.

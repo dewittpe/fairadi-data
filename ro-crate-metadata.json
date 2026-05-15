@@ -1,0 +1,637 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2/context",
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": {
+        "@id": "./"
+      },
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.2"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "fairadi-data: A FAIR-Compliant U.S. Deprivation Indices Datasets",
+      "description": "Attached RO-Crate for the fairadi release snapshot. The crate describes the repository as a reproducible U.S. deprivation indices build and release package containing source extracts, build scripts, documentation, integrity metadata, and released ADI and CDI artifacts derived from U.S. Census Bureau ACS 5-year and Decennial Census tables.",
+      "datePublished": "2026-03-25",
+      "version": "1.0.0",
+      "license": [
+        {
+          "@id": "LICENSE"
+        },
+        {
+          "@id": "LICENSE-data"
+        }
+      ],
+      "identifier": {
+        "@id": "#release-doi"
+      },
+      "url": {
+        "@id": "https://github.com/dewittpe/fairadi-data"
+      },
+      "creator": [
+        {
+          "@id": "https://orcid.org/0000-0002-6391-0795"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-7253-7171"
+        }
+      ],
+      "mentions": [
+        {
+          "@id": "#build-adi-action"
+        },
+        {
+          "@id": "#build-cdi-action"
+        },
+        {
+          "@id": "#build-manifest-action"
+        },
+        {
+          "@id": "#package-release-action"
+        },
+        {
+          "@id": "#register-doi-action"
+        }
+      ],
+      "keywords": [
+        "area deprivation index",
+        "ADI",
+        "community deprivation index",
+        "CDI",
+        "United States",
+        "ACS5",
+        "Decennial Census",
+        "social determinants of health",
+        "block group",
+        "deprivation"
+      ],
+      "hasPart": [
+        {
+          "@id": "README.md"
+        },
+        {
+          "@id": "metadata.json"
+        },
+        {
+          "@id": "dcat-us.json"
+        },
+        {
+          "@id": "CITATION.cff"
+        },
+        {
+          "@id": "PROVENANCE.md"
+        },
+        {
+          "@id": "provenance.provn"
+        },
+        {
+          "@id": "MANIFEST.tsv"
+        },
+        {
+          "@id": "LICENSE"
+        },
+        {
+          "@id": "LICENSE-data"
+        },
+        {
+          "@id": "Makefile"
+        },
+        {
+          "@id": "ADI/Makefile"
+        },
+        {
+          "@id": "ADI/fairadi.R"
+        },
+        {
+          "@id": "CDI/Makefile"
+        },
+        {
+          "@id": "CDI/faircdi.R"
+        },
+        {
+          "@id": "utilities/build_manifest.py"
+        },
+        {
+          "@id": "utilities/validate_provenance.py"
+        },
+        {
+          "@id": "FIPS/"
+        },
+        {
+          "@id": "ACS5/"
+        },
+        {
+          "@id": "Decennial/"
+        },
+        {
+          "@id": "ADI/"
+        },
+        {
+          "@id": "CDI/"
+        },
+        {
+          "@id": "utilities/"
+        },
+        {
+          "@id": "ADI/fairadi.csv.gz"
+        },
+        {
+          "@id": "ADI/fairadi_schema.json"
+        },
+        {
+          "@id": "ADI/fairadi_codelists.tsv"
+        },
+        {
+          "@id": "ADI/fairadi_data_dictionary.tsv"
+        },
+        {
+          "@id": "CDI/faircdi.csv.gz"
+        },
+        {
+          "@id": "CDI/faircdi_data_dictionary.tsv"
+        },
+        {
+          "@id": "CDI/faircdi_schema.json"
+        }
+      ],
+      "isBasedOn": [
+        {
+          "@id": "https://www.census.gov/programs-surveys/acs"
+        },
+        {
+          "@id": "https://www.census.gov/programs-surveys/decennial-census.html"
+        }
+      ]
+    },
+    {
+      "@id": "#release-doi",
+      "@type": "PropertyValue",
+      "name": "Zenodo DOI",
+      "propertyID": "DOI",
+      "value": "10.5281/zenodo.19222629",
+      "url": {
+        "@id": "https://doi.org/10.5281/zenodo.19222629"
+      }
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-6391-0795",
+      "@type": "Person",
+      "name": "Peter DeWitt"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-7253-7171",
+      "@type": "Person",
+      "name": "Ardelia Clarke"
+    },
+    {
+      "@id": "https://github.com/dewittpe/fairadi-data",
+      "@type": "CreativeWork",
+      "name": "fairadi-data GitHub repository"
+    },
+    {
+      "@id": "#zenodo",
+      "@type": "Organization",
+      "name": "Zenodo"
+    },
+    {
+      "@id": "https://www.census.gov/programs-surveys/acs",
+      "@type": "CreativeWork",
+      "name": "American Community Survey (ACS) 5-year tables"
+    },
+    {
+      "@id": "https://www.census.gov/programs-surveys/decennial-census.html",
+      "@type": "CreativeWork",
+      "name": "U.S. Decennial Census"
+    },
+    {
+      "@id": "README.md",
+      "@type": "File",
+      "name": "Repository README",
+      "encodingFormat": "text/markdown",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "metadata.json",
+      "@type": "File",
+      "name": "Project release metadata",
+      "encodingFormat": "application/json",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "dcat-us.json",
+      "@type": "File",
+      "name": "DCAT-US 3.0 catalog record",
+      "encodingFormat": "application/json",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "CITATION.cff",
+      "@type": "File",
+      "name": "Citation metadata",
+      "encodingFormat": "text/plain",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "PROVENANCE.md",
+      "@type": "File",
+      "name": "Release provenance documentation",
+      "encodingFormat": "text/markdown",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "provenance.provn",
+      "@type": "File",
+      "name": "Formal W3C PROV-N provenance serialization",
+      "description": "Machine-readable provenance graph for the release snapshot, build outputs, and core workflow relationships.",
+      "encodingFormat": "text/provenance-notation",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "MANIFEST.tsv",
+      "@type": "File",
+      "name": "Tracked-file manifest",
+      "encodingFormat": "text/tab-separated-values",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "LICENSE",
+      "@type": "File",
+      "name": "BSD 3-Clause License",
+      "description": "License covering repository code and build scripts.",
+      "encodingFormat": "text/plain"
+    },
+    {
+      "@id": "LICENSE-data",
+      "@type": "File",
+      "name": "CC BY 4.0 data and documentation license",
+      "description": "License covering repository data artifacts and documentation unless stated otherwise.",
+      "encodingFormat": "text/plain"
+    },
+    {
+      "@id": "Makefile",
+      "@type": [
+        "File",
+        "SoftwareSourceCode"
+      ],
+      "name": "Top-level build orchestration",
+      "encodingFormat": "text/plain",
+      "programmingLanguage": "GNU Make",
+      "license": {
+        "@id": "LICENSE"
+      }
+    },
+    {
+      "@id": "ADI/fairadi.R",
+      "@type": [
+        "File",
+        "SoftwareSourceCode"
+      ],
+      "name": "ADI build script",
+      "encodingFormat": "text/plain",
+      "programmingLanguage": "R",
+      "license": {
+        "@id": "LICENSE"
+      }
+    },
+    {
+      "@id": "ADI/Makefile",
+      "@type": [
+        "File",
+        "SoftwareSourceCode"
+      ],
+      "name": "ADI build Makefile",
+      "encodingFormat": "text/plain",
+      "programmingLanguage": "GNU Make",
+      "license": {
+        "@id": "LICENSE"
+      }
+    },
+    {
+      "@id": "CDI/faircdi.R",
+      "@type": [
+        "File",
+        "SoftwareSourceCode"
+      ],
+      "name": "CDI build script",
+      "encodingFormat": "text/plain",
+      "programmingLanguage": "R",
+      "license": {
+        "@id": "LICENSE"
+      }
+    },
+    {
+      "@id": "CDI/Makefile",
+      "@type": [
+        "File",
+        "SoftwareSourceCode"
+      ],
+      "name": "CDI build Makefile",
+      "encodingFormat": "text/plain",
+      "programmingLanguage": "GNU Make",
+      "license": {
+        "@id": "LICENSE"
+      }
+    },
+    {
+      "@id": "utilities/build_manifest.py",
+      "@type": [
+        "File",
+        "SoftwareSourceCode"
+      ],
+      "name": "Manifest build script",
+      "encodingFormat": "text/x-python",
+      "programmingLanguage": "Python",
+      "license": {
+        "@id": "LICENSE"
+      }
+    },
+    {
+      "@id": "utilities/validate_provenance.py",
+      "@type": [
+        "File",
+        "SoftwareSourceCode"
+      ],
+      "name": "Provenance validation script",
+      "encodingFormat": "text/x-python",
+      "programmingLanguage": "Python",
+      "license": {
+        "@id": "LICENSE"
+      }
+    },
+    {
+      "@id": "FIPS/",
+      "@type": "Dataset",
+      "name": "Reference geography inventories"
+    },
+    {
+      "@id": "ACS5/",
+      "@type": "Dataset",
+      "name": "ACS 5-year extracts and metadata"
+    },
+    {
+      "@id": "Decennial/",
+      "@type": "Dataset",
+      "name": "Decennial Census extracts and metadata"
+    },
+    {
+      "@id": "ADI/",
+      "@type": "Dataset",
+      "name": "ADI scripts, outputs, and documentation"
+    },
+    {
+      "@id": "CDI/",
+      "@type": "Dataset",
+      "name": "CDI scripts, outputs, and documentation"
+    },
+    {
+      "@id": "utilities/",
+      "@type": "Dataset",
+      "name": "Workflow utility scripts"
+    },
+    {
+      "@id": "ADI/fairadi.csv.gz",
+      "@type": "File",
+      "name": "Canonical released fairadi dataset",
+      "encodingFormat": "application/gzip",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "ADI/fairadi_schema.json",
+      "@type": "File",
+      "name": "fairadi row schema",
+      "encodingFormat": "application/schema+json",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "ADI/fairadi_codelists.tsv",
+      "@type": "File",
+      "name": "fairadi codelists",
+      "encodingFormat": "text/tab-separated-values",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "ADI/fairadi_data_dictionary.tsv",
+      "@type": "File",
+      "name": "fairadi data dictionary",
+      "encodingFormat": "text/tab-separated-values",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "CDI/faircdi.csv.gz",
+      "@type": "File",
+      "name": "Canonical released faircdi dataset",
+      "encodingFormat": "application/gzip",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "CDI/faircdi_data_dictionary.tsv",
+      "@type": "File",
+      "name": "faircdi data dictionary",
+      "encodingFormat": "text/tab-separated-values",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "CDI/faircdi_schema.json",
+      "@type": "File",
+      "name": "faircdi row schema",
+      "encodingFormat": "application/schema+json",
+      "license": {
+        "@id": "LICENSE-data"
+      }
+    },
+    {
+      "@id": "#build-adi-action",
+      "@type": "CreateAction",
+      "name": "Build ADI release dataset",
+      "description": "Build the canonical fairadi dataset from tracked Census and geography inputs.",
+      "endTime": "2026-03-25",
+      "agent": {
+        "@id": "https://orcid.org/0000-0002-6391-0795"
+      },
+      "instrument": [
+        {
+          "@id": "ADI/Makefile"
+        },
+        {
+          "@id": "ADI/fairadi.R"
+        }
+      ],
+      "object": [
+        {
+          "@id": "FIPS/"
+        },
+        {
+          "@id": "ACS5/"
+        },
+        {
+          "@id": "Decennial/"
+        }
+      ],
+      "result": {
+        "@id": "ADI/fairadi.csv.gz"
+      },
+      "actionStatus": {
+        "@id": "http://schema.org/CompletedActionStatus"
+      }
+    },
+    {
+      "@id": "#build-cdi-action",
+      "@type": "CreateAction",
+      "name": "Build CDI release dataset",
+      "description": "Build the canonical faircdi dataset from tracked ACS5 inputs.",
+      "endTime": "2026-03-25",
+      "agent": {
+        "@id": "https://orcid.org/0000-0002-6391-0795"
+      },
+      "instrument": [
+        {
+          "@id": "CDI/Makefile"
+        },
+        {
+          "@id": "CDI/faircdi.R"
+        }
+      ],
+      "object": {
+        "@id": "ACS5/"
+      },
+      "result": {
+        "@id": "CDI/faircdi.csv.gz"
+      },
+      "actionStatus": {
+        "@id": "http://schema.org/CompletedActionStatus"
+      }
+    },
+    {
+      "@id": "#build-manifest-action",
+      "@type": "CreateAction",
+      "name": "Build tracked-file manifest",
+      "description": "Generate the tracked-file inventory with file sizes and SHA-256 digests.",
+      "endTime": "2026-03-25",
+      "agent": {
+        "@id": "https://orcid.org/0000-0002-6391-0795"
+      },
+      "instrument": {
+        "@id": "utilities/build_manifest.py"
+      },
+      "object": {
+        "@id": "./"
+      },
+      "result": {
+        "@id": "MANIFEST.tsv"
+      },
+      "actionStatus": {
+        "@id": "http://schema.org/CompletedActionStatus"
+      }
+    },
+    {
+      "@id": "#package-release-action",
+      "@type": "CreateAction",
+      "name": "Assemble release metadata and release snapshot",
+      "description": "Package the release snapshot and connect its citation, integrity, and provenance metadata.",
+      "endTime": "2026-03-25",
+      "agent": [
+        {
+          "@id": "https://orcid.org/0000-0002-6391-0795"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-7253-7171"
+        }
+      ],
+      "instrument": [
+        {
+          "@id": "Makefile"
+        },
+        {
+          "@id": "ro-crate-metadata.json"
+        },
+        {
+          "@id": "provenance.provn"
+        },
+        {
+          "@id": "utilities/validate_provenance.py"
+        }
+      ],
+      "object": [
+        {
+          "@id": "metadata.json"
+        },
+        {
+          "@id": "CITATION.cff"
+        },
+        {
+          "@id": "PROVENANCE.md"
+        },
+        {
+          "@id": "ADI/fairadi.csv.gz"
+        },
+        {
+          "@id": "CDI/faircdi.csv.gz"
+        },
+        {
+          "@id": "CDI/faircdi_data_dictionary.tsv"
+        },
+        {
+          "@id": "CDI/faircdi_schema.json"
+        },
+        {
+          "@id": "MANIFEST.tsv"
+        }
+      ],
+      "result": {
+        "@id": "./"
+      },
+      "actionStatus": {
+        "@id": "http://schema.org/CompletedActionStatus"
+      }
+    },
+    {
+      "@id": "#register-doi-action",
+      "@type": "CreateAction",
+      "name": "Register Zenodo release DOI",
+      "description": "Register the Zenodo DOI associated with the release snapshot.",
+      "endTime": "2026-03-25",
+      "agent": {
+        "@id": "#zenodo"
+      },
+      "object": {
+        "@id": "./"
+      },
+      "result": {
+        "@id": "#release-doi"
+      },
+      "actionStatus": {
+        "@id": "http://schema.org/CompletedActionStatus"
+      }
+    }
+  ]
+}

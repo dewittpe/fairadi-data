@@ -1,14 +1,22 @@
 # Provenance
 
-This repository publishes a tracked annual release snapshot of the `fairadi`
+This repository publishes a tracked annual release snapshot of the
+`fairadi-data`
 project. Provenance for a release is established by the combination of:
 
 - the git release reference and repository history
 - `MANIFEST.tsv`, which records tracked file paths, sizes, and SHA-256 digests
 - the build scripts under `Makefile`, `ACS5/`, `Decennial/`, `FIPS/`, `ADI/`,
   `CDI/`, and `utilities/`
-- release metadata in `metadata.json` and `CITATION.cff`
+- release metadata in `metadata.json`, `CITATION.cff`, and
+  `ro-crate-metadata.json`
+- the DCAT-US catalog record in `dcat-us.json`
+- the formal PROV-N serialization in `provenance.provn`
 - the split-license statements in `LICENSE` and `LICENSE-data`
+
+`MANIFEST.tsv` applies to the tracked repository release snapshot. It does not
+describe the tarballs emitted for Zenodo upload. The Zenodo packaging workflow
+produces a separate `SHA256SUMS` file for those packaged release artifacts.
 
 The reserved Zenodo DOI for the current release record is:
 
@@ -18,19 +26,26 @@ The intended git release reference for this release is:
 
 - `v1.0.0`
 
-## Canonical Released Dataset
+## Canonical Released Datasets
 
-The canonical released dataset artifact is:
+The canonical released ADI dataset artifact is:
 
 - `ADI/fairadi.csv.gz`
 
 The column definitions for this file are documented in:
 
 - `ADI/fairadi_data_dictionary.tsv`
+- `ADI/fairadi_schema.json`
+- `ADI/fairadi_codelists.tsv`
 
-The current tracked CDI build artifact is:
+The canonical released CDI dataset artifact is:
 
 - `CDI/faircdi.csv.gz`
+
+The column definitions and row schema for this file are documented in:
+
+- `CDI/faircdi_data_dictionary.tsv`
+- `CDI/faircdi_schema.json`
 
 The CDI process documentation is:
 
@@ -70,6 +85,41 @@ The final dataset builds are orchestrated by:
 - `CDI/Makefile`
 - `CDI/faircdi.R`
 
+## Formal Provenance Serialization
+
+The repository also publishes a formal provenance serialization in:
+
+- `provenance.provn`
+
+This file uses the W3C PROV-N notation to describe the release snapshot,
+selected generated artifacts, principal build activities, creators, and core
+derivation relationships. It is a concise machine-readable complement to this
+human-oriented provenance document, not an exhaustive file-by-file execution
+log.
+
+Validate the provenance file with:
+
+```sh
+make validate-provenance
+```
+
+This runs `utilities/validate_provenance.py`, which performs repository-level
+consistency checks. If `provconvert` happens to be installed locally, the
+script also uses it as an optional extra parse check, but it is not required
+for the repository workflow.
+
+## RO-Crate Validation
+
+Validate the RO-Crate metadata with:
+
+```sh
+make validate-ro-crate
+```
+
+This runs `utilities/validate_ro_crate.py`, which performs repository-level
+checks on `ro-crate-metadata.json`, including the required root entities,
+selected release resources, action entries, and referenced local paths.
+
 ## Integrity Verification
 
 To refresh the tracked-file manifest:
@@ -77,6 +127,9 @@ To refresh the tracked-file manifest:
 ```sh
 make manifest
 ```
+
+This refreshes the repository-snapshot manifest, not the Zenodo package
+checksums.
 
 To verify any single tracked file against the manifest:
 

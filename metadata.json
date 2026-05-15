@@ -1,10 +1,10 @@
 {
-  "title": "fairadi: A FAIR-Compliant U.S. Deprivation Indices Dataset",
-  "name": "fairadi",
+  "title": "fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets",
+  "name": "fairadi-data",
   "version": "1.0.0",
   "date_released": "2026-03-25",
   "doi": "10.5281/zenodo.19222629",
-  "description": "Reproducible U.S. deprivation indices build derived from U.S. Census Bureau ACS 5-year and Decennial Census tables. The repository currently contains FAIR-oriented ADI release artifacts and in-progress CDI build outputs, along with tracked source tables, documentation, and integrity metadata for the annual release snapshot.",
+  "description": "Reproducible U.S. deprivation indices build derived from U.S. Census Bureau ACS 5-year and Decennial Census tables. The repository contains FAIR-oriented, release-grade ADI and CDI artifacts, along with tracked source tables, documentation, and integrity metadata for the annual release snapshot.",
   "resource_type": "dataset",
   "creators": [
     {
@@ -30,7 +30,7 @@
     "country": "United States"
   },
   "temporal_coverage": {
-    "start": "2020",
+    "start": "2012",
     "end": "2024"
   },
   "files": [
@@ -39,8 +39,24 @@
       "description": "Canonical released fairadi dataset."
     },
     {
+      "path": "ADI/fairadi_schema.json",
+      "description": "Machine-readable row schema for the fairadi dataset."
+    },
+    {
+      "path": "ADI/fairadi_codelists.tsv",
+      "description": "Machine-readable codelists for ADI exclusion, note, and replacement-level codes."
+    },
+    {
       "path": "CDI/faircdi.csv.gz",
-      "description": "Current CDI build output dataset."
+      "description": "Canonical released faircdi dataset."
+    },
+    {
+      "path": "CDI/faircdi_data_dictionary.tsv",
+      "description": "Column-level schema and value notes for the faircdi dataset."
+    },
+    {
+      "path": "CDI/faircdi_schema.json",
+      "description": "Machine-readable row schema for the faircdi dataset."
     },
     {
       "path": "ADI/fairadi_data_dictionary.tsv",
@@ -48,11 +64,27 @@
     },
     {
       "path": "CDI/README.md",
-      "description": "Process documentation for the CDI implementation."
+      "description": "Process documentation for the release-grade CDI implementation."
+    },
+    {
+      "path": "FAIR_TODO.md",
+      "description": "Concrete FAIR implementation checklist for follow-on repository work."
+    },
+    {
+      "path": "dcat-us.json",
+      "description": "DCAT-US 3.0 catalog record for the repository release snapshot and released distributions."
     },
     {
       "path": "MANIFEST.tsv",
       "description": "Tracked-file inventory with SHA-256 digests and file sizes."
+    },
+    {
+      "path": "ro-crate-metadata.json",
+      "description": "Attached RO-Crate JSON-LD metadata for the repository release snapshot."
+    },
+    {
+      "path": "provenance.provn",
+      "description": "Formal W3C PROV-N provenance serialization for the release snapshot and core build relationships."
     }
   ],
   "licenses": {

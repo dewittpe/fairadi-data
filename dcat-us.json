@@ -1,0 +1,164 @@
+{
+  "@id": "https://github.com/dewittpe/fairadi-data/blob/main/dcat-us.json",
+  "@type": "dcat:Catalog",
+  "conformsTo": {
+    "@type": "Standard",
+    "title": "DCAT-US 3.0",
+    "identifier": "https://resources.data.gov/dcat-us/3.0.0"
+  },
+  "title": "fairadi-data DCAT-US Catalog",
+  "description": "DCAT-US 3.0 catalog record for the fairadi-data annual release snapshot and its released ADI and CDI datasets.",
+  "modified": "2026-03-25",
+  "issued": "2026-03-25",
+  "language": [
+    "en"
+  ],
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "rights": [
+    "Repository code is licensed under BSD-3-Clause in LICENSE.",
+    "Released data artifacts and documentation are licensed under CC BY 4.0 in LICENSE-data."
+  ],
+  "publisher": {
+    "@type": "Agent",
+    "name": "fairadi-data maintainers"
+  },
+  "contactPoint": [
+    {
+      "@type": "Kind",
+      "fn": "fairadi-data maintainers",
+      "url": "https://github.com/dewittpe/fairadi-data/issues"
+    }
+  ],
+  "keyword": [
+    "ADI",
+    "CDI",
+    "deprivation",
+    "ACS5",
+    "Decennial Census",
+    "United States",
+    "block group"
+  ],
+  "spatial": [
+    {
+      "@type": "Location",
+      "prefLabel": "United States"
+    }
+  ],
+  "dataset": [
+    {
+      "@type": "Dataset",
+      "title": "fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets",
+      "description": "Annual release snapshot of reproducible U.S. Area Deprivation Index and Community Deprivation Index datasets derived from U.S. Census Bureau ACS 5-year and Decennial Census tables.",
+      "identifier": "https://doi.org/10.5281/zenodo.19222629",
+      "publisher": {
+        "@type": "Organization",
+        "name": "fairadi-data maintainers"
+      },
+      "contactPoint": {
+        "@type": "Kind",
+        "fn": "fairadi-data maintainers",
+        "url": "https://github.com/dewittpe/fairadi-data/issues"
+      },
+      "keyword": [
+        "area deprivation index",
+        "community deprivation index",
+        "social determinants of health",
+        "ACS5",
+        "Decennial Census",
+        "United States"
+      ],
+      "landingPage": {
+        "@type": "Document",
+        "title": "fairadi-data repository landing page",
+        "accessURL": "https://github.com/dewittpe/fairadi-data"
+      },
+      "accessRights": "public",
+      "rights": [
+        "Upstream U.S. Census Bureau source data are in the public domain.",
+        "Released data artifacts and documentation are licensed under CC BY 4.0."
+      ],
+      "version": "1.0.0",
+      "temporal": [
+        {
+          "@type": "PeriodOfTime",
+          "startDate": "2012-01-01",
+          "endDate": "2024-12-31"
+        }
+      ],
+      "spatial": [
+        {
+          "@type": "Location",
+          "prefLabel": "United States"
+        }
+      ],
+      "distribution": [
+        {
+          "@type": "Distribution",
+          "title": "ADI release dataset",
+          "description": "Canonical released fairadi dataset as a gzip-compressed CSV file.",
+          "downloadURL": "https://github.com/dewittpe/fairadi-data/blob/main/ADI/fairadi.csv.gz",
+          "mediaType": "application/gzip",
+          "format": "CSV",
+          "license": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        {
+          "@type": "Distribution",
+          "title": "ADI data dictionary",
+          "description": "Column-level definitions for the fairadi dataset.",
+          "downloadURL": "https://github.com/dewittpe/fairadi-data/blob/main/ADI/fairadi_data_dictionary.tsv",
+          "mediaType": "text/tab-separated-values",
+          "format": "TSV",
+          "license": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        {
+          "@type": "Distribution",
+          "title": "ADI row schema",
+          "description": "Machine-readable row schema for the fairadi dataset.",
+          "downloadURL": "https://github.com/dewittpe/fairadi-data/blob/main/ADI/fairadi_schema.json",
+          "mediaType": "application/schema+json",
+          "format": "JSON",
+          "license": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        {
+          "@type": "Distribution",
+          "title": "CDI release dataset",
+          "description": "Canonical released faircdi dataset as a gzip-compressed CSV file.",
+          "downloadURL": "https://github.com/dewittpe/fairadi-data/blob/main/CDI/faircdi.csv.gz",
+          "mediaType": "application/gzip",
+          "format": "CSV",
+          "license": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        {
+          "@type": "Distribution",
+          "title": "CDI data dictionary",
+          "description": "Column-level definitions for the faircdi dataset.",
+          "downloadURL": "https://github.com/dewittpe/fairadi-data/blob/main/CDI/faircdi_data_dictionary.tsv",
+          "mediaType": "text/tab-separated-values",
+          "format": "TSV",
+          "license": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        {
+          "@type": "Distribution",
+          "title": "CDI row schema",
+          "description": "Machine-readable row schema for the faircdi dataset.",
+          "downloadURL": "https://github.com/dewittpe/fairadi-data/blob/main/CDI/faircdi_schema.json",
+          "mediaType": "application/schema+json",
+          "format": "JSON",
+          "license": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        {
+          "@type": "Distribution",
+          "title": "Repository release metadata bundle",
+          "description": "Repository-level citation, provenance, and FAIR metadata files.",
+          "downloadURL": "https://github.com/dewittpe/fairadi-data/blob/main/metadata.json",
+          "mediaType": "application/json",
+          "format": "JSON",
+          "license": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      ],
+      "provenance": [
+        "The release snapshot is documented by metadata.json, ro-crate-metadata.json, provenance.provn, PROVENANCE.md, and MANIFEST.tsv."
+      ]
+    }
+  ]
+}

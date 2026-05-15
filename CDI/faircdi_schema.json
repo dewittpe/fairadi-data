@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dewittpe/fairadi-data/blob/main/CDI/faircdi_schema.json",
+  "title": "faircdi row schema",
+  "description": "Row-level schema for CDI/faircdi.csv.gz in the fairadi-data release snapshot.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "year",
+    "FIPS",
+    "faircdi"
+  ],
+  "properties": {
+    "year": {
+      "type": "integer",
+      "minimum": 2013,
+      "maximum": 2024,
+      "description": "Reference year for the record."
+    },
+    "FIPS": {
+      "type": "string",
+      "pattern": "^[0-9]{12}$",
+      "description": "Concatenated 12-digit Census block-group geographic identifier."
+    },
+    "cdiraw": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Raw CDI score derived from the first principal component before year-wise rescaling."
+    },
+    "cdistd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Standardized CDI score after rescaling the raw score within year."
+    },
+    "faircdi": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100,
+      "description": "National percentile ranking of the CDI score within year."
+    }
+  }
+}

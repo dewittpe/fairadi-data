@@ -2,15 +2,22 @@
 
 
 
-This directory contains an in-progress implementation of the Community
-Deprivation Index (CDI) based on the TEAM CDI specification tracked in
+This directory contains the release-grade Community Deprivation Index (CDI)
+implementation tracked in this repository and versioned alongside the ADI
+release artifacts. The implementation is based on the TEAM CDI specification tracked in
 [`2025-08-28-team-cdi-calculation-specifications.pdf`](./2025-08-28-team-cdi-calculation-specifications.pdf).
 
-The current build uses public ACS 5-year data already extracted elsewhere in
+The released CDI build uses public ACS 5-year data already extracted elsewhere in
 the repository and produces:
 
 - `component01.csv.gz` through `component18.csv.gz`
 - `total_population_and_housing_units.csv.gz`
+- `faircdi.csv.gz`
+- `faircdi_data_dictionary.tsv`
+- `faircdi_schema.json`
+
+The canonical released CDI artifact is:
+
 - `faircdi.csv.gz`
 
 ## CDI Components
@@ -182,6 +189,21 @@ block groups.
 - `cdiraw`
 - `cdistd`
 - `faircdi`
+
+Column-level definitions are provided in:
+
+- `faircdi_data_dictionary.tsv`
+
+A machine-readable row schema is provided in:
+
+- `faircdi_schema.json`
+
+Coverage notes:
+
+- the current tracked release spans years `2013` through `2024`
+- `faircdi` is populated for all released rows
+- `cdiraw` and `cdistd` are nullable in the tracked release and should be read
+  accordingly by downstream tooling
 
 ## Technical Validation
 

@@ -1,0 +1,123 @@
+document
+  prefix ex <https://github.com/dewittpe/fairadi-data/>
+  prefix doi <https://doi.org/>
+  prefix orcid <https://orcid.org/>
+  prefix prov <http://www.w3.org/ns/prov#>
+  prefix xsd <http://www.w3.org/2001/XMLSchema#>
+
+  agent(orcid:0000-0002-6391-0795, [prov:type='prov:Person', prov:label="Peter DeWitt"])
+  agent(orcid:0000-0001-7253-7171, [prov:type='prov:Person', prov:label="Ardelia Clarke"])
+  agent(ex:org/zenodo, [prov:type='prov:Organization', prov:label="Zenodo"])
+
+  entity(ex:repo/v1.0.0, [
+    prov:label="fairadi-data release snapshot v1.0.0",
+    prov:type='prov:Collection',
+    ex:doi="10.5281/zenodo.19222629",
+    ex:version="1.0.0"
+  ])
+  entity(doi:10.5281/zenodo.19222629, [
+    prov:label="Zenodo DOI for fairadi v1.0.0",
+    prov:type='prov:Entity'
+  ])
+
+  entity(ex:file/ADI/fairadi.csv.gz, [prov:label="ADI/fairadi.csv.gz"])
+  entity(ex:file/ADI/fairadi_schema.json, [prov:label="ADI/fairadi_schema.json"])
+  entity(ex:file/ADI/fairadi_codelists.tsv, [prov:label="ADI/fairadi_codelists.tsv"])
+  entity(ex:file/ADI/fairadi_data_dictionary.tsv, [prov:label="ADI/fairadi_data_dictionary.tsv"])
+  entity(ex:file/CDI/faircdi.csv.gz, [prov:label="CDI/faircdi.csv.gz"])
+  entity(ex:file/CDI/faircdi_data_dictionary.tsv, [prov:label="CDI/faircdi_data_dictionary.tsv"])
+  entity(ex:file/CDI/faircdi_schema.json, [prov:label="CDI/faircdi_schema.json"])
+  entity(ex:file/MANIFEST.tsv, [prov:label="MANIFEST.tsv"])
+  entity(ex:file/metadata.json, [prov:label="metadata.json"])
+  entity(ex:file/dcat-us.json, [prov:label="dcat-us.json"])
+  entity(ex:file/CITATION.cff, [prov:label="CITATION.cff"])
+  entity(ex:file/ro-crate-metadata.json, [prov:label="ro-crate-metadata.json"])
+  entity(ex:file/PROVENANCE.md, [prov:label="PROVENANCE.md"])
+  entity(ex:file/provenance.provn, [prov:label="provenance.provn"])
+
+  entity(ex:dir/FIPS, [prov:label="FIPS reference geography inventories", prov:type='prov:Collection'])
+  entity(ex:dir/ACS5, [prov:label="ACS5 source table extracts", prov:type='prov:Collection'])
+  entity(ex:dir/Decennial, [prov:label="Decennial source table extracts", prov:type='prov:Collection'])
+  entity(ex:dir/ADI, [prov:label="ADI workflow directory", prov:type='prov:Collection'])
+  entity(ex:dir/CDI, [prov:label="CDI workflow directory", prov:type='prov:Collection'])
+  entity(ex:dir/utilities, [prov:label="workflow utility scripts", prov:type='prov:Collection'])
+
+  entity(ex:file/Makefile, [prov:label="top-level Makefile"])
+  entity(ex:file/ADI/Makefile, [prov:label="ADI/Makefile"])
+  entity(ex:file/ADI/fairadi.R, [prov:label="ADI/fairadi.R"])
+  entity(ex:file/CDI/Makefile, [prov:label="CDI/Makefile"])
+  entity(ex:file/CDI/faircdi.R, [prov:label="CDI/faircdi.R"])
+  entity(ex:file/utilities/build_manifest.py, [prov:label="utilities/build_manifest.py"])
+
+  activity(ex:activity/build-adi-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Build ADI release dataset"])
+  activity(ex:activity/build-cdi-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Build CDI output dataset"])
+  activity(ex:activity/build-manifest-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Build tracked-file manifest"])
+  activity(ex:activity/package-release-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Assemble release metadata and release snapshot"])
+  activity(ex:activity/register-doi-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Register Zenodo release DOI"])
+
+  used(ex:activity/build-adi-v1.0.0, ex:dir/FIPS, -, [prov:role="reference geography"])
+  used(ex:activity/build-adi-v1.0.0, ex:dir/ACS5, -, [prov:role="ACS5 inputs"])
+  used(ex:activity/build-adi-v1.0.0, ex:dir/Decennial, -, [prov:role="Decennial inputs"])
+  used(ex:activity/build-adi-v1.0.0, ex:file/ADI/Makefile, -, [prov:role="build specification"])
+  used(ex:activity/build-adi-v1.0.0, ex:file/ADI/fairadi.R, -, [prov:role="build script"])
+
+  used(ex:activity/build-cdi-v1.0.0, ex:dir/ACS5, -, [prov:role="ACS5 inputs"])
+  used(ex:activity/build-cdi-v1.0.0, ex:file/CDI/Makefile, -, [prov:role="build specification"])
+  used(ex:activity/build-cdi-v1.0.0, ex:file/CDI/faircdi.R, -, [prov:role="build script"])
+
+  used(ex:activity/build-manifest-v1.0.0, ex:file/utilities/build_manifest.py, -, [prov:role="manifest script"])
+  used(ex:activity/build-manifest-v1.0.0, ex:repo/v1.0.0, -, [prov:role="tracked release files"])
+
+  used(ex:activity/package-release-v1.0.0, ex:file/Makefile, -, [prov:role="workflow orchestration"])
+  used(ex:activity/package-release-v1.0.0, ex:file/metadata.json, -, [prov:role="release metadata"])
+  used(ex:activity/package-release-v1.0.0, ex:file/dcat-us.json, -, [prov:role="DCAT-US catalog metadata"])
+  used(ex:activity/package-release-v1.0.0, ex:file/CITATION.cff, -, [prov:role="citation metadata"])
+  used(ex:activity/package-release-v1.0.0, ex:file/PROVENANCE.md, -, [prov:role="narrative provenance"])
+  used(ex:activity/package-release-v1.0.0, ex:file/ro-crate-metadata.json, -, [prov:role="RO-Crate metadata"])
+  used(ex:activity/package-release-v1.0.0, ex:file/provenance.provn, -, [prov:role="formal provenance serialization"])
+  used(ex:activity/package-release-v1.0.0, ex:file/ADI/fairadi.csv.gz, -, [prov:role="canonical dataset"])
+  used(ex:activity/package-release-v1.0.0, ex:file/ADI/fairadi_schema.json, -, [prov:role="ADI row schema"])
+  used(ex:activity/package-release-v1.0.0, ex:file/ADI/fairadi_codelists.tsv, -, [prov:role="ADI codelists"])
+  used(ex:activity/package-release-v1.0.0, ex:file/CDI/faircdi.csv.gz, -, [prov:role="canonical CDI dataset"])
+  used(ex:activity/package-release-v1.0.0, ex:file/CDI/faircdi_data_dictionary.tsv, -, [prov:role="CDI column schema"])
+  used(ex:activity/package-release-v1.0.0, ex:file/CDI/faircdi_schema.json, -, [prov:role="CDI row schema"])
+  used(ex:activity/package-release-v1.0.0, ex:file/MANIFEST.tsv, -, [prov:role="integrity manifest"])
+
+  wasGeneratedBy(ex:file/ADI/fairadi.csv.gz, ex:activity/build-adi-v1.0.0, -)
+  wasGeneratedBy(ex:file/CDI/faircdi.csv.gz, ex:activity/build-cdi-v1.0.0, -)
+  wasGeneratedBy(ex:file/MANIFEST.tsv, ex:activity/build-manifest-v1.0.0, -)
+  wasGeneratedBy(ex:repo/v1.0.0, ex:activity/package-release-v1.0.0, -)
+  wasGeneratedBy(doi:10.5281/zenodo.19222629, ex:activity/register-doi-v1.0.0, -)
+
+  wasDerivedFrom(ex:file/ADI/fairadi.csv.gz, ex:dir/FIPS)
+  wasDerivedFrom(ex:file/ADI/fairadi.csv.gz, ex:dir/ACS5)
+  wasDerivedFrom(ex:file/ADI/fairadi.csv.gz, ex:dir/Decennial)
+  wasDerivedFrom(ex:file/CDI/faircdi.csv.gz, ex:dir/ACS5)
+  wasDerivedFrom(ex:file/MANIFEST.tsv, ex:repo/v1.0.0)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/ADI/fairadi.csv.gz)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/ADI/fairadi_schema.json)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/ADI/fairadi_codelists.tsv)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/ADI/fairadi_data_dictionary.tsv)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/CDI/faircdi.csv.gz)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/CDI/faircdi_data_dictionary.tsv)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/CDI/faircdi_schema.json)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/MANIFEST.tsv)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/metadata.json)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/dcat-us.json)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/CITATION.cff)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/ro-crate-metadata.json)
+  wasDerivedFrom(ex:repo/v1.0.0, ex:file/provenance.provn)
+
+  wasAssociatedWith(ex:activity/build-adi-v1.0.0, orcid:0000-0002-6391-0795)
+  wasAssociatedWith(ex:activity/build-cdi-v1.0.0, orcid:0000-0002-6391-0795)
+  wasAssociatedWith(ex:activity/build-manifest-v1.0.0, orcid:0000-0002-6391-0795)
+  wasAssociatedWith(ex:activity/package-release-v1.0.0, orcid:0000-0002-6391-0795)
+  wasAssociatedWith(ex:activity/package-release-v1.0.0, orcid:0000-0001-7253-7171)
+  wasAssociatedWith(ex:activity/register-doi-v1.0.0, ex:org/zenodo)
+
+  wasAttributedTo(ex:repo/v1.0.0, orcid:0000-0002-6391-0795)
+  wasAttributedTo(ex:repo/v1.0.0, orcid:0000-0001-7253-7171)
+  wasAttributedTo(ex:file/ADI/fairadi.csv.gz, orcid:0000-0002-6391-0795)
+  wasAttributedTo(ex:file/CDI/faircdi.csv.gz, orcid:0000-0002-6391-0795)
+  wasAttributedTo(doi:10.5281/zenodo.19222629, ex:org/zenodo)
+endDocument

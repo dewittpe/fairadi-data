@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dewittpe/fairadi-data/blob/main/ADI/fairadi_schema.json",
+  "title": "fairadi row schema",
+  "description": "Row-level schema for ADI/fairadi.csv.gz in the fairadi-data release snapshot.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "year",
+    "state",
+    "county",
+    "tract",
+    "block_group",
+    "FIPS",
+    "exclude_from_ranking"
+  ],
+  "properties": {
+    "year": {
+      "type": "integer",
+      "minimum": 2012,
+      "maximum": 2024,
+      "description": "Reference year for the record."
+    },
+    "state": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 78,
+      "description": "State or state-equivalent FIPS code represented numerically."
+    },
+    "county": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 840,
+      "description": "County or county-equivalent FIPS code within state."
+    },
+    "tract": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Census tract code within county represented numerically."
+    },
+    "block_group": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9,
+      "description": "Census block group within tract."
+    },
+    "FIPS": {
+      "type": "string",
+      "pattern": "^[0-9]{12}$",
+      "description": "Concatenated 12-digit Census block-group geographic identifier."
+    },
+    "adi_raw": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Continuous raw fairadi score before state and national ranking assignment."
+    },
+    "exclude_from_ranking": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "description": "Indicator for whether the block group is excluded from ranking."
+    },
+    "exclude_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "",
+        "PH",
+        "GQ",
+        "GQ-PH",
+        "QDI",
+        null
+      ],
+      "description": "Reason the block group is excluded from ranking; blank or null when included."
+    },
+    "national_rank": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 100,
+      "description": "National percentile-style rank within year."
+    },
+    "state_rank": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 10,
+      "description": "State decile-style rank within year and state."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+file	column	type	nullable	description	allowed_values_or_notes
+faircdi.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2013 through 2024.
+faircdi.csv.gz	FIPS	string	no	Concatenated 12-digit Census block-group geographic identifier.	Constructed from state, county, tract, and block group codes.
+faircdi.csv.gz	cdiraw	numeric	yes	Raw CDI score derived from the first principal component before year-wise rescaling.	Higher values indicate greater deprivation under the current orientation; blank for a small number of rows where the raw PCA score is unavailable in the current tracked release.
+faircdi.csv.gz	cdistd	numeric	yes	Standardized CDI score after rescaling the raw score within year.	Target scaling is mean 100 and standard deviation 20 within year; blank when cdiraw is blank.
+faircdi.csv.gz	faircdi	integer	no	National percentile ranking of the CDI score within year.	Expected range is 1 through 100; higher values indicate greater deprivation relative to other block groups in the same year.

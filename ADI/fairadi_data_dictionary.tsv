@@ -1,5 +1,5 @@
 file	column	type	nullable	description	allowed_values_or_notes
-fairadi.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2020 through 2024.
+fairadi.csv.gz	year	integer	no	Reference year for the record.	Expected values in the current release are 2012 through 2024.
 fairadi.csv.gz	state	integer	no	State FIPS code.	Two-digit state code represented numerically in the file.
 fairadi.csv.gz	county	integer	no	County FIPS code within state.	Three-digit county code represented numerically in the file.
 fairadi.csv.gz	tract	integer	no	Census tract code within county.	Six-digit tract code represented numerically in the file.

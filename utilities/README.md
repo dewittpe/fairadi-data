@@ -35,7 +35,86 @@ files:
 - `CITATION.cff`
 - `metadata.json`
 - `PROVENANCE.md`
+- `ro-crate-metadata.json`
+- `provenance.provn`
 - `ADI/fairadi_data_dictionary.tsv`
+
+## validate_provenance.py
+
+Validates the repository's formal provenance file, `provenance.provn`.
+
+```sh
+./utilities/validate_provenance.py
+```
+
+The validator checks:
+
+- that the file has the expected PROV-N document wrapper
+- that required agents, entities, activities, and core relations are present
+- that referenced repository files and directories actually exist
+- and, when available, that `provconvert` can parse the PROV-N file as an
+  optional extra cross-check
+
+The top-level `make validate-provenance` target runs this script. The
+`manifest`, `zenodo`, and `release` workflows depend on it so provenance
+validation is part of release metadata generation. Installing `provconvert` is
+not required.
+
+## validate_ro_crate.py
+
+Validates the repository's `ro-crate-metadata.json` file.
+
+```sh
+./utilities/validate_ro_crate.py
+```
+
+The validator checks:
+
+- that the RO-Crate JSON parses correctly
+- that the RO-Crate 1.2 context and root entities are present
+- that required release entities and `CreateAction` entries exist
+- that referenced local files and directories actually exist
+
+The top-level `make validate-ro-crate` target runs this script. The
+`manifest`, `zenodo`, and `release` workflows depend on it so RO-Crate
+validation is part of release metadata generation.
+
+## validate_dcat_us.py
+
+Validates the repository's `dcat-us.json` file.
+
+```sh
+./utilities/validate_dcat_us.py
+```
+
+The validator checks:
+
+- that the DCAT-US JSON parses correctly
+- that the catalog-level required fields are present
+- that the main dataset entry is present and structurally complete
+- that the expected ADI/CDI distributions are listed
+
+The top-level `make validate-dcat-us` target runs this script. The `manifest`,
+`zenodo`, and `release` workflows depend on it so DCAT-US validation is part
+of release metadata generation.
+
+## validate_zenodo_package.py
+
+Validates the Zenodo packaging specification and, when present, the built
+archive contents.
+
+```sh
+./utilities/validate_zenodo_package.py
+```
+
+The validator checks:
+
+- that each expected packaging path pattern resolves to real repository files
+- that none of the defined archives would be empty
+- that any built archives in `zenodo-dist/` contain exactly the expected files
+- that the Zenodo `SHA256SUMS` file matches the built archives and README
+
+The `zenodo` target runs this validator after creating the archives.
 
 ## check_namespaces.R
 
@@ -144,13 +223,15 @@ This is useful when the workflow first creates many geography-specific extracts
 and later needs one combined table.
 
 ## zenodo_package.sh
-The repository now tracks the annual release snapshot intended for downstream
-use, so the Zenodo deposit can be a single source snapshot of the tagged git
-state rather than a collection of separate data archives.
+Builds the Zenodo upload bundle for the repository's annual release snapshot.
 
 The recommended workflow is to produce:
 
-- one source archive from the git-tracked tree
+- one curated source archive for reproducibility
+- one ADI release archive
+- one CDI release archive
+- one derived-intermediates archive
+- one docs-and-metadata archive
 - a release README with unpacking instructions
 - a `SHA256SUMS` file for integrity checks
 
@@ -172,11 +253,22 @@ To preview what will be packaged without creating the archives:
 
 By default, the script writes the Zenodo upload set to `zenodo-dist/`.
 
+The current outputs are:
+
+- `fairadi-data-<label>-source.tar.gz`
+- `fairadi-data-<label>-adi-release.tar.gz`
+- `fairadi-data-<label>-cdi-release.tar.gz`
+- `fairadi-data-<label>-derived-intermediates.tar.gz`
+- `fairadi-data-<label>-docs-metadata.tar.gz`
+- `fairadi-data-<label>-README.txt`
+- `fairadi-data-<label>-SHA256SUMS.txt`
+
 This approach is preferred over uploading the raw repository directory because
 it:
 
-- excludes `.git/` automatically from the source snapshot
-- keeps the Zenodo upload set minimal
+- separates end-user release data from the reproducibility subset
+- keeps the Zenodo file count small
+- avoids forcing the Zenodo deposit to mirror the GitHub working layout
 - makes checksum verification straightforward after upload and download
 
 Ignored scratch files such as the detailed `FIPS/tracts/` and
@@ -188,44 +280,29 @@ For a Zenodo release, upload the files emitted in `zenodo-dist/`.
 
 ## Using the Zenodo Archive
 
-After downloading `fairadi-<label>-source.tar.gz` from Zenodo, extract it with:
+For released datasets, most users should start with:
+
+- `fairadi-data-<label>-adi-release.tar.gz`
+- `fairadi-data-<label>-cdi-release.tar.gz`
+- `fairadi-data-<label>-docs-metadata.tar.gz`
+
+For reproducibility work, also download:
+
+- `fairadi-data-<label>-source.tar.gz`
+
+If you want the published ADI topic files and CDI component files, also
+download:
+
+- `fairadi-data-<label>-derived-intermediates.tar.gz`
+
+To extract one archive:
 
 ```sh
-tar -xzf fairadi-<label>-source.tar.gz
+tar -xzf fairadi-data-<label>-adi-release.tar.gz
 ```
-
-This will create a top-level directory named `fairadi-<label>/`.
 
 If you want to inspect the archive contents before extracting:
 
 ```sh
-tar -tzf fairadi-<label>-source.tar.gz | head
+tar -tzf fairadi-data-<label>-adi-release.tar.gz | head
 ```
-
-### File Structure After Extraction
-
-After extraction, the tree will look like:
-
-```text
-fairadi-<label>/
-├── README.md
-├── LICENSE
-├── CHANGELOG.md
-├── Makefile
-├── Makevars
-├── ACS5/
-├── ADI/
-├── Decennial/
-├── FIPS/
-└── utilities/
-```
-
-Directory summary:
-
-- `ACS5/`: American Community Survey 5-year input tables and geography-level extracts.
-- `ADI/`: deprivation index scripts, derived topic files, final ADI output, and figures.
-- `Decennial/`: Decennial Census input tables and derived geography-level extracts.
-- `FIPS/`: reference geography inventories and supporting lookup files used by the build workflow.
-- `utilities/`: helper scripts for data fetch, reshaping, and packaging tasks.
-
-The archive does not include the local `.git/` directory or ignored scratch files.
