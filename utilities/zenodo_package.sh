@@ -70,9 +70,30 @@ done
 
 ARCHIVE_PREFIX="fairadi-data-${LABEL}"
 
-timestamp_utc() {
-  TZ=UTC date +"%Y-%m-%dT%H:%M:%SZ"
-}
+RELEASE_DATE="$(
+  python3 - <<'PY' 2>/dev/null || true
+import json
+from pathlib import Path
+path = Path("metadata.json")
+if path.exists():
+    metadata = json.loads(path.read_text(encoding="utf-8"))
+    print(metadata.get("date_released", ""))
+PY
+)"
+RELEASE_DATE="${RELEASE_DATE:-1970-01-01}"
+ARCHIVE_TIMESTAMP_UTC="${SOURCE_DATE_EPOCH:-${RELEASE_DATE}T00:00:00Z}"
+TOUCH_TIMESTAMP="$(
+  python3 - "${ARCHIVE_TIMESTAMP_UTC}" <<'PY'
+import datetime
+import sys
+
+value = sys.argv[1]
+if value.endswith("Z"):
+    value = value[:-1] + "+00:00"
+dt = datetime.datetime.fromisoformat(value)
+print(dt.strftime("%Y%m%d%H%M.%S"))
+PY
+)"
 
 assert_paths_exist() {
   local path
@@ -95,12 +116,35 @@ archive_from_paths() {
   local archive="$1"
   shift
   local paths=("$@")
+  local stage_dir
+  local path
+  local target
   [[ ${#paths[@]} -gt 0 ]] || fail "no input paths provided for ${archive}"
   assert_paths_exist "${paths[@]}"
+  stage_dir="$(mktemp -d "${TMPDIR:-/tmp}/zenodo-package.XXXXXX")"
+  trap 'rm -rf "${stage_dir}"' RETURN
+
+  for path in "${paths[@]}"; do
+    target="${stage_dir}/${path}"
+    mkdir -p "$(dirname "${target}")"
+    cp -p "${ROOT}/${path}" "${target}"
+    touch -t "${TOUCH_TIMESTAMP}" "${target}"
+  done
+
   (
-    cd "${ROOT}"
-    COPYFILE_DISABLE=1 tar -czf "${archive}" "${paths[@]}"
+    cd "${stage_dir}"
+    COPYFILE_DISABLE=1 tar -cf - \
+      --format ustar \
+      --uid 0 \
+      --gid 0 \
+      --uname root \
+      --gname root \
+      "${paths[@]}" \
+      | gzip -n > "${archive}"
   )
+
+  rm -rf "${stage_dir}"
+  trap - RETURN
 }
 
 source_patterns=(
@@ -199,6 +243,7 @@ SHA_FILE="${OUTPUT_DIR}/${ARCHIVE_PREFIX}-SHA256SUMS.txt"
 if [[ "${DRY_RUN}" -eq 1 ]]; then
   echo "Zenodo package plan"
   echo "label: ${LABEL}"
+  echo "release_date: ${RELEASE_DATE}"
   echo "output_dir: ${OUTPUT_DIR}"
   echo "source_archive: ${SOURCE_ARCHIVE##*/}"
   echo "adi_release_archive: ${ADI_ARCHIVE##*/}"
@@ -207,6 +252,7 @@ if [[ "${DRY_RUN}" -eq 1 ]]; then
   echo "docs_metadata_archive: ${DOCS_ARCHIVE##*/}"
   echo "readme: ${README_FILE##*/}"
   echo "checksums: ${SHA_FILE##*/}"
+  echo "release_date_source: metadata.json date_released (override with SOURCE_DATE_EPOCH if needed)"
   exit 0
 fi
 
@@ -218,10 +264,13 @@ archive_from_paths "${CDI_ARCHIVE}" "${cdi_release_paths[@]}"
 archive_from_paths "${DERIVED_ARCHIVE}" "${derived_intermediate_paths[@]}"
 archive_from_paths "${DOCS_ARCHIVE}" "${docs_metadata_paths[@]}"
 
+echo "Using release_date=${RELEASE_DATE}"
+echo "Change metadata.json date_released or set SOURCE_DATE_EPOCH to override the package timestamp."
+
 cat > "${README_FILE}" <<EOF
 fairadi-data Zenodo package
 label: ${LABEL}
-created_utc: $(timestamp_utc)
+package_timestamp_utc: ${ARCHIVE_TIMESTAMP_UTC}
 
 Files in this release bundle:
 - ${ARCHIVE_PREFIX}-source.tar.gz: curated reproducibility subset with build scripts, Makefiles, metadata, and supporting documentation needed to rebuild the tracked release from public source data.

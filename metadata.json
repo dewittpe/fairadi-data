@@ -2,7 +2,7 @@
   "title": "fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets",
   "name": "fairadi-data",
   "version": "1.0.0",
-  "date_released": "2026-03-25",
+  "date_released": "2026-05-15",
   "doi": "10.5281/zenodo.19222629",
   "description": "Reproducible U.S. deprivation indices build derived from U.S. Census Bureau ACS 5-year and Decennial Census tables. The repository contains FAIR-oriented, release-grade ADI and CDI artifacts, along with tracked source tables, documentation, and integrity metadata for the annual release snapshot.",
   "resource_type": "dataset",
