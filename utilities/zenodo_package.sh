@@ -99,7 +99,7 @@ archive_from_paths() {
   assert_paths_exist "${paths[@]}"
   (
     cd "${ROOT}"
-    tar -czf "${archive}" "${paths[@]}"
+    COPYFILE_DISABLE=1 tar -czf "${archive}" "${paths[@]}"
   )
 }
 

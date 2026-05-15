@@ -40,6 +40,7 @@ SOURCE_PATTERNS = [
     "ADI/README.md",
     "ADI/README.Rmd",
     "ADI/fairadi_data_dictionary.tsv",
+    "ADI/fairadi_codelists.tsv",
     "ADI/fairadi_schema.json",
     "ADI/*.R",
     "CDI/Makefile",
@@ -58,6 +59,7 @@ SOURCE_PATTERNS = [
 ADI_RELEASE_PATTERNS = [
     "ADI/fairadi.csv.gz",
     "ADI/fairadi_data_dictionary.tsv",
+    "ADI/fairadi_codelists.tsv",
     "ADI/fairadi_schema.json",
 ]
 
@@ -76,6 +78,7 @@ DOCS_PATTERNS = [
     "README.md",
     "ADI/README.md",
     "CDI/README.md",
+    "ADI/fairadi_codelists.tsv",
     "CITATION.cff",
     "metadata.json",
     "dcat-us.json",
