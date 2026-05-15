@@ -147,6 +147,34 @@ The current required namespace list is:
 - `qwraps2`
 - `scales`
 
+## import_release_data.R
+
+Example R import script for the release-grade ADI and CDI artifacts.
+
+```sh
+Rscript --vanilla utilities/import_release_data.R
+```
+
+The script uses the repository's release metadata rather than hard-coded file
+paths:
+
+- reads `metadata.json` to locate the canonical ADI/CDI release tables
+- reads `ADI/fairadi_schema.json` and `CDI/faircdi_schema.json`
+- reads the ADI/CDI data dictionaries
+- imports `ADI/fairadi.csv.gz` and `CDI/faircdi.csv.gz`
+- coerces columns based on the row schemas
+- checks required columns and enum-coded fields
+
+To use it interactively in R:
+
+```r
+source("utilities/import_release_data.R")
+bundle <- read_release_bundle(".")
+
+adi <- bundle$adi$data
+cdi <- bundle$cdi$data
+```
+
 ## import_census_table.R
 Defines a useful helper function for importing an ACS5 or Decennial Census
 dataset into R.  Expected to be evaluated within either the ADI or CDI

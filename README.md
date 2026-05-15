@@ -151,6 +151,24 @@ they serve different audiences and standards:
 These files overlap on purpose. The overlap keeps the release usable in
 different contexts without forcing one file to do every job.
 
+For software import workflows, `metadata.json` is the most practical starting
+point because it identifies the canonical ADI/CDI release files and their
+related schema and dictionary files. The provenance files are useful for
+documenting where the release came from, but they are not the primary import
+interface.
+
+An example R import script is provided at
+[`utilities/import_release_data.R`](/Users/dewittp/NLR/fairadi-data/utilities/import_release_data.R:1).
+It uses `metadata.json` to locate the canonical release tables, reads the ADI
+and CDI schemas, coerces column types, and performs basic required-column and
+enum checks during import.
+
+```r
+# Interactive R session use
+source("utilities/import_release_data.R")
+bundle <- read_release_bundle(".")
+```
+
 Validate the RO-Crate metadata with:
 
 ```sh
