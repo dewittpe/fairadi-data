@@ -1,7 +1,7 @@
 ################################################################################
 # file: group_quarters.R
 #
-# Objective: build a data.table with the % of population in group quarters
+# Objective: build a data.table with the percentage of the population in group quarters
 #
 ################################################################################
 source("../utilities/import_census_table.R")
@@ -36,7 +36,7 @@ DT <-
 
 DT[, group_quarters := gq / pop]
 
-# Sanity checks: all the percent_group_quarters should be between 0 and 100. NA
+# Sanity checks: all group-quarters proportions should be between 0 and 1. NA
 # values are due to zero total population.
 stopifnot(
   DT[is.na(group_quarters), all(pop == 0)],
@@ -44,7 +44,7 @@ stopifnot(
   DT[, all(group_quarters <=   1, na.rm = TRUE)]
 )
 
-# the base cols_to_keep is defined in adi_utilities.R
+# The base COLS_TO_KEEP object is defined in adi_utilities.R.
 cols_to_keep <- c(COLS_TO_KEEP, "group_quarters")
 
 data.table::fwrite(

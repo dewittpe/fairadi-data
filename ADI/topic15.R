@@ -1,10 +1,11 @@
 ################################################################################
-# file: adi_topic15.R
+# file: topic15.R
 #
 # Objective: build topic15 of the Area Deprivation Index
 #
-# There are two versions.  The original work used % households without a
-# telephone, the newer version used % households without internet
+# There are two versions. The original work used the percentage of households
+# without a telephone; the newer version used the percentage of households
+# without internet.
 #
 #   Topic: 15_old
 #   Topic Area: Households Without a Telephone
@@ -14,7 +15,7 @@
 #     Denominator: B25043_001
 #
 #   Topic: 15
-#   Topic Area: Households Without internet
+#   Topic Area: Households Without Internet
 #   Detailed Table ID: B28002
 #   Calculations:
 #     Numerator: B28002_013
@@ -29,7 +30,7 @@ DT_old <- import_census_table("B25043")
 DT_new <- import_census_table("B28002")
 DT <- merge(DT_old, DT_new, all = TRUE)
 
-# verify that columns you expect to be integers are integers
+# Verify that columns expected to be integers are integers
 verify_integer(DT)
 
 cfa <- check_for_annotations(DT)
@@ -43,13 +44,13 @@ DT[
   )
   ]
 
-# Sanity check, all the proportions should be less than 1
+# Sanity check: all proportions should be less than 1
 stopifnot(
   all(DT[["topic15_old"]] <= 1.00, na.rm = TRUE),
   all(DT[["topic15_new"]] <= 1.00, na.rm = TRUE)
 )
 
-# all missing is due to the denominator
+# All missing values are due to the denominator.
 stopifnot(DT[is.na(topic15_old), all(is.na(B25043_001E) | B25043_001E == 0)])
 stopifnot(DT[is.na(topic15_new), all(B28002_001E == 0, na.rm = TRUE)])
 
@@ -63,13 +64,13 @@ if (interactive()) {
   )
 }
 
-# 2017 Internet data is available, use that for 2017 and beyond, use the phone
-# data for 2016 and before
+# Internet data are available starting in 2017. Use those data for 2017 and
+# later, and use the telephone data for 2016 and earlier.
 
 DT[year >= 2017, `:=`(topic15 = topic15_new, topic15_notes = topic15_new_notes)]
 DT[year <  2017, `:=`(topic15 = topic15_old, topic15_notes = topic15_old_notes)]
 
-# the base cols_to_keep is defined in adi_utilities.R
+# The base COLS_TO_KEEP object is defined in adi_utilities.R.
 cols_to_keep <- c(COLS_TO_KEEP, "topic15", "topic15_notes")
 
 data.table::fwrite(

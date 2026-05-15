@@ -5,25 +5,29 @@
 #
 # NOTES:
 #
-#   Component01: ACS-5-Year Estimates for B15003 eariliest availablity is 2012.
-#     ACS-1-Year estimates do go back to 2010, but since we are working with
-#     ACS-5-year estiamtes we will not have this component for 2010 and 2011
+#   Component01: The earliest ACS 5-year estimates for B15003 are available in
+#     2012. ACS 1-year estimates do go back to 2010, but because this project
+#     uses ACS 5-year estimates, this component is not available for 2010 and
+#     2011.
 #
-#   Component02: ACS-5-Year Estimates for B15003 eariliest availablity is 2012.
-#     ACS-1-Year estimates do go back to 2010, but since we are working with
-#     ACS-5-year estiamtes we will not have this component for 2010 and 2011
+#   Component02: The earliest ACS 5-year estimates for B15003 are available in
+#     2012. ACS 1-year estimates do go back to 2010, but because this project
+#     uses ACS 5-year estimates, this component is not available for 2010 and
+#     2011.
 #
-#   Component09: due to a unique shrinkage and build process, this component
-#     can, and does, appear in 
+#   Component09: Due to its unique shrinkage and build process, this component
+#     can appear in years before 2013.
 #
-#   Component17: ACS-5-Year estimtes for B23025 first availablity is 2011
+#   Component17: The earliest ACS 5-year estimates for B23025 are available in
+#     2011.
 #
-#   Component18: ACS-5-Year estimtes for B27010 first availablity is 2013
+#   Component18: The earliest ACS 5-year estimates for B27010 are available in
+#     2013.
 #
 ################################################################################
 source("cdi_utilities.R")
 
-# step 7: PCA
+# Step 7: PCA
 
 # import all the components
 components <-
@@ -57,8 +61,8 @@ pcas <-
             component13 + component14 + component15 + component16 +
             component17 + component18,
         data = data,
-        center = FALSE, # data has alredy been scaled
-        scale  = FALSE  # data has alredy been scaled
+        center = FALSE, # data have already been scaled
+        scale  = FALSE  # data have already been scaled
       )
     }
   )
@@ -93,10 +97,10 @@ faircdi <-
   ) |>
   data.table::rbindlist()
 
-# step 8: standardize to have mean 100, standard deviation 20
+# Step 8: standardize to have mean 100 and standard deviation 20
 faircdi[, cdistd := 100 + 20 * scale(cdiraw), by = .(year)]
 
-# step 9, set percentiles
+# Step 9: set percentiles
 faircdi[, faircdi := ceiling(100 * data.table::frank(cdiraw, ties.method = "average") / .N), by = .(year)]
 
 
@@ -122,7 +126,7 @@ stopifnot(
 )
 
 ################################################################################
-# save fairadi to disk
+# Save faircdi to disk
 faircdi[, FIPS := build_FIPS(state, county, tract, block_group)]
 # write to disk
 data.table::fwrite(

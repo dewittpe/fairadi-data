@@ -8,7 +8,7 @@
 # ACS Data Table:
 #   B19001
 # Table Name:
-#   Household income in the paste 12 months
+#   Household income in the past 12 months
 # Numerator Calculation:
 #   sum of the items B19001_002 to B19001_004
 # Denominator Calculation:

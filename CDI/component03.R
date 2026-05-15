@@ -4,7 +4,7 @@
 # Build component 3 of the CDI
 #
 # Component: 3
-#   Employed in white collar jobs, %
+#   Employed in white-collar occupations, %
 # ACS Data Table:
 #   C24010
 # Table Name:
@@ -14,7 +14,7 @@
 # Denominator Calculation:
 #   C24010_001
 # Value Calculation with Description:
-#   [Male: Management, business, science, and arts occupations (C24010_003) + Male: Sales and office occupations (C24010_027) + Female: Management, business, science, and arts occupations (C24010_039) + Female: Sales and office occupations (C24010_63)]/Total (C24010_001)
+#   [Male: Management, business, science, and arts occupations (C24010_003) + Male: Sales and office occupations (C24010_027) + Female: Management, business, science, and arts occupations (C24010_039) + Female: Sales and office occupations (C24010_063)]/Total (C24010_001)
 ################################################################################
 source("cdi_utilities.R")
 
@@ -38,8 +38,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component03")
 
 # Step 6: Standardize the component

@@ -1,7 +1,7 @@
 ################################################################################
 # file: adi_utilities.R
 #
-# Objective: define several utilities to simplify the building of the ADI
+# Objective: define utilities to simplify ADI construction
 #
 # Methods defined in this file:
 #
@@ -19,11 +19,10 @@ COLS_TO_KEEP <- c("year", "state", "county", "tract", "block_group")
 ################################################################################
 #                            Geographic Imputation
 #
-# When there are missing values, we will use a geographic imputation.  If the
-# block_group is missing then the tract level value will be used, if the
-# block_group and the tract is missing then the county level value will be used,
-# and if the block_group, tract, and county are all missing then the state level
-# value will be used.
+# When values are missing, use geographic imputation. If the block-group value
+# is missing, use the tract-level value. If the block-group and tract values
+# are missing, use the county-level value. If the block-group, tract, and
+# county values are all missing, use the state-level value.
 geographic_imputation <- function(DT, variable = NULL) {
   stopifnot(!is.null(variable))
   stopifnot(is.character(variable))
@@ -134,9 +133,9 @@ shrink <- function(DT, variable) {
     value = d[["state_tau_sq"]] / (d[["state_tau_sq"]] + d[[VH]])
   )
 
-  # there are some missing tract weights because while there are more than one
-  # blockgroups in the tract, the data might not have been usable, so if there
-  # is only one useable blockgroup in the tract, then the weight is 1.
+  # Some tract weights are missing because, although there is more than one
+  # block group in the tract, the data may not have been usable. If there is
+  # only one usable block group in the tract, set the weight to 1.
   i <- which((d[[VG]] == "block_group") & (d[["tract_n"]] == 1) & is.na(d[["tract_weight"]]))
   data.table::set(d, i = i, j = "tract_weight", value = 1)
 
@@ -181,8 +180,8 @@ shrink <- function(DT, variable) {
       )[i]
   )
 
-  # if there are any missing values left, all the imputatation should be from
-  # the state level data
+  # If any values are still missing, all remaining imputation should come from
+  # the state-level data.
   i <- which(is.na(d[[VS]]))
   stopifnot(
     d[i, all(.SD == "state"), .SDcols = VG]

@@ -8,15 +8,15 @@
 # ACS Data Table:
 #   B27010
 # Table Name:
-#   Types of health insureance coverage by age
+#   Types of health insurance coverage by age
 # Numerator Calculation:
 #   B27010_017 + B27010_033 + B27010_050 + B27010_066
 # Denominator Calculation:
 #   B27010_001
 # Value Calculation with Description:
-#   No insurance under 19 (B27010_017) + No insurance 19-34 (B27010_033) + no insurance 35- 65 (B27010_050) + no insurance 65 and over (B27010_066)/ Total (B27010_001)
+#   No insurance under 19 (B27010_017) + no insurance age 19-34 (B27010_033) + no insurance age 35-64 (B27010_050) + no insurance age 65 and over (B27010_066)/Total (B27010_001)
 #
-# NOTE: ACS-5-Year estimtes for B27010 first availablity is 2013
+# NOTE: The earliest ACS 5-year estimates for B27010 are available in 2013.
 ################################################################################
 source("cdi_utilities.R")
 
@@ -41,8 +41,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component18")
 
 # Step 6: Standardize the component

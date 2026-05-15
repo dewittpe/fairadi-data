@@ -1,13 +1,12 @@
 ################################################################################
 # file: fairadi.R
 #
-# Build the fairadi output and ranking data
+# Build the fairadi output and ranking datasets
 #
 # Inputs:
 #   topic{01..17}.csv, each built by a similar named .R file
 #
 ################################################################################
-# For the moment, no spatial data, so use data.table
 source("../utilities/build_FIPS.R")
 source("adi_utilities.R")
 
@@ -94,8 +93,9 @@ adi <-
 # group-quarters values as the public-data source for this criterion across all
 # modeled years.
 #
-# As such, all the 2010 group quarters needs to merge to the 2010-2019 ACS5 data
-# and all the 2020 group quarters need to map to 2020-2029 data
+# As such, all 2010 group-quarters values need to merge with the 2010-2019
+# ACS5 data, and all 2020 group-quarters values need to map to the 2020-2029
+# data.
 
 yrs <- unique(adi$year)
 

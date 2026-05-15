@@ -4,11 +4,11 @@
 # Build component 5 of the CDI
 #
 # Component: 5
-#   Crowding (households with more than 1 person ber room), %
+#   Crowding (households with more than 1 person per room), %
 # ACS Data Table:
 #   B25014
 # Table Name:
-#   Tenure by occupants per roon
+#   Tenure by occupants per room
 # Numerator Calculation:
 #   B25014_005 + B25014_006 + B25014_007 + B25014_011 + B25014_012 + B25014_013
 # Denominator Calculation:
@@ -39,8 +39,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component05")
 
 # Step 6: Standardize the component
@@ -48,7 +48,7 @@ DT[, component05 := scale(component05), by = .(year)]
 
 # Steps 7, 8, and 9 are done in faircdi.R
 
-# missing values? It might be due to no population?
+# Missing values may be due to no population.
 if (interactive()) {
   B25014 <- import_census_table("B25014")
   B25014[DT[is.na(component05)], on = .NATURAL]

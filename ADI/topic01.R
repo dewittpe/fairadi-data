@@ -4,7 +4,7 @@
 # Objective: build topic01 of the Area Deprivation Index
 #
 #   Topic: 1
-#   Topic Area: % Pop ≥ 25 yrs with < 9 yrs Education
+#   Topic Area: % Population Age 25 and Older With Fewer Than 9 Years of Education
 #   Detailed Table ID: B15003
 #   Calculations:
 #     Numerator: Sum _002 to _012. Denominator: B15003_001
@@ -53,21 +53,21 @@ source("adi_utilities.R")
 # import needed data
 DT <- import_census_table(table = "B15003")
 
-# verify that columns you expect to be integers are integers
+# Verify that columns expected to be integers are integers
 verify_integer(DT)
 
 cfa <- check_for_annotations(DT)
 
 # B15003_001MA exists
 stopifnot(identical(cfa, list(E = character(0), M = "B15003_001MA")))
-# all the annotations are the same:
+# All annotations are the same:
 stopifnot(
   DT[!is.na(B15003_001MA), all(B15003_001MA == "*****")]
 )
 # see notes in ../utilities/check_for_annotations.R; error can be treated as zero in these cases
 DT[!is.na(B15003_001MA), B15003_001M := 0L]
 
-# We are interested in working on the block_group level for the ADI
+# Work at the block-group level for the ADI.
 DT <- DT[!is.na(block_group)]
 
 # build the topic
@@ -83,7 +83,7 @@ DT[
   .SDcols = numerator_variables
   ]
 
-# Sanity check, all the proportions should be less than 1
+# Sanity check: all proportions should be less than 1
 stopifnot(all(DT[["topic01"]] <= 1.00, na.rm = TRUE))
 
 DT[B15003_001E == 0, topic01_notes := "QDI-ZD"]

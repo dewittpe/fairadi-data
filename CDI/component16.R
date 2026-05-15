@@ -14,7 +14,7 @@
 # Denominator Calculation:
 #   C17002_001
 # Value Calculation with Description:
-#   [Under .50 (C17002_002) + .50 to .99 (C17002_003) + 1.00 to 1.24 (C17002_004) + 1.25 to 1.49 (C17002_005)] /Total (C17002_001) 
+#   [Under .50 (C17002_002) + .50 to .99 (C17002_003) + 1.00 to 1.24 (C17002_004) + 1.25 to 1.49 (C17002_005)]/Total (C17002_001)
 ################################################################################
 source("cdi_utilities.R")
 
@@ -39,8 +39,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component16")
 
 # Step 6: Standardize the component

@@ -57,8 +57,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component12")
 
 # Step 6: Standardize the component

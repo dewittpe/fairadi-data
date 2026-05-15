@@ -13,7 +13,7 @@ stopifnot(identical(cfa, list(E = character(0), M = character(0))))
 
 data.table::setnames(DT, old = "B25001_001E", new = "housing_units")
 
-# the base cols_to_keep is defined in adi_utilities.R
+# The base COLS_TO_KEEP object is defined in adi_utilities.R.
 cols_to_keep <- c(COLS_TO_KEEP, "housing_units")
 
 data.table::fwrite(

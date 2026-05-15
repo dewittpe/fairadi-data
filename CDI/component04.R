@@ -8,7 +8,7 @@
 # ACS Data Table:
 #   B17010
 # Table Name:
-#   Povery status in the past 12 months of families by familiy type by presence
+#   Poverty status in the past 12 months of families by family type by presence
 #   of related children
 # Numerator Calculation:
 #   B17010_002
@@ -40,8 +40,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component04")
 
 # Step 6: Standardize the component

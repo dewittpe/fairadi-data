@@ -22,7 +22,7 @@ source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT <- import_census_table("B19001")
 
-# verify that columns you expect to be integers are integers
+# Verify that columns expected to be integers are integers
 verify_integer(DT)
 
 cfa <- check_for_annotations(DT)
@@ -43,13 +43,13 @@ DT[
   .SDcols = sprintf("B19001_%03dE", c(2, 11:17))
 ]
 
-# what about the missing values?  All due to a zero total population
+# Missing values are all due to zero total population.
 stopifnot(DT[is.na(topic05_w_epsilon), all(total_population == 0 | is.na(topic05_wo_epsilon))])
 
 #DT[is.na(topic05_w_epsilon), .(total_population, B19001_002E), ]
 #DT[is.na(topic05_w_epsilon), .N, by = year]
 
-# the base cols_to_keep is defined in adi_utilities.R
+# The base COLS_TO_KEEP object is defined in adi_utilities.R.
 cols_to_keep <- c(COLS_TO_KEEP, "topic05_wo_epsilon", "topic05_w_epsilon")
 
 data.table::fwrite(

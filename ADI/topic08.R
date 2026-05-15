@@ -16,7 +16,7 @@ source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25088")
 
-# verify that columns you expect to be integers are integers
+# Verify that columns expected to be integers are integers
 verify_integer(DT)
 
 
@@ -33,7 +33,7 @@ if (interactive()) {
 
 DT[, topic08_notes := NA_character_]
 
-# Too few samples to compute standard error
+# Too few samples to compute the standard error
 DT[
   B25088_001E  == -666666666 &
   B25088_001EA == "-" &
@@ -42,7 +42,7 @@ DT[
   `:=`(B25088_001E = NA_integer_, B25088_001M = NA_integer_, topic08_notes = "QDI-n")
 ]
 
-# median value in lowest or highest range
+# Median value in the lowest or highest range
 DT[
   B25088_001E  == 99 &
   B25088_001EA == "100-" &
@@ -59,7 +59,7 @@ DT[
   `:=`(B25088_001E = NA_integer_, B25088_001M = NA_integer_, topic08_notes = "QDI-range")
 ]
 
-# all annotations have been addressed
+# All annotations have been addressed.
 stopifnot(
   DT[
     !is.na(B25088_001EA) | !is.na(B25088_001MA),
@@ -67,8 +67,8 @@ stopifnot(
     ]
 )
 
-# There are missing values, we will use a geographic imputation.
-# We also apply a shrinkage
+# There are missing values, so use geographic imputation.
+# Also apply shrinkage.
 DT <-
   merge(
     x = shrink(DT, "B25088_001"),

@@ -16,7 +16,7 @@ source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25077")
 
-# verify that columns you expect to be integers are integers
+# Verify that columns expected to be integers are integers
 verify_integer(DT)
 
 cfa <- check_for_annotations(DT)
@@ -29,7 +29,7 @@ if (interactive()) {
 
 DT[, topic06_notes := NA_character_]
 
-# Too few samples to compute standard error
+# Too few samples to compute the standard error
 DT[
   B25077_001E  == -666666666 &
   B25077_001EA == "-" &
@@ -38,7 +38,7 @@ DT[
   `:=`(B25077_001E = NA_integer_, B25077_001M = NA_integer_, topic06_notes = "QDI-n")
 ]
 
-# median value in lowest or highest range
+# Median value in the lowest or highest range
 DT[
   B25077_001E  == 9999 &
   B25077_001EA == "10,000-" &
@@ -57,15 +57,15 @@ DT[
   `:=`(B25077_001E = NA_integer_, B25077_001M = NA_integer_, topic06_notes = "QDI-range")
 ]
 
-# for the 2010-2012 data there are 1000001 values with NA MOE.  Set those values
-# to NA 
+# For the 2010-2012 data, there are `1000001` values with `NA` MOE. Set those
+# values to `NA`.
 DT[
   (year %in% 2010:2012) & (B25077_001E == 1000001 & is.na(B25077_001M)),
   `:=`(B25077_001E = NA_integer_, B25077_001M = NA_integer_, topic06_notes = "QDI-range")
   ]
 
-# There are missing values, we will use a geographic imputation.
-# We also apply a shrinkage
+# There are missing values, so use geographic imputation.
+# Also apply shrinkage.
 DT <-
   merge(
     x = shrink(DT, variable = "B25077_001"),

@@ -4,7 +4,7 @@
 # Build component 15 of the CDI
 #
 # Component: 15
-#   Owner occupied housing, %
+#   Owner-occupied housing, %
 # ACS Data Table:
 #   B25003
 # Table Name:
@@ -14,7 +14,7 @@
 # Denominator Calculation:
 #   B25003_001
 # Value Calculation with Description:
-#   Owner occupied (B25003_002)/Total (B25003_001)
+#   Owner-occupied (B25003_002)/Total (B25003_001)
 ################################################################################
 source("cdi_utilities.R")
 
@@ -39,8 +39,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component15")
 
 # Step 6: Standardize the component

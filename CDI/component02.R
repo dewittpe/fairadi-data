@@ -4,7 +4,7 @@
 # Build component 2 of the CDI
 #
 # Component: 2
-#   16+ years of schooling, %
+#   Population with 16 or more years of schooling, %
 # ACS Data Table:
 #   B15003
 # Table Name:
@@ -16,10 +16,9 @@
 # Value Calculation with Description:
 #   [Bachelor's degree (B15003_022) + Master's degree (B15003_023) + Professional school degree (B15003_024) + Doctorate degree (B15003_025)]/Total (B15003_001)
 #
-# NOTE: ACS-5-Year Estimates for B15003 eariliest availablity is 2012.
-# ACS-1-Year estimates do go back to 2010, but since we are working with
-# ACS-5-year estiamtes we will not have this component for 2010 
-# and 2011
+# NOTE: The earliest ACS 5-year estimates for B15003 are available in 2012.
+# ACS 1-year estimates do go back to 2010, but because this project uses
+# ACS 5-year estimates, this component is not available for 2010 and 2011.
 ################################################################################
 source("cdi_utilities.R")
 
@@ -30,7 +29,7 @@ cfa <- check_for_annotations(DT)
 # B15003_001MA exists
 stopifnot(identical(cfa, list(E = character(0), M = "B15003_001MA")))
 
-# all the annotations are the same:
+# All annotations are the same:
 stopifnot(
   DT[!is.na(B15003_001MA), all(B15003_001MA == "*****")]
 )
@@ -53,8 +52,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component02")
 
 # Step 6: Standardize the component

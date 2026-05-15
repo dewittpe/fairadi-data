@@ -16,7 +16,7 @@
 # Value Calculation with Description:
 #   Unemployed (B23025_005)/Labor Force (B23025_002)
 #
-# NOTE: ACS-5-Year estimtes for B23025 first availablity is 2011
+# NOTE: The earliest ACS 5-year estimates for B23025 are available in 2011.
 ################################################################################
 source("cdi_utilities.R")
 
@@ -41,8 +41,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component17")
 
 # Step 6: Standardize the component

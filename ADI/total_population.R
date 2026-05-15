@@ -2,7 +2,7 @@
 # file: total_population.R
 #
 # Objective:
-#   build a data.table with the total population.  This will be used in
+#   build a data.table with the total population. This will be used in
 #   some topicXX.R scripts.
 #
 ################################################################################
@@ -14,7 +14,7 @@ cfa <- check_for_annotations(DT)
 
 # B01003_001MA exists
 stopifnot(identical(cfa, list(E = character(0), M = "B01003_001MA")))
-# all the annotations are the same:
+# All annotations are the same:
 stopifnot(
   DT[!is.na(B01003_001MA), all(B01003_001MA == "*****")]
 )

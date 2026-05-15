@@ -4,7 +4,7 @@
 # Objective: build topic03 of the Area Deprivation Index
 #
 #   Topic: 3
-#   Topic Area: % Employed ≥ 16 yrs in White-Collar Occs.
+#   Topic Area: % Employed Population Age 16 and Older in White-Collar Occupations
 #   Detailed Table ID: C24010
 #   Calculations:
 #      Numerator:
@@ -100,7 +100,7 @@ source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT <- import_census_table("C24010")
 
-# verify that columns you expect to be integers are integers
+# Verify that columns expected to be integers are integers
 verify_integer(DT)
 
 cfa <- check_for_annotations(DT)
@@ -121,11 +121,10 @@ DT[
   .SDcols = numerator_variables
   ]
 
-# Sanity check, all the proportions should be less than 1
+# Sanity check: all proportions should be less than 1
 stopifnot(all(DT[["topic03"]] <= 1.00, na.rm = TRUE))
 
-# what about the missing values?  Check that all the missing values are due to a
-# zero denominator.
+# Check that all missing values are due to a zero denominator.
 DT[C24010_001E == 0L,  topic03_notes := "QDI-ZD"]
 DT[is.na(C24010_001E), topic03_notes := "QDI-ZD"]
 

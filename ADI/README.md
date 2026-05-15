@@ -85,19 +85,6 @@ suppression rule is anchored to 2020 rather than varying annually.
 In this directory there are R script for each of the ADI topics and one for
 building the ADI score and rankings.
 
-The canonical released ADI artifact is:
-
-- `fairadi.csv.gz`
-
-Column-level definitions are provided in:
-
-- `fairadi_data_dictionary.tsv`
-- `fairadi_codelists.tsv`
-
-A machine-readable row schema is provided in:
-
-- `fairadi_schema.json`
-
 ## Diagnostics of the Reproduction
 
 ### Neighborhood Atlas Data
@@ -145,7 +132,7 @@ str(fairadi)
 ##  $ exclude_reason      : chr  "" "" "" "" ...
 ##  $ national_rank       : int  63 63 67 67 70 73 52 59 65 65 ...
 ##  $ state_rank          : int  3 3 4 4 4 5 2 3 4 4 ...
-##  - attr(*, ".internal.selfref")=<pointer: 0x1014f2400>
+##  - attr(*, ".internal.selfref")=<pointer: 0x105636360>
 ```
 
 

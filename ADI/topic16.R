@@ -17,7 +17,7 @@ source("../utilities/verify_integer.R")
 source("adi_utilities.R")
 DT <- import_census_table("B25047")
 
-# verify that columns you expect to be integers are integers
+# Verify that columns expected to be integers are integers
 verify_integer(DT)
 
 cfa <- check_for_annotations(DT)
@@ -33,14 +33,14 @@ DT[
              )
   ]
 
-# Sanity check, all the proportions should be less than 1
+# Sanity check: all proportions should be less than 1
 stopifnot(all(DT[["topic16"]] <= 1.00, na.rm = TRUE))
 
-# missing only due to denominator
+# Missing values are only due to the denominator.
 stopifnot(DT[is.na(topic16), all(B25047_001E == 0, na.rm =  TRUE)])
 DT[is.na(topic16) & B25047_001E == 0, topic16_notes := "QDI-ZD"]
 
-# the base cols_to_keep is defined in adi_utilities.R
+# The base COLS_TO_KEEP object is defined in adi_utilities.R.
 cols_to_keep <- c(COLS_TO_KEEP, "topic16", "topic16_notes")
 
 data.table::fwrite(

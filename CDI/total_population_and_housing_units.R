@@ -1,21 +1,21 @@
 ################################################################################
 # file: total_population_and_housing_units.R
 #
-# build a data set to flag geographies requiring replacement due to low
+# Build a dataset to flag geographies requiring replacement due to low
 # population or housing units.
 #
-# Notes: 
+# Notes:
 #
-#   Total population uses B01001_001E in the specification.  B01003_001E
-#   provides the same information.  To be consistent with the specification we
+#   Total population uses B01001_001E in the specification. B01003_001E
+#   provides the same information. To be consistent with the specification, we
 #   use B01001_001E.
 ################################################################################
 source("cdi_utilities.R")
 B01001 <- import_census_table("B01001")
 B25032 <- import_census_table("B25032")
 
-# just a sanity check, B01003_001E and B01001_001E are equivalent.  This is not
-# needed for the build but is of interest to me.
+# As a sanity check, B01003_001E and B01001_001E are equivalent. This is not
+# needed for the build, but it is useful to confirm.
 B01003 <- import_census_table("B01003")
 sanity <- merge(B01001, B01003, all = TRUE, by = c("year", "GEO_ID"))
 stopifnot(identical(sanity[["B01003_001E"]], sanity[["B01001_001E"]]))

@@ -1,5 +1,5 @@
 ################################################################################
-# file cdi_utilities.R
+# file: cdi_utilities.R
 source("../utilities/import_census_table.R")
 source("../utilities/check_for_annotations.R")
 source("../utilities/build_FIPS.R")
@@ -34,7 +34,7 @@ affluence_components <-
   )
 
 ################################################################################
-# Join Total Population and Houseing Units
+# Join total population and housing units
 join_tphu <- function(DT) {
   tphu <- data.table::fread("total_population_and_housing_units.csv.gz")
   merge(DT, tphu, all.x = TRUE, by = c("year", "GEO_ID"))
@@ -82,8 +82,8 @@ steps_1_and_2 <- function(DT, component, numerator_variables, denominator_variab
 }
 
 ################################################################################
-# Step 4 and 5 of the CDI build requires shrinking the value and geographic
-# imputation.  The following function does that.
+# Steps 4 and 5 of the CDI build require shrinkage and geographic imputation.
+# The following function does that.
 steps_4_and_5 <- function(DT, variable) {
   stopifnot(inherits(DT, "data.table"))
   stopifnot(is.character(variable))
@@ -157,7 +157,7 @@ steps_4_and_5 <- function(DT, variable) {
   data.table::setnames(tractshrunk,  old = paste0(VE, "_shrunk"), new = paste0(VE, "_shrunk_tract"))
   data.table::setnames(countyshrunk, old = paste0(VE, "_shrunk"), new = paste0(VE, "_shrunk_county"))
 
-  # build the frame work for the return object
+  # Build the framework for the return object.
   rtn <-
     merge(
      x =

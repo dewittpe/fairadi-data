@@ -8,7 +8,7 @@
 # ACS Data Table:
 #   B25088
 # Table Name:
-#   Median Median selected monthly owner costs (dollars) by mortgage status
+#   Median selected monthly owner costs (dollars) by mortgage status
 # Numerator Calculation:
 #   B25088_002
 # Denominator Calculation:
@@ -61,8 +61,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component13")
 
 # Step 6: Standardize the component

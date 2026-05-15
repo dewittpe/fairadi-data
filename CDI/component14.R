@@ -4,7 +4,7 @@
 # Build component 14 of the CDI
 #
 # Component: 14
-#   One parent households, %
+#   One-parent households, %
 # ACS Data Table:
 #   B11003
 # Table Name:
@@ -14,7 +14,7 @@
 # Denominator Calculation:
 #   B11003_001
 # Value Calculation with Description:
-#   [Male w children and no spouse present (B11003_010) + Female w children and no spouse present (B11003_016)]/Total (B11003_001)
+#   [Male with children and no spouse present (B11003_010) + Female with children and no spouse present (B11003_016)]/Total (B11003_001)
 ################################################################################
 source("cdi_utilities.R")
 
@@ -39,8 +39,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component14")
 
 # Step 6: Standardize the component

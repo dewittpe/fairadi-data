@@ -39,8 +39,8 @@ DT[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 DT <- steps_4_and_5(DT, "component07")
 
 # Step 6: Standardize the component
@@ -48,7 +48,7 @@ DT[, component07 := scale(component07), by = .(year)]
 
 # Steps 7, 8, and 9 are done in faircdi.R
 
-# missing values? It might be due to no population?
+# Missing values may be due to no population.
 if (interactive()) {
   B25044 <- import_census_table("B25044")
   B25044[DT[is.na(component07)], on = .NATURAL]

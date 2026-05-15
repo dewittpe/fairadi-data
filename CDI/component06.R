@@ -3,7 +3,7 @@
 #
 # Build component 6 of the CDI
 #
-# Component: 6 OLD - use phone status pre 2017
+# Component: 6 OLD - use telephone status before 2017
 # ACS Data Table:
 #   B25043
 # Table Name:
@@ -13,16 +13,16 @@
 # Denominator Calculation:
 #   B25043_001
 # Value Calculation with Description:
-#   (No telephone (owner occupied) + No telephone (renter occupied)) / total
+#   (No telephone, owner-occupied + no telephone, renter-occupied) / total
 #
 # Component: 6 - 2017 and beyond
 #   Households without high-speed internet, %
 # ACS Data Table:
 #   B28002
 # Table Name:
-#   Presence and types of internet subscriptions in household
+#   Presence and types of internet subscriptions in the household
 # Numerator Calculation:
-#   B28002_003 + B28002_0013
+#   B28002_003 + B28002_013
 # Denominator Calculation:
 #   B28002_001
 # Value Calculation with Description:
@@ -72,12 +72,12 @@ post2017[
   )
 ]
 
-# Step 4 and 5: Apply Shrinkage to account for sampling error, and coalese by
-# geography level
+# Steps 4 and 5: Apply shrinkage to account for sampling error, and coalesce by
+# geographic level.
 pre2017  <- steps_4_and_5(pre2017,  "component06")
 post2017 <- steps_4_and_5(post2017, "component06")
 
-# build as one data set
+# Build as one dataset.
 DT <- rbind(pre2017, post2017)
 
 # Step 6: Standardize the component
