@@ -18,7 +18,7 @@ project. Provenance for a release is established by the combination of:
 describe the tarballs emitted for Zenodo upload. The Zenodo packaging workflow
 produces a separate `SHA256SUMS` file for those packaged release artifacts.
 
-The reserved Zenodo DOI for the current release record is:
+The Zenodo DOI for the current release record is:
 
 - `10.5281/zenodo.19222629`
 

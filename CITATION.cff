@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this project or dataset, please cite the software repository and the released dataset snapshot."
-title: "fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets"
+title: "fairadi-data: FAIR-Oriented U.S. Deprivation Indices Datasets"
 type: software
 version: 1.0.0
-date-released: 2026-03-25
+date-released: 2026-05-15
 license: BSD-3-Clause
 authors:
   - family-names: DeWitt
@@ -24,7 +24,7 @@ abstract: >
   metadata for archiving and reuse.
 preferred-citation:
   type: dataset
-  title: "fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets"
+  title: "fairadi-data: FAIR-Oriented U.S. Deprivation Indices Datasets"
   authors:
     - family-names: DeWitt
       given-names: Peter
@@ -34,7 +34,7 @@ preferred-citation:
       orcid: "https://orcid.org/0000-0001-7253-7171"
   doi: 10.5281/zenodo.19222629
   version: 1.0.0
-  date-released: 2026-03-25
+  date-released: 2026-05-15
 keywords:
   - area deprivation index
   - ADI

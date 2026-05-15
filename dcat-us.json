@@ -8,8 +8,8 @@
   },
   "title": "fairadi-data DCAT-US Catalog",
   "description": "DCAT-US 3.0 catalog record for the fairadi-data annual release snapshot and its released ADI and CDI datasets.",
-  "modified": "2026-03-25",
-  "issued": "2026-03-25",
+  "modified": "2026-05-15",
+  "issued": "2026-05-15",
   "language": [
     "en"
   ],
@@ -47,7 +47,7 @@
   "dataset": [
     {
       "@type": "Dataset",
-      "title": "fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets",
+      "title": "fairadi-data: FAIR-Oriented U.S. Deprivation Indices Datasets",
       "description": "Annual release snapshot of reproducible U.S. Area Deprivation Index and Community Deprivation Index datasets derived from U.S. Census Bureau ACS 5-year and Decennial Census tables.",
       "identifier": "https://doi.org/10.5281/zenodo.19222629",
       "publisher": {

@@ -1,5 +1,5 @@
 {
-  "title": "fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets",
+  "title": "fairadi-data: FAIR-Oriented U.S. Deprivation Indices Datasets",
   "name": "fairadi-data",
   "version": "1.0.0",
   "date_released": "2026-05-15",
@@ -67,10 +67,6 @@
       "description": "Process documentation for the release-grade CDI implementation."
     },
     {
-      "path": "FAIR_TODO.md",
-      "description": "Concrete FAIR implementation checklist for follow-on repository work."
-    },
-    {
       "path": "dcat-us.json",
       "description": "DCAT-US 3.0 catalog record for the repository release snapshot and released distributions."
     },
@@ -96,7 +92,7 @@
     "repository": "https://github.com/dewittpe/fairadi-data",
     "git_ref": "v1.0.0",
     "manifest": "MANIFEST.tsv",
-    "zenodo_reserved_doi": "10.5281/zenodo.19222629"
+    "zenodo_doi": "10.5281/zenodo.19222629"
   },
   "related_resources": [
     {

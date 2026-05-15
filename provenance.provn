@@ -49,11 +49,11 @@ document
   entity(ex:file/CDI/faircdi.R, [prov:label="CDI/faircdi.R"])
   entity(ex:file/utilities/build_manifest.py, [prov:label="utilities/build_manifest.py"])
 
-  activity(ex:activity/build-adi-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Build ADI release dataset"])
-  activity(ex:activity/build-cdi-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Build CDI output dataset"])
-  activity(ex:activity/build-manifest-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Build tracked-file manifest"])
-  activity(ex:activity/package-release-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Assemble release metadata and release snapshot"])
-  activity(ex:activity/register-doi-v1.0.0, 2026-03-25T00:00:00Z, -, [prov:label="Register Zenodo release DOI"])
+  activity(ex:activity/build-adi-v1.0.0, 2026-05-15T00:00:00Z, -, [prov:label="Build ADI release dataset"])
+  activity(ex:activity/build-cdi-v1.0.0, 2026-05-15T00:00:00Z, -, [prov:label="Build CDI output dataset"])
+  activity(ex:activity/build-manifest-v1.0.0, 2026-05-15T00:00:00Z, -, [prov:label="Build tracked-file manifest"])
+  activity(ex:activity/package-release-v1.0.0, 2026-05-15T00:00:00Z, -, [prov:label="Assemble release metadata and release snapshot"])
+  activity(ex:activity/register-doi-v1.0.0, 2026-05-15T00:00:00Z, -, [prov:label="Register Zenodo release DOI"])
 
   used(ex:activity/build-adi-v1.0.0, ex:dir/FIPS, -, [prov:role="reference geography"])
   used(ex:activity/build-adi-v1.0.0, ex:dir/ACS5, -, [prov:role="ACS5 inputs"])

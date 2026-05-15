@@ -220,7 +220,7 @@ the answer below says so directly.
 | :---- | :------------- |
 | Name of Community | `fairadi` maintainers and reusers of U.S. deprivation index datasets |
 | Description of Community | This project supports researchers, analysts, and data stewards building and reusing U.S. Area Deprivation Index (ADI) and Community Deprivation Index (CDI) datasets derived from public U.S. Census inputs. |
-| Supporting Links | GitHub repository: `https://github.com/dewittpe/fairadi-data`; reserved Zenodo DOI: `10.5281/zenodo.19222629` |
+| Supporting Links | GitHub repository: `https://github.com/dewittpe/fairadi-data`; Zenodo DOI: `10.5281/zenodo.19222629` |
 | Research Domain | Public health, health services research, social determinants of health, and census-derived deprivation measurement |
 | Data Steward | Peter DeWitt (`https://orcid.org/0000-0002-6391-0795`); Ardelia Clarke (`https://orcid.org/0000-0001-7253-7171`) |
 | Date of FIP creation | `2026-05-14` |
@@ -230,7 +230,7 @@ the answer below says so directly.
 | FAIR principle | Question | Current answer in this project | Evidence / notes |
 | :------------- | :------- | :----------------------------- | :--------------- |
 | `F1` | What globally unique, persistent, resolvable identifiers do you use for metadata records? | Zenodo DOI at the release level: `10.5281/zenodo.19222629` | Declared in `metadata.json`, `CITATION.cff`, `README.md`, and `PROVENANCE.md`. There is not yet a separate PID for each individual metadata file in the repository. |
-| `F1` | What globally unique, persistent, resolvable identifiers do you use for datasets? | Zenodo DOI at the released dataset level: `10.5281/zenodo.19222629` | The canonical released dataset is `ADI/fairadi.csv.gz`. Internal file paths are stable within a git release, but they are not global persistent identifiers by themselves. |
+| `F1` | What globally unique, persistent, resolvable identifiers do you use for datasets? | Zenodo DOI at the released dataset level: `10.5281/zenodo.19222629` | The canonical released datasets are `ADI/fairadi.csv.gz` and `CDI/faircdi.csv.gz`. Internal file paths are stable within a git release, but they are not global persistent identifiers by themselves. |
 | `F2` | Which metadata schemas do you use for findability? | RO-Crate 1.2 (`ro-crate-metadata.json`), `CITATION.cff` 1.2.0, project `metadata.json`, and the Zenodo release record | RO-Crate provides standardized machine-readable release metadata. `CITATION.cff` supports repository citation and discovery. `metadata.json` remains a project-specific release summary. |
 | `F3` | What is the technology that links the persistent identifiers of your data to the metadata description? | DOI landing page plus RO-Crate / repository metadata files linked by release version and file path | The DOI resolves to the archived release record, while `ro-crate-metadata.json`, `metadata.json`, `CITATION.cff`, `PROVENANCE.md`, and `MANIFEST.tsv` describe the released contents. |
 | `F4` | In which search engines are your metadata records indexed? | GitHub repository search and Zenodo record search | Additional external indexing is not yet documented in this repository. |
@@ -281,4 +281,4 @@ provided in `CITATION.cff`, `metadata.json`, `PROVENANCE.md`,
 `ADI/fairadi_data_dictionary.tsv`, `ADI/fairadi_schema.json`,
 `CDI/faircdi_data_dictionary.tsv`, and `CDI/faircdi_schema.json`.
 
-The reserved Zenodo DOI for the current release is `10.5281/zenodo.19222629`.
+The Zenodo DOI for the current release is `10.5281/zenodo.19222629`.

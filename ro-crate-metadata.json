@@ -14,9 +14,9 @@
     {
       "@id": "./",
       "@type": "Dataset",
-      "name": "fairadi-data: A FAIR-Compliant U.S. Deprivation Indices Datasets",
+      "name": "fairadi-data: A FAIR-Oriented U.S. Deprivation Indices Datasets",
       "description": "Attached RO-Crate for the fairadi release snapshot. The crate describes the repository as a reproducible U.S. deprivation indices build and release package containing source extracts, build scripts, documentation, integrity metadata, and released ADI and CDI artifacts derived from U.S. Census Bureau ACS 5-year and Decennial Census tables.",
-      "datePublished": "2026-03-25",
+      "datePublished": "2026-05-15",
       "version": "1.0.0",
       "license": [
         {
@@ -474,7 +474,7 @@
       "@type": "CreateAction",
       "name": "Build ADI release dataset",
       "description": "Build the canonical fairadi dataset from tracked Census and geography inputs.",
-      "endTime": "2026-03-25",
+      "endTime": "2026-05-15",
       "agent": {
         "@id": "https://orcid.org/0000-0002-6391-0795"
       },
@@ -509,7 +509,7 @@
       "@type": "CreateAction",
       "name": "Build CDI release dataset",
       "description": "Build the canonical faircdi dataset from tracked ACS5 inputs.",
-      "endTime": "2026-03-25",
+      "endTime": "2026-05-15",
       "agent": {
         "@id": "https://orcid.org/0000-0002-6391-0795"
       },
@@ -536,7 +536,7 @@
       "@type": "CreateAction",
       "name": "Build tracked-file manifest",
       "description": "Generate the tracked-file inventory with file sizes and SHA-256 digests.",
-      "endTime": "2026-03-25",
+      "endTime": "2026-05-15",
       "agent": {
         "@id": "https://orcid.org/0000-0002-6391-0795"
       },
@@ -558,7 +558,7 @@
       "@type": "CreateAction",
       "name": "Assemble release metadata and release snapshot",
       "description": "Package the release snapshot and connect its citation, integrity, and provenance metadata.",
-      "endTime": "2026-03-25",
+      "endTime": "2026-05-15",
       "agent": [
         {
           "@id": "https://orcid.org/0000-0002-6391-0795"
@@ -619,7 +619,7 @@
       "@type": "CreateAction",
       "name": "Register Zenodo release DOI",
       "description": "Register the Zenodo DOI associated with the release snapshot.",
-      "endTime": "2026-03-25",
+      "endTime": "2026-05-15",
       "agent": {
         "@id": "#zenodo"
       },

@@ -292,7 +292,7 @@ Notes:
 - These archives are designed for Zenodo publication and do not mirror the GitHub file layout one-for-one.
 - Code and build scripts are licensed under BSD-3-Clause in LICENSE.
 - Released data artifacts and documentation are licensed under CC BY 4.0 in LICENSE-data.
-- Reserved Zenodo DOI for the current release: 10.5281/zenodo.19222629
+- Zenodo DOI for the current release: 10.5281/zenodo.19222629
 EOF
 
 (
