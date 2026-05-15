@@ -1,4 +1,4 @@
-# fairadi-data: FAIR-Compliant U.S. Deprivation Indices Datasets
+# fairadi-data: FAIR-Oriented U.S. Deprivation Indices Datasets
 
 Workflow for downloading data from the US Census for building Deprivation
 Indices. The focus of this repo is getting the needed tables from the U.S.
