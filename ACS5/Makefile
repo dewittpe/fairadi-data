@@ -26,6 +26,7 @@ block_group:
 	@set -e -o pipefail; \
 	tmp="$@.tmp"; \
 	gzip -n -9c "$<" > "$$tmp"; \
+	gzip -t "$$tmp"; \
 	$(PUBLISH_GZIP_CSV)
 
 %.csv: ../utilities/stacktogether.R | state county tract block_group

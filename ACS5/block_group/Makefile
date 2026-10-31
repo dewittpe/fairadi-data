@@ -46,7 +46,8 @@ $(OUTDIR)/%.csv.gz:
 	$(eval year := $(word 1,$(TEMP_LIST)))
 	$(eval state := $(word 2,$(TEMP_LIST)))
 	$(eval tab := $(word 3,$(TEMP_LIST)))
-	@mkdir -p "$(dir $@)"; \
+	@set -e -o pipefail; \
+	mkdir -p "$(dir $@)"; \
 	if echo " $(ACS5_BLOCK_GROUP_API_UNSUPPORTED_YEARS) " | grep -q " $(year) "; then \
 		echo " Writing $@ via ACS5 Summary File"; \
 		python3 $(SUMMARY_IMPORT) \
@@ -56,6 +57,7 @@ $(OUTDIR)/%.csv.gz:
 			--states-csv $(FIPS_DIR)/$(year)__states.csv \
 			--cache-dir $(SUMMARY_CACHE_DIR) \
 			--output $@; \
+		gzip -t "$@"; \
 	else \
 		$(REQUIRE_API_KEY); \
 		raw="$@.raw"; \
@@ -64,6 +66,7 @@ $(OUTDIR)/%.csv.gz:
 		echo " Writing $@"; \
 		$(FETCH) "$$url" "$$raw"; \
 		gzip -9c "$$raw" > "$$tmp"; \
+		gzip -t "$$tmp"; \
 		mv -f "$$tmp" "$@"; \
 		rm -f "$$raw"; \
 	fi

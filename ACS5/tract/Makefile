@@ -34,7 +34,8 @@ $(OUTDIR)/%.csv.gz:
 	$(eval year := $(word 1,$(TEMP_LIST)))
 	$(eval state := $(word 2,$(TEMP_LIST)))
 	$(eval tab := $(word 3,$(TEMP_LIST)))
-	@$(REQUIRE_API_KEY); \
+	@set -e -o pipefail; \
+	$(REQUIRE_API_KEY); \
 	raw="$@.raw"; \
 	tmp="$@.tmp"; \
 	mkdir -p "$(dir $@)"; \
@@ -42,5 +43,6 @@ $(OUTDIR)/%.csv.gz:
 	echo " Writing $@"; \
 	$(FETCH) "$$url" "$$raw"; \
 	gzip -9c "$$raw" > "$$tmp"; \
+	gzip -t "$$tmp"; \
 	mv -f "$$tmp" "$@"; \
 	rm -f "$$raw"
